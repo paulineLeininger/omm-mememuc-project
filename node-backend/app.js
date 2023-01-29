@@ -1,21 +1,41 @@
-var createError = require('http-errors');
+/*var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');*/
+
+import createError from "http-errors";
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+
+//import { indexRouter } from "./routes/index.js"
+//import { userRouter } from "./routes/users.js"
+
 
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
-const MONGODB_PORT = process.env.DBPORT || '27017';
-const db = require('monk')(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`); // connect to database omm-2021
-console.log(`Connected to MongoDB at port ${MONGODB_PORT}`)
-// ######
+//const MONGODB_PORT = process.env.DBPORT || '27017';
+//const db = require('monk')(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`); // connect to database omm-2021
+//console.log(`Connected to MongoDB at port ${MONGODB_PORT}`)
+// ###### --> replaced by mongoose
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//var indexRouter = require('./routes/index');
+//var usersRouter = require('./routes/users');
 
-var app = express();
+//var app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config();
+//create app
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,8 +73,8 @@ app.use((req,res,next) => {
 
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/', indexRouter);
+//app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -72,4 +92,21 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+/* MONGOOSE SETUP*/
+
+const PORT = process.env.DBPORT || 6001;
+mongoose
+    .connect(`mongodb://127.0.0.1:${PORT}/omm-ws2223`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => { // what happens after we connect
+        app.listen(PORT, () => console.log(`Server Port: ${PORT}`)); // callback function
+
+        /* ADD DATA ONE TIME */
+        //User.insertMany(users);
+        //Post.insertMany(posts);
+    })
+  .catch((error) => console.log(`${error} did not connect`));
+    
+export default app;

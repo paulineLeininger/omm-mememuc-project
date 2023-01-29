@@ -1,12 +1,17 @@
+import { Typography, useTheme } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import PostWidget from "./PostWidget";
+import WidgetWrapper from "components/WidgetWrapper";
+
 
 const PostsWidget = ({ userId, isProfile = false }) => {
     const dispatch = useDispatch();
     const posts = useSelector((state) => state.posts);
     const token = useSelector((state) => state.token);
+
+    const { palette } = useTheme();     
 
     // API call to server/routes/posts.js getFeedPosts
     const getPosts = async () => {
@@ -32,14 +37,18 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
     useEffect(() => {
         if (isProfile) {
-        getUserPosts();
+            getUserPosts();
+             console.log("get user post............");
         } else {
-        getPosts();
+            getPosts();
+            console.log("get post............");
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>
+            <WidgetWrapper>
+            <Typography> Explore popular memes</Typography>
         {posts.map(
             ({
             _id,
@@ -68,7 +77,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 comments={comments}
             />
             )
-        )}
+                )}
+                </WidgetWrapper>
         </>
     );
 };

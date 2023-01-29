@@ -38,6 +38,13 @@ const MyPostWidget = ({ picturePath }) => {
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
+    const light = palette.neutral.light;
+    const dark = palette.neutral.dark;
+
+    //for meme display
+    const [selectedRefPath, setSelectedRefPath] = useState("");
+    const [topCaption, setTopCaption] = useState("");
+    const [bottomCaption, setBottomCaption] = useState("");
 
     const handlePost = async () => {
         const formData = new FormData();
@@ -75,69 +82,152 @@ const MyPostWidget = ({ picturePath }) => {
 
     useEffect(() => {
         getRefs();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <WidgetWrapper>
         <FlexBetween gap="1.5rem">
                 <Box
                     display="grid"
-                    gap="30px"
-                    gridTemplateColumns="repeat(5, minmax(0, 1fr))">
+                    gap="16px"
+                    width="100%"
+                    gridTemplateColumns="repeat(6, minmax(0, 1fr))">
+                    <Typography
+                        variant="h4"
+                        color={palette.neutral.dark}
+                        fontWeight="500"
+                        sx={{
+                            gridColumn: "span 6"
+                        }}
+                    >Create your own Meme
+                    </Typography>
                     <Box display="flex"
-                        gap="1.5rem"
-                        border={`1px solid ${medium}`}
+                        gap="0.5rem"
                         borderRadius="5px"
-                        mt="1rem"
-                        p="1rem"
+                        mt="0.5rem"
+                        p="0.5rem"
                             sx={{
                             overflow: "auto",
                             overflowY: "scroll",
-                            gridColumn: "span 5"
+                            gridColumn: "span 6"
                         }}
-                        >
-                            {console.debug("-------------Refs:"+refs.length)}
-                            {refs.map((ref) => (
-                                console.debug("-------------Ref path:" + ref.picturePath),
-                                <img
-                                    style={{ objectFit: "cover", borderRadius: "5%" }}
-                                    width="160px"
-                                    height="160px"
+                    >
+                        {console.log("-------getting refs: "+refs.length)}
+                        {refs.map((ref) => (
+                            <FlexBetween>
+                                <Button onClick={() => {
+                                    setSelectedRefPath(ref.picturePath);
+                                    console.log("selected pic: "+selectedRefPath);
+                                }}
+                                    width="100px"
+                                    height="100px"
                                     alt="ref"
+                                    p="1rem"
+                            >
+                                <img
                                     src={`http://localhost:3001/assets/${ref.picturePath}`}
-                        />
+                                    style={{ objectFit: "cover", borderRadius: "3%" }}
+                                    width="100px"
+                                    height="100px"
+                                    alt="ref"
+                                    p="1rem"
+                                    sx={{
+                                        "&:hover": { color: light },
+                                        "&:selected": {
+                                            border: 1, 
+                                            borderColor: medium },
+                                    }}
+                                    />
+                            </Button>
+                            </FlexBetween>
                         ))}
                     </Box>
-                    <Divider sx={{ margin: "1.25rem 0", gridColumn: "span 5" }} />
-                    <UserImage image={picturePath} sx={{ gridColumn: "span 1" }}/>
-                    <InputBase
-                        placeholder="Describe your meme..."
-                        onChange={(e) => setPost(e.target.value)}
-                        value={post}
+                    <Divider sx={{ margin: ".25rem 0", gridColumn: "span 6" }} />
+                    <Box
+                        display="flex"
+                        gap="0.5rem"
+                        borderRadius="5px"
+                        mt="1rem"
+                        p="0.5rem"
+                        height="15rem"
+                        position="relative"
                         sx={{
-                            width: "100%",
-                            backgroundColor: palette.neutral.light,
-                            borderRadius: "2rem",
-                            padding: "1rem 2rem",
-                            gridColumn: "span 4",
-                        }}
-                    />
+                            gridColumn: "span 6"
+                        }}> 
+                        <img
+                            src={`http://localhost:3001/assets/${selectedRefPath}`}
+                            style={{ objectFit: "contain", borderRadius: "0%" }}
+                            alt="ref"
+                            width="100%"
+                            height="100%"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            sx={{
+                                gridColumn: "span 6",
+                            }}
+                        />
+                        <Box
+                            position="absolute"
+                            top={-80}
+                            left={0}
+                            width="100%"
+                            height="100%"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center">
+                            <Typography
+                            variant="h4"
+                                color="white"
+                                fontWeight="500"
+                                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black' }}>
+                                Top Caption</Typography>
+                        </Box>
+                        <Box
+                            position="absolute"
+                            top={80}
+                            left={0}
+                            width="100%"
+                            height="100%"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center">
+                            <Typography
+                                variant="h4"
+                                color="white"
+                                fontWeight="500"
+                                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black'}}
+                            >Bottom Caption</Typography>
+                        </Box>
+                    </Box>
                     <InputBase
                         placeholder="Top Caption"
-                        onChange={(e) => setPost(e.target.value)}
-                        value={post}
+                        onChange={(e) => (topCaption=(e.target.value))}
+                        value={topCaption}
                         sx={{
                             width: "100%",
                             backgroundColor: palette.neutral.light,
                             borderRadius: "2rem",
-                            padding: "1rem 2rem",
-                            gridColumn: "span 2",
+                            padding: "1rem",
+                            gridColumn: "span 3",
                         }}
                     />
                     <InputBase
                         placeholder="Bottom Caption"
+                        onChange={(e) => bottomCaption=(e.target.value)}
+                        value={bottomCaption}
+                        sx={{
+                            width: "100%",
+                            backgroundColor: palette.neutral.light,
+                            borderRadius: "2rem",
+                            padding: "1rem",
+                            gridColumn: "span 3",
+                        }}
+                    />
+                    <UserImage image={picturePath} sx={{ gridColumn: "span 1" }}/>
+                    <InputBase
+                        placeholder="Leave a comment..."
                         onChange={(e) => setPost(e.target.value)}
                         value={post}
                         sx={{
@@ -145,7 +235,7 @@ const MyPostWidget = ({ picturePath }) => {
                             backgroundColor: palette.neutral.light,
                             borderRadius: "2rem",
                             padding: "1rem 2rem",
-                            gridColumn: "span 2",
+                            gridColumn: "span 5",
                         }}
                     />
                 </Box>

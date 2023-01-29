@@ -48,7 +48,7 @@ const PostWidget = ({
     };
 
     return (
-        <WidgetWrapper m="2rem 0">
+        <WidgetWrapper m="2rem 0" sx={{backgroundColor: palette.neutral.light}}>
         <Friend
             friendId={postUserId}
             name={name}

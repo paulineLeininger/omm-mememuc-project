@@ -14,13 +14,16 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/memePosts.js";
+import refsRoutes from "./routes/memeRefs.js";
+
 //import single function from controller 
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPost } from "./controllers/memePosts.js";
 import User from "./models/User.js";
 import MemePost from "./models/MemePost.js";
-import { users, posts } from "./data/index.js";
+import { users, posts, refs } from "./data/index.js";
+import MemeRef from "./models/MemeRefs.js";
 
 
 //import { indexRouter } from "./routes/index.js"
@@ -112,6 +115,7 @@ app.post("/posts", verifyToken, upload.single("picture"), createPost);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
+app.use("/refs", refsRoutes);
 
 /*
 
@@ -150,6 +154,7 @@ mongoose
         /* ADD DATA ONE TIME */
         //User.insertMany(users);
         //MemePost.insertMany(posts);
+        //MemeRef.insertMany(refs);
     })
   .catch((error) => console.log(`${error} did not connect`));
     

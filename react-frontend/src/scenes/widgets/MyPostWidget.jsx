@@ -21,9 +21,10 @@ import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts } from "state";
+import { setPosts, setRefs } from "state";
 
 const MyPostWidget = ({ picturePath }) => {
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const MyPostWidget = ({ picturePath }) => {
     const { palette } = useTheme();
     const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
+    const refs = useSelector((state) => state.refs);
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
@@ -40,7 +42,9 @@ const MyPostWidget = ({ picturePath }) => {
     const handlePost = async () => {
         const formData = new FormData();
         formData.append("userId", _id);
-        formData.append("description", post);
+        formData.append("topText", post);
+        formData.append("bottomText", post);
+
         if (image) {
             formData.append("picture", image);
             formData.append("picturePath", image.name);
@@ -57,21 +61,94 @@ const MyPostWidget = ({ picturePath }) => {
         setPost("");
     };
 
+    const getRefs = async () => {
+        const response = await fetch(
+        `http://localhost:3001/refs/${_id}/assets/`,
+        {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+        }
+        );
+        const data = await response.json();
+        dispatch(setRefs({ refs: data }));
+    };
+
+    useEffect(() => {
+        getRefs();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    
+
     return (
         <WidgetWrapper>
         <FlexBetween gap="1.5rem">
-            <UserImage image={picturePath} />
-                <InputBase
-                    placeholder="What's on your mind..."
-                    onChange={(e) => setPost(e.target.value)}
-                    value={post}
-                    sx={{
-                        width: "100%",
-                        backgroundColor: palette.neutral.light,
-                        borderRadius: "2rem",
-                        padding: "1rem 2rem",
-                    }}
-            />
+                <Box
+                    display="grid"
+                    gap="30px"
+                    gridTemplateColumns="repeat(5, minmax(0, 1fr))">
+                    <Box display="flex"
+                        gap="1.5rem"
+                        border={`1px solid ${medium}`}
+                        borderRadius="5px"
+                        mt="1rem"
+                        p="1rem"
+                            sx={{
+                            overflow: "auto",
+                            overflowY: "scroll",
+                            gridColumn: "span 5"
+                        }}
+                        >
+                            {console.debug("-------------Refs:"+refs.length)}
+                            {refs.map((ref) => (
+                                console.debug("-------------Ref path:" + ref.picturePath),
+                                <img
+                                    style={{ objectFit: "cover", borderRadius: "5%" }}
+                                    width="160px"
+                                    height="160px"
+                                    alt="ref"
+                                    src={`http://localhost:3001/assets/${ref.picturePath}`}
+                        />
+                        ))}
+                    </Box>
+                    <Divider sx={{ margin: "1.25rem 0", gridColumn: "span 5" }} />
+                    <UserImage image={picturePath} sx={{ gridColumn: "span 1" }}/>
+                    <InputBase
+                        placeholder="Describe your meme..."
+                        onChange={(e) => setPost(e.target.value)}
+                        value={post}
+                        sx={{
+                            width: "100%",
+                            backgroundColor: palette.neutral.light,
+                            borderRadius: "2rem",
+                            padding: "1rem 2rem",
+                            gridColumn: "span 4",
+                        }}
+                    />
+                    <InputBase
+                        placeholder="Top Caption"
+                        onChange={(e) => setPost(e.target.value)}
+                        value={post}
+                        sx={{
+                            width: "100%",
+                            backgroundColor: palette.neutral.light,
+                            borderRadius: "2rem",
+                            padding: "1rem 2rem",
+                            gridColumn: "span 2",
+                        }}
+                    />
+                    <InputBase
+                        placeholder="Bottom Caption"
+                        onChange={(e) => setPost(e.target.value)}
+                        value={post}
+                        sx={{
+                            width: "100%",
+                            backgroundColor: palette.neutral.light,
+                            borderRadius: "2rem",
+                            padding: "1rem 2rem",
+                            gridColumn: "span 2",
+                        }}
+                    />
+                </Box>
         </FlexBetween>
         {isImage && (
             <Box

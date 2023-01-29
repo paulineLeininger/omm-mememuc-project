@@ -6,11 +6,6 @@ const userIds = [
     new mongoose.Types.ObjectId(),
     new mongoose.Types.ObjectId(),
     new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId(),
-    new mongoose.Types.ObjectId(),
 ];
 
 export const users = [
@@ -79,5 +74,53 @@ export const users = [
         "another random comment",
         "yet another random comment",
         ],
+    },
+    ];
+
+    export const refs = [
+    {
+        _id: new mongoose.Types.ObjectId(),
+        userId: userIds[1],
+        firstName: "Steve",
+        lastName: "Ralph",
+        userName: "ralphy",
+        picturePath: "memes/bernie.jpg",
+        userPicturePath: "p3.jpeg",
+        },
+        {
+        _id: new mongoose.Types.ObjectId(),
+        userId: userIds[1],
+        firstName: "Steve",
+        lastName: "Ralph",
+        userName: "ralphy",
+        picturePath: "memes/boromir.jpg",
+        userPicturePath: "p3.jpeg",
+        },
+        {
+        _id: new mongoose.Types.ObjectId(),
+        userId: userIds[1],
+        firstName: "Steve",
+        lastName: "Ralph",
+        userName: "ralphy",
+        picturePath: "memes/buzz.jpg",
+        userPicturePath: "p3.jpeg",
+        },
+        {
+        _id: new mongoose.Types.ObjectId(),
+        userId: userIds[1],
+        firstName: "Steve",
+        lastName: "Ralph",
+        userName: "ralphy",
+        picturePath: "memes/Confession-Bear.jpg",
+        userPicturePath: "p3.jpeg",
+        },
+        {
+        _id: new mongoose.Types.ObjectId(),
+        userId: userIds[1],
+        firstName: "Steve",
+        lastName: "Ralph",
+        userName: "ralphy",
+        picturePath: "memes/doge.jpg",
+        userPicturePath: "p3.jpeg",
     },
 ];

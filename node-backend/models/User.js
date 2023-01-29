@@ -15,6 +15,12 @@ const UserSchema = new mongoose.Schema(
             min: 2,
             max: 50,
         },
+        userName: {
+            type: String,
+            required: true,
+            min: 2,
+            max: 50,
+        },
         email: {
             type: String,
             required: true,
@@ -26,12 +32,6 @@ const UserSchema = new mongoose.Schema(
             type: String,
             required: true,
             min: 5,
-        },
-        userName: {
-            type: String,
-            required: true,
-            min: 2,
-            max: 50,
         },
         picturePath: {
             type: String,

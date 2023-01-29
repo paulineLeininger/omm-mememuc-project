@@ -1,13 +1,21 @@
-var express = require('express');
-var router = express.Router();
+import express from "express";
+//import controllers = funktionen, die Aktionen ausführen (=Logic)
+import {
+    getUser,
+    getUserFriends,
+    addRemoveFriend
+} from "../controllers/users.js";
+import { verifyToken } from "../middleware/auth.js";
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  const db = req.db;
-  const users = db.get('users');
-  users.find({username: req.username},{ projection: {basicauthtoken: 0} }) // return all user properties, except the basic auth token
-      .then((docs) => res.json(docs))
-      .catch((e) => res.status(500).send())
-});
+const router = express.Router();
 
-module.exports = router;
+/* READ */
+//create read routes = where we grab information
+//we don's save/change anything to/from database
+router.get("/:id", verifyToken, getUser); //querystring: if client sends user id
+router.get("/:id/friends", verifyToken, getUserFriends);
+
+/* UPDATE */
+router.patch("/:id/:friendId", verifyToken, addRemoveFriend);
+
+export default router;

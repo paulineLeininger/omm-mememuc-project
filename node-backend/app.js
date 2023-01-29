@@ -1,10 +1,3 @@
-/*var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var mongoose = require('mongoose');*/
-
 import createError from "http-errors";
 import express from "express";
 import path from "path";
@@ -27,7 +20,7 @@ import { verifyToken } from "./middleware/auth.js";
 import { createPost } from "./controllers/memePosts.js";
 import User from "./models/User.js";
 import MemePost from "./models/MemePost.js";
-//import { users, posts } from "./data/index.js";
+import { users, posts } from "./data/index.js";
 
 
 //import { indexRouter } from "./routes/index.js"
@@ -53,14 +46,15 @@ dotenv.config();
 const app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+//app.set('views', path.join(__dirname, 'views'));
+//app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+//app.use(logger('dev'));
+//app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+//app.use(cookieParser());
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
@@ -69,9 +63,9 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // sets dir of our assets
 
-app.use(function(req,res,next){  req.db = db;
+/*app.use(function(req,res,next){  req.db = db;
   next();
-});
+});*/
 
 
 // the login middleware. Requires BasicAuth authentication
@@ -119,6 +113,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
 
+/*
 
 app.use(express.static(path.join(__dirname, 'public')));
 //app.use('/', indexRouter);
@@ -138,13 +133,14 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+});*/
 
 /* MONGOOSE SETUP*/
 
-const PORT = process.env.DBPORT || 6001;
+const MONGO_URL = process.env.MONGO_URL;
+const PORT = process.env.PORT || 3002;
 mongoose
-    .connect(`mongodb://127.0.0.1:${PORT}/omm-ws2223`, {
+    .connect(MONGO_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })

@@ -23,7 +23,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
     //grab user from backend --> API call
     const getUser = async () => {
-    const response = await fetch(`http://localhost:27017/users/${userId}`, {
+    const response = await fetch(`http://localhost:3001/users/${userId}`, {
         method: "GET",
         //we specified "Bearer..." in server/middleware/auth.js
         headers: { Authorization: `Bearer ${token}` },

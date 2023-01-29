@@ -10,7 +10,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
 
     // API call to server/routes/posts.js getFeedPosts
     const getPosts = async () => {
-        const response = await fetch("http://localhost:27017/posts", {
+        const response = await fetch("http://localhost:3001/posts", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
         });

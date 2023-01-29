@@ -33,6 +33,7 @@ const UserSchema = new mongoose.Schema(
             required: true,
             min: 5,
         },
+        location: String,
         picturePath: {
             type: String,
             default: "",
@@ -41,7 +42,6 @@ const UserSchema = new mongoose.Schema(
             type: Array,
             default: [],
         },
-        location: String,
     },
     { timestamps: true }
 );

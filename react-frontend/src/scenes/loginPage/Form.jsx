@@ -32,12 +32,12 @@ const loginSchema = yup.object().shape({
 });
 
 const initialValuesRegister = {
-    firstName: "Meme",
-    lastName: "Gen",
-    userName: "testUser",
-    email: "meme@mail.com",
-    password: "memeGen",
-    location: "Germany",
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    location: "",
     picture: "",
 };
 
@@ -65,7 +65,7 @@ const Form = () => {
         
         //fetch catch response from api
         const savedUserResponse = await fetch(
-            "http://localhost:27017/auth/register",
+            "http://localhost:3001/auth/register",
             {
             method: "POST",
             body: formData,
@@ -81,7 +81,7 @@ const Form = () => {
         };
     
         const login = async (values, onSubmitProps) => {
-        const loggedInResponse = await fetch("http://localhost:27017/auth/login", {
+        const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(values),

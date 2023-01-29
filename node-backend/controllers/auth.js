@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         // function provided by express
         res.status(201).json(savedUser);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ msg: "User could not be registered" },{ error: err.message });
     }
 };
  /* LOGIN */

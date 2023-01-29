@@ -13,9 +13,10 @@ const postSchema = mongoose.Schema(
     lastName: {
       type: String,
       required: true,
-        },
-        userName: {
-        
+    },
+    userName: { 
+      type: String,
+      required: true,
     },
     location: String,
     description: String,
@@ -25,6 +26,8 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
+    topText: String,
+    bottomText: String,
     comments: {
       type: Array,
       default: [],

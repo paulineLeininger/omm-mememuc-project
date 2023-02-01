@@ -23,7 +23,7 @@ import { createPost } from "./controllers/memePosts.js";
 import User from "./models/User.js";
 import MemePost from "./models/MemePost.js";
 import { users, posts, refs } from "./data/index.js";
-import MemeRef from "./models/MemeRefs.js";
+import MemeRef from "./models/MemeRef.js";
 
 
 //import { indexRouter } from "./routes/index.js"

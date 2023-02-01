@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import MemeRef from "../models/MemeRefs.js";
+import MemeRef from "../models/MemeRef.js";
 
 export const createPost = async (req, res) => {
     try {
@@ -29,9 +29,10 @@ export const getFeedPosts = async (req, res) => {
     try {        
         //this grabs ALL posts
         const post = await MemeRef.find();
+        console.log("........finding all refs on server: "+post)
         res.status(200).json(post);
     } catch (err) {
-        res.status(404).json({ error: err.message +"couldn't fetch memes" });
+        res.status(404).json({ error: err.message +" couldn't fetch memes" });
     }
 };
 

@@ -70,13 +70,14 @@ const MyPostWidget = ({ picturePath }) => {
 
     const getRefs = async () => {
         const response = await fetch(
-        `http://localhost:3001/refs/${_id}/assets/`,
+        `http://localhost:3001/refs/${_id}/refs`,
         {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
         }
         );
         const data = await response.json();
+        console.log("........data: " + data); //no response
         dispatch(setRefs({ refs: data }));
     };
 

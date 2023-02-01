@@ -125,7 +125,7 @@ const PostWidget = ({
             </FlexBetween>
 
             <IconButton>
-            <ShareOutlined />
+                    {/*<ShareOutlined />*/}
             </IconButton>
         </FlexBetween>
         {isComments && (

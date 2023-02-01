@@ -32,6 +32,7 @@ import { useState } from "react";
 import { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts, setRefs } from "state";
+import PostDialogWidget from "./PostDialogWidget";
 
 const MyPostWidget = ({ picturePath }) => {
     //for post
@@ -50,6 +51,8 @@ const MyPostWidget = ({ picturePath }) => {
     const posts = useSelector((state) => state.posts);
     const buttonRefs = useRef([]);
 
+    //test
+    const [isTest, setIsTest] = useState(false);
 
     //gui
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -538,6 +541,7 @@ const MyPostWidget = ({ picturePath }) => {
             )}
 
         </FlexBetween>*/}
+        <PostDialogWidget/>
         </WidgetWrapper>
     );
 };

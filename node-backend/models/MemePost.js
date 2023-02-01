@@ -19,6 +19,8 @@ const postSchema = mongoose.Schema(
       required: true,
     },
     location: String,
+    topCaption: String,
+    bottomCaption: String,
     description: String,
     picturePath: String,
     userPicturePath: String,
@@ -26,8 +28,6 @@ const postSchema = mongoose.Schema(
       type: Map,
       of: Boolean,
     },
-    topText: String,
-    bottomText: String,
     comments: {
       type: Array,
       default: [],

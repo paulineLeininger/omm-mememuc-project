@@ -4,7 +4,7 @@ import MemePost from "../models/MemePost.js";
 export const createPost = async (req, res) => {
     try {
         //what frontend sends us
-        const { userId, description, picturePath } = req.body;
+        const { userId, topCaption, bottomCaption, description, picturePath } = req.body;
         const user = await User.findById(userId);
         const newPost = new MemePost({
             userId,
@@ -12,6 +12,8 @@ export const createPost = async (req, res) => {
             lastName: user.lastName,
             userName: user.userName,
             location: user.location,
+            topCaption,
+            bottomCaption,
             description,
             picturePath,
             userPicturePath: user.picturePath,

@@ -27,19 +27,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts, setRefs } from "state";
 
 const MyPostWidget = ({ picturePath }) => {
+    //for post
     const dispatch = useDispatch();
     const [isImage, setIsImage] = useState(false);
+    const [isGif, setIsGif] = useState(false);
     const [image, setImage] = useState(null);
+    const [gif, setGif] = useState(null);
     const [post, setPost] = useState("");
     const { palette } = useTheme();
+
+    //state
     const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const refs = useSelector((state) => state.refs);
+
+    //gui
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
     const mediumMain = palette.neutral.mediumMain;
     const medium = palette.neutral.medium;
     const light = palette.neutral.light;
-    const dark = palette.neutral.dark;
 
     //for meme display
     const [selectedRefPath, setSelectedRefPath] = useState("");
@@ -49,12 +55,17 @@ const MyPostWidget = ({ picturePath }) => {
     const handlePost = async () => {
         const formData = new FormData();
         formData.append("userId", _id);
-        formData.append("topText", post);
-        formData.append("bottomText", post);
+        formData.append("topCaption", topCaption);
+        formData.append("bottomCaption", bottomCaption);
 
+        if (selectedRefPath !== "") {
+            formData.append("picturePath", selectedRefPath);
+        }
+        if (post !== "") {
+            formData.append("description", post);
+        }
         if (image) {
             formData.append("picture", image);
-            formData.append("picturePath", image.name);
         }
 
         const response = await fetch(`http://localhost:3001/posts`, {
@@ -77,13 +88,11 @@ const MyPostWidget = ({ picturePath }) => {
         }
         );
         const data = await response.json();
-        console.log("........data: " + data); //no response
         dispatch(setRefs({ refs: data }));
     };
 
     useEffect(() => {
         getRefs();
-
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
@@ -91,7 +100,7 @@ const MyPostWidget = ({ picturePath }) => {
         <FlexBetween gap="1.5rem">
                 <Box
                     display="grid"
-                    gap="16px"
+                    gap="6px"
                     width="100%"
                     gridTemplateColumns="repeat(6, minmax(0, 1fr))">
                     <Typography
@@ -109,21 +118,28 @@ const MyPostWidget = ({ picturePath }) => {
                         mt="0.5rem"
                         p="0.5rem"
                             sx={{
-                            overflow: "auto",
-                            overflowY: "scroll",
-                            gridColumn: "span 6"
+                                overflow: "auto",
+                                overflowY: "scroll",
+                                gridColumn: "span 6"
                         }}
                     >
-                        {console.log("-------getting refs: "+refs.length)}
-                        {refs.map((ref) => (
+                        {refs.map((ref, index) => (
                             <FlexBetween>
-                                <Button onClick={() => {
+                                <Button
+                                    onClick={() => {
                                     setSelectedRefPath(ref.picturePath);
-                                    console.log("selected pic: "+selectedRefPath);
+                                    console.log("selected pic: " + selectedRefPath);
                                 }}
                                     width="100px"
                                     height="100px"
                                     alt="ref"
+                                    sx={{
+                                        "color": medium,
+                                        "&:focus": {
+                                            border: 1,
+                                            borderColor: palette.primary.dark
+                                        }
+                                    }}
                                     p="1rem"
                             >
                                 <img
@@ -134,7 +150,8 @@ const MyPostWidget = ({ picturePath }) => {
                                     alt="ref"
                                     p="1rem"
                                     sx={{
-                                        "&:hover": { color: light },
+                                        "&:hover": { color: light, border: 1, 
+                                            borderColor: medium },
                                         "&:selected": {
                                             border: 1, 
                                             borderColor: medium },
@@ -142,12 +159,13 @@ const MyPostWidget = ({ picturePath }) => {
                                     />
                             </Button>
                             </FlexBetween>
-                        ))}
+                        ))
+                    }
                     </Box>
                     <Divider sx={{ margin: ".25rem 0", gridColumn: "span 6" }} />
                     <Box
                         display="flex"
-                        gap="0.5rem"
+                        gap="2rem"
                         borderRadius="5px"
                         mt="1rem"
                         p="0.5rem"
@@ -159,7 +177,7 @@ const MyPostWidget = ({ picturePath }) => {
                         <img
                             src={`http://localhost:3001/assets/${selectedRefPath}`}
                             style={{ objectFit: "contain", borderRadius: "0%" }}
-                            alt="ref"
+                            alt="Select or upload a Reference first..."
                             width="100%"
                             height="100%"
                             display="flex"
@@ -183,7 +201,7 @@ const MyPostWidget = ({ picturePath }) => {
                                 color="white"
                                 fontWeight="500"
                                 style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black' }}>
-                                Top Caption</Typography>
+                                {topCaption}</Typography>
                         </Box>
                         <Box
                             position="absolute"
@@ -199,43 +217,47 @@ const MyPostWidget = ({ picturePath }) => {
                                 color="white"
                                 fontWeight="500"
                                 style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black'}}
-                            >Bottom Caption</Typography>
+                            >{bottomCaption}</Typography>
                         </Box>
                     </Box>
                     <InputBase
                         placeholder="Top Caption"
-                        onChange={(e) => (topCaption=(e.target.value))}
-                        value={topCaption}
+                        onChange={(e) => (setTopCaption(e.target.value))}
                         sx={{
                             width: "100%",
+                            height: "70%",
                             backgroundColor: palette.neutral.light,
-                            borderRadius: "2rem",
+                            borderRadius: "0.5rem",
                             padding: "1rem",
                             gridColumn: "span 3",
                         }}
                     />
                     <InputBase
                         placeholder="Bottom Caption"
-                        onChange={(e) => bottomCaption=(e.target.value)}
-                        value={bottomCaption}
+                        onChange={(e) =>
+                            (setBottomCaption(e.target.value)
+                            )}
                         sx={{
                             width: "100%",
+                            height: "70%",
                             backgroundColor: palette.neutral.light,
-                            borderRadius: "2rem",
+                            borderRadius: "0.5rem",
                             padding: "1rem",
                             gridColumn: "span 3",
                         }}
                     />
-                    <UserImage image={picturePath} sx={{ gridColumn: "span 1" }}/>
+                    <UserImage gap="2rem" mr="1rem" image={picturePath} sx={{ gridColumn: "span 1" }}/>
                     <InputBase
                         placeholder="Leave a comment..."
                         onChange={(e) => setPost(e.target.value)}
                         value={post}
+                        ml="3rem"
                         sx={{
                             width: "100%",
+                            height: "70%",
                             backgroundColor: palette.neutral.light,
-                            borderRadius: "2rem",
-                            padding: "1rem 2rem",
+                            borderRadius: "0.5rem",
+                            padding: "1rem",
                             gridColumn: "span 5",
                         }}
                     />
@@ -249,7 +271,7 @@ const MyPostWidget = ({ picturePath }) => {
                 p="1rem"
                 >
             <Dropzone
-                acceptedFiles=".jpg,.jpeg,.png"
+                acceptedFiles=".jpg,.jpeg,.png,"
                 multiple={false}
                 onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
             >
@@ -285,6 +307,50 @@ const MyPostWidget = ({ picturePath }) => {
             </Dropzone>
             </Box>
         )}
+        {isGif && (
+            <Box
+                border={`1px solid ${medium}`}
+                borderRadius="5px"
+                mt="1rem"
+                p="1rem"
+                >
+            <Dropzone
+                acceptedFiles=".jpg,.jpeg,.png,"
+                multiple={false}
+                onDrop={(acceptedFiles) => setGif(acceptedFiles[0])}
+            >
+                {({ getRootProps, getInputProps }) => (
+                    <FlexBetween>
+                        <Box
+                            {...getRootProps()}
+                            border={`2px dashed ${palette.primary.main}`}
+                            p="1rem"
+                            width="100%"
+                            sx={{ "&:hover": { cursor: "pointer" } }}
+                            >
+                            <input {...getInputProps()} />
+                            {!gif ? (
+                                <p>Add Gif Here</p>
+                            ) : (
+                                <FlexBetween>
+                                <Typography>{gif.name}</Typography>
+                                <EditOutlined />
+                                </FlexBetween>
+                            )}
+                        </Box>
+                        {gif && (
+                            <IconButton
+                                onClick={() => setGif(null)}
+                                sx={{ width: "15%" }}
+                            >
+                                <DeleteOutlined />
+                            </IconButton>
+                        )}
+                    </FlexBetween>
+                )}
+            </Dropzone>
+            </Box>
+        )}
 
         <Divider sx={{ margin: "1.25rem 0" }} />
 
@@ -301,19 +367,13 @@ const MyPostWidget = ({ picturePath }) => {
 
             {isNonMobileScreens ? (
             <>
-                <FlexBetween gap="0.25rem">
+                <FlexBetween gap="0.25rem" onClick={() => setIsGif(!isGif)}>
                 <GifBoxOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Clip</Typography>
-                </FlexBetween>
-
-                <FlexBetween gap="0.25rem">
-                <AttachFileOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Attachment</Typography>
-                </FlexBetween>
-
-                <FlexBetween gap="0.25rem">
-                <MicOutlined sx={{ color: mediumMain }} />
-                <Typography color={mediumMain}>Audio</Typography>
+                            <Typography
+                                color={mediumMain}
+                                sx={{ "&:hover": { cursor: "pointer", color: medium } }}>
+                                Clip
+                            </Typography>
                 </FlexBetween>
             </>
             ) : (

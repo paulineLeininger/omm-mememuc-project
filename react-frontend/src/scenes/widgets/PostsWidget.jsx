@@ -38,7 +38,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     useEffect(() => {
         if (isProfile) {
             getUserPosts();
-             console.log("get user post............");
+            console.log("get user post............");
         } else {
             getPosts();
             console.log("get post............");
@@ -67,8 +67,8 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 key={_id}
                 postId={_id}
                 postUserId={userId}
-                name={`${firstName} ${lastName}`}
                 userName={userName}
+                name={`${firstName} ${lastName}`}
                 description={description}
                 location={location}
                 picturePath={picturePath}

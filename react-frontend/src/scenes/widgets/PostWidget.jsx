@@ -15,7 +15,10 @@ import { setPost } from "state";
 const PostWidget = ({
     postId,
     postUserId,
+    userName,
     name,
+    topCaption,
+    bottomCaption,
     description,
     location,
     picturePath,
@@ -51,6 +54,7 @@ const PostWidget = ({
         <WidgetWrapper m="2rem 0" sx={{backgroundColor: palette.neutral.light}}>
         <Friend
             friendId={postUserId}
+            userName={userName}
             name={name}
             subtitle={location}
             userPicturePath={userPicturePath}
@@ -67,6 +71,38 @@ const PostWidget = ({
             src={`http://localhost:3001/assets/${picturePath}`}
             />
         )}
+            {/* <Box
+            position="absolute"
+            top={-80}
+            left={0}
+            width="100%"
+            height="100%"
+            display="flex"
+            alignItems="center"
+            justifyContent="center">
+            <Typography
+            variant="h4"
+                color="white"
+                fontWeight="500"
+                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black' }}>
+                {topCaption}</Typography>
+        </Box>
+        <Box
+            position="absolute"
+            top={80}
+            left={0}
+            width="100%"
+            height="100%"
+            display="flex"
+            alignItems="center"
+            justifyContent="center">
+            <Typography
+                variant="h4"
+                color="white"
+                fontWeight="500"
+                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black'}}
+            >{bottomCaption}</Typography>
+        </Box>     */}           
         <FlexBetween mt="0.25rem">
             <FlexBetween gap="1rem">
             <FlexBetween gap="0.3rem">

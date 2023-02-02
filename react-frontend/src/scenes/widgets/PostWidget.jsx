@@ -26,6 +26,7 @@ const PostWidget = ({
     userPicturePath,
     likes,
     comments,
+    isDetail=false
     }) => {
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const PostWidget = ({
     const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
+    const is_Detail = Object.keys(isDetail);
 
     const { palette } = useTheme();
     const main = palette.neutral.main;
@@ -72,7 +74,9 @@ const PostWidget = ({
             src={`http://localhost:3001/assets/${picturePath}`}
             />
             )}
-            <PostDialogWidget postId={postId} userId={postUserId} />
+            {!isDetail && 
+                <PostDialogWidget postId={postId} userId={postUserId} />
+            }
             {/* <Box
             position="absolute"
             top={-80}

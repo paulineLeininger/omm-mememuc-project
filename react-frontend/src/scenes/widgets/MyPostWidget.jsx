@@ -11,6 +11,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import exportAsImage from "helpers/exportAsImage"
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import {
     Box,
     Divider,
@@ -32,7 +35,7 @@ import { useState } from "react";
 import { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts, setRefs } from "state";
-import PostDialogWidget from "./PostDialogWidget";
+import Draggable from 'react-draggable'; 
 
 const MyPostWidget = ({ picturePath }) => {
     //for post
@@ -73,6 +76,9 @@ const MyPostWidget = ({ picturePath }) => {
     const [maxRefIndex, setMaxRefIndex] = useState(0);
     const [topCaption, setTopCaption] = useState("");
     const [bottomCaption, setBottomCaption] = useState("");
+
+    //download
+    const exportRef = useRef();
 
     const handlePost = async () => {
         const formData = new FormData();
@@ -140,12 +146,6 @@ const MyPostWidget = ({ picturePath }) => {
 
     useEffect(() => {
         if (selectedRefPath !== "") {
-            /* const index = buttonRefs.current.findIndex(
-             (ref) => ref.picturePath === selectedRefPath
-             );
-             if (index !== -1) {
-             buttonRefs.current[index].focus();
-             }*/
             buttonRefs.current[selectedRefIndex].focus();
         }
         else {
@@ -382,10 +382,8 @@ const MyPostWidget = ({ picturePath }) => {
                         display="flex"
                         gap="2rem"
                         borderRadius="5px"
-                        mt="1rem"
-                        p="0.5rem"
-                        height = "20rem"
                         position="relative"
+                        style={{ objectFit: "contain", width:"100%" }}
                         sx={{
                             gridColumn: "span 6"
                         }}>
@@ -398,51 +396,66 @@ const MyPostWidget = ({ picturePath }) => {
                                 setSelectedRefIndex(selectedRefIndex - 1);
                             }} sx = {{ color: medium, gridColumn: "span 1" }} />
                         )}
+                        <div ref={exportRef}>
                         <img
                             src={`http://localhost:3001/assets/${selectedRefPath}`}
-                            style={{ objectFit: "contain", borderRadius: "0%" }}
+                            style={{ objectFit: "contain", width:"100%" }}
                             alt="Select or upload a Reference first..."
-                            width="100%"
-                            height="100%"
                             display="flex"
                             alignItems="center"
                             justifyContent="center"
                             sx={{
                                 gridColumn: "span 4",
                             }}
-                        />
+                            />
+                        <Draggable>
                         <Box
                             position="absolute"
-                            top="2rem"
-                            left="15rem"
-                            width="20%"
-                            height="10%"
+                            top="1rem"
+                            left="12rem"
+                            width="fit-content"
                             display="flex"
                             alignItems="center"
-                            justifyContent="center">
-                            <Typography
-                            variant="h4"
-                                color="white"
-                                fontWeight="500"
-                                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black' }}>
-                                {topCaption}</Typography>
-                        </Box>
+                            justifyContent="center"
+                            sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}>
+                                <Typography
+                                    variant="h4"
+                                    color="white"
+                                    fontWeight="500"
+                                        style={{
+                                            textTransform: 'uppercase',
+                                            fontWeight: 'bold',
+                                            textShadow: '2px 2px black',
+                                            cursor: "grab"
+                                        }}>
+                                        {topCaption}</Typography>
+                            </Box>
+                        </Draggable>
+                        <Draggable>
                         <Box
                             position="absolute"
-                            top="17rem"
-                            left="15rem"
-                            width="20%"
-                            height="10%"
+                            top="12rem"
+                            left="12rem"
+                            width="fit-content"
                             display="flex"
                             alignItems="center"
-                            justifyContent="center">
+                            justifyContent="center"
+                            sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}
+                            >
                             <Typography
                                 variant="h4"
                                 color="white"
                                 fontWeight="500"
-                                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black'}}
-                            >{bottomCaption}</Typography>
-                        </Box>
+                                        style={{
+                                            textTransform: 'uppercase',
+                                            fontWeight: 'bold',
+                                            textShadow: '2px 2px black',
+                                            cursor: "grab",
+                                        }}
+                                >{bottomCaption}</Typography>
+                            </Box>
+                            </Draggable>
+                            </div>
                         {(selectedRefIndex === maxRefIndex) && (
                             <ArrowForwardIosIcon disabled sx={{ color: light, gridColumn: "span 1" }} />
                         )}
@@ -541,7 +554,7 @@ const MyPostWidget = ({ picturePath }) => {
             )}
 
         </FlexBetween>*/}
-        <PostDialogWidget postId={posts[0]._id} userId={_id} />
+            <Button onClick={() => exportAsImage(exportRef.current, "test")}>Download</Button>
         </WidgetWrapper>
     );
 };

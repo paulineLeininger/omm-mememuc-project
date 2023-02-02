@@ -11,6 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
+import PostDialogWidget from "./PostDialogWidget";
 
 const PostWidget = ({
     postId,
@@ -70,7 +71,8 @@ const PostWidget = ({
             style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
             src={`http://localhost:3001/assets/${picturePath}`}
             />
-        )}
+            )}
+            <PostDialogWidget postId={postId} userId={postUserId} />
             {/* <Box
             position="absolute"
             top={-80}
@@ -140,7 +142,7 @@ const PostWidget = ({
             ))}
             <Divider />
             </Box>
-        )}
+            )}
         </WidgetWrapper>
     );
 };

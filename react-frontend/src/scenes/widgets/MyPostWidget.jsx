@@ -541,7 +541,7 @@ const MyPostWidget = ({ picturePath }) => {
             )}
 
         </FlexBetween>*/}
-        <PostDialogWidget/>
+        <PostDialogWidget postId={posts[0]._id} userId={_id} />
         </WidgetWrapper>
     );
 };

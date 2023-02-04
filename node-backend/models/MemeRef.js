@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const postSchema = mongoose.Schema(
     {
         userId: {
@@ -20,10 +19,20 @@ const postSchema = mongoose.Schema(
         },
         picturePath: String,
         userPicturePath: String,
-        likes: {
-        type: Map,
-        of: Boolean,
-        },
+        topCaption: String,
+        bottomCaption : String,
+        useCount: Number,
+        isDraft: Boolean,
+        font: String,
+        fontColor: String,
+        fontBackground: String,
+        fontSize: Number,
+        topCaptionX: Number,
+        topCaptionY: Number,
+        bottomCaptionX: Number,
+        bottomCaptionY: Number,
+        canvasHeight: Number,
+        canvasWidth: Number,
     },
     { timestamps: true }
 );

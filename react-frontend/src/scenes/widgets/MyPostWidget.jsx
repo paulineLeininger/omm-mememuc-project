@@ -34,28 +34,31 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { setPosts, setRefs } from "state";
-import Draggable from 'react-draggable'; 
+import { setPosts, setRefs, setImgs } from "state";
+import Meme from "components/Meme";
 
 const MyPostWidget = ({ picturePath }) => {
     //for post
     const dispatch = useDispatch();
+
+    //state hooks
     const [isImage, setIsImage] = useState(false);
     const [isGif, setIsGif] = useState(false);
     const [image, setImage] = useState(null);
     const [gif, setGif] = useState(null);
-    const [post, setPost] = useState("");
+    const [desc, setDesc] = useState("");
     const { palette } = useTheme();
 
     //state
     const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
     const refs = useSelector((state) => state.refs);
+    const imgs = useSelector((state) => state.imgs);
     const posts = useSelector((state) => state.posts);
     const buttonRefs = useRef([]);
 
     //test
-    const [isTest, setIsTest] = useState(false);
+    //const [isTest, setIsTest] = useState(false);
 
     //gui
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
@@ -67,6 +70,8 @@ const MyPostWidget = ({ picturePath }) => {
     const REFERENCE = "reference";
     const TEMPLATE = "template";
     const UPLOAD = "upload";
+    const HISTORY = "history";
+    const DRAFT = "draft";
 
     //for meme display
     const [selectedRefPath, setSelectedRefPath] = useState("");
@@ -89,8 +94,8 @@ const MyPostWidget = ({ picturePath }) => {
         if (selectedRefPath !== "") {
             formData.append("picturePath", selectedRefPath);
         }
-        if (post !== "") {
-            formData.append("description", post);
+        if (desc !== "") {
+            formData.append("description", desc);
         }
         if (image) {
             formData.append("picture", image);
@@ -104,12 +109,34 @@ const MyPostWidget = ({ picturePath }) => {
         const posts = await response.json();
         dispatch(setPosts({ posts }));
         setImage(null);
-        setPost("");
+        setDesc("");
     };
+
+    const handleRef = async() => {
+        const formData = new FormData();
+        formData.append("userId", _id);
+        formData.append("topCaption", topCaption);
+        formData.append("bottomCaption", bottomCaption);
+
+        if (selectedRefPath !== "") {
+            formData.append("picturePath", selectedRefPath);
+        }
+        if (image) {
+            formData.append("picture", image);
+        }
+        const response = await fetch(`http://localhost:3001/refs`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+            body: formData,
+        });
+        const refs = await response.json();
+        dispatch(setRefs({ refs }));
+        setImage(null);
+    }
 
     const getRefs = async () => {
         const response = await fetch(
-        `http://localhost:3001/refs/${_id}/refs`,
+        `http://localhost:3001/refs`,
         {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },
@@ -118,6 +145,19 @@ const MyPostWidget = ({ picturePath }) => {
         const data = await response.json();
         dispatch(setRefs({ refs: data }));
     };
+
+    const getImgs = async () => {
+        const response = await fetch(
+        `http://localhost:3001/imgs`,
+        {
+            method: "GET",
+            headers: { Authorization: `Bearer ${token}` },
+        }
+        );
+        const data = await response.json();
+        dispatch(setImgs({ imgs: data }));
+    };
+
     const getUserPosts = async () => {
         const response = await fetch(
         `http://localhost:3001/posts/${_id}/posts`,
@@ -132,32 +172,117 @@ const MyPostWidget = ({ picturePath }) => {
 
     useEffect(() => {
         getRefs();
+        getImgs();
+        console.log("imgs: " + imgs.length);
+        console.log("refs: " + refs.length);
         getUserPosts();
         setMaxRefIndex(refs.length - 1);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+    //reference Mode changed
     useEffect(() => {
-    if (refs.length > 0) {
-        setRefPaths(refs.map(element => element.picturePath));
-        console.log("refpaths " + refPaths.length);
-        console.log("maxIndex: " + maxRefIndex);
-  }
-}, [refs]);
+        switch (refMode) {
+            case REFERENCE: setRefPaths(imgs.map(element => element.picturePath)); break;
+            case HISTORY: setRefPaths(imgs.map(element => element.picturePath)); break;
+            case DRAFT: setRefPaths(imgs.map(element => element.picturePath)); break;
+            case TEMPLATE: setRefPaths(refs.map(element => element.picturePath)); break;
+            default: setRefPaths(imgs.map(element => element.picturePath)); break;
+        } 
+    }, [refMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    //refs changed
     useEffect(() => {
-        if (selectedRefPath !== "") {
-            buttonRefs.current[selectedRefIndex].focus();
-        }
-        else {
-            buttonRefs.current[0].focus();
+    if (refs.length > 0 && refMode===TEMPLATE) {
+        setRefPaths(refs.map(element => element.picturePath));
+        //console.log("refpaths " + refPaths.length);
+        //console.log("maxIndex: " + maxRefIndex);
+    }
+    }, [refs]);
+
+    //imgs changed
+    useEffect(() => {
+    if (imgs.length > 0 && refMode===REFERENCE) {
+        setRefPaths(imgs.map(element => element.picturePath));
+        console.log("imgpaths " + refPaths.length);
+        console.log("maxIndex: " + maxRefIndex);
+    }
+    }, [imgs]);
+
+    //selectedRefPath changed
+    useEffect(() => {
+        if (buttonRefs !== null && buttonRefs.length>0) {
+            if (selectedRefPath !== "") {
+                buttonRefs.current[selectedRefIndex].focus();
+            }
+            else {
+                buttonRefs.current[0].focus();
+            }
         }
         console.log("selected ref path: " + selectedRefPath); 
     }, [selectedRefPath]);
 
+    //selectedRefIndex changed
     useEffect(() => {
         setSelectedRefPath(refPaths[selectedRefIndex]);
         console.log("selected ref index: " + selectedRefIndex);
     }, [selectedRefIndex]);
+
+    const MemeSelection = (input_imgs) => {
+        return (
+            <Box display="flex"
+                borderRadius="5px"
+                p="0.5rem"
+                sx={{
+                    overflow: "auto",
+                    overflowY: "scroll",
+                    gridColumn: "span 6"
+                }}
+            >
+                {input_imgs.map((img, index) => (
+                    <FlexBetween>
+                        <Button
+                            ref={(el) => (buttonRefs.current[index] = el)}
+                            onClick={() => {
+                                setSelectedRefPath(img.picturePath);
+                                setSelectedRefIndex(index);
+                            }}
+                            width="100px"
+                            height="100px"
+                            alt="ref"
+                            sx={{
+                                "color": medium,
+                                "&:focus": {
+                                    border: 1,
+                                    borderColor: palette.primary.dark
+                                }
+                            }}
+                            p="1rem"
+                        >
+                            <img
+                                src={`http://localhost:3001/assets/${img.picturePath}`}
+                                style={{ objectFit: "cover", borderRadius: "3%" }}
+                                width="100px"
+                                height="100px"
+                                alt="ref"
+                                p="1rem"
+                                sx={{
+                                    "&:hover": {
+                                        color: light, border: 1,
+                                        borderColor: medium
+                                    },
+                                    "&:selected": {
+                                        border: 1,
+                                        borderColor: medium
+                                    },
+                                }}
+                            />
+                        </Button>
+                    </FlexBetween>
+                ))
+                }
+            </Box>
+        )
+    };
 
     return (
         <WidgetWrapper>
@@ -189,139 +314,54 @@ const MyPostWidget = ({ picturePath }) => {
                         <ToggleButton 
                             value={REFERENCE}
                             sx={{
-                                width: "33%",
+                                width: "20%",
                                 gridColumn: "span 6",
                             }}
                             onClick={() => {
                                 setRefMode(REFERENCE);
                                 setMaxRefIndex(refs.length - 1);
                             }}>
-                            Reference Images</ToggleButton>
+                            All Images</ToggleButton>
+                        <ToggleButton value={HISTORY} sx={{
+                            width: "20%",
+                            gridColumn: "span 6",
+                        }} onClick={() => {
+                            setRefMode(HISTORY);
+                            setMaxRefIndex(refs.length - 1);
+                            }} >History</ToggleButton>
+                        <ToggleButton value={DRAFT} sx={{
+                            width: "20%",
+                            gridColumn: "span 6",
+                        }} onClick={() => {
+                            setRefMode(DRAFT);
+                            setMaxRefIndex(refs.length - 1);
+                        }} >Drafts</ToggleButton>
                         <ToggleButton value={TEMPLATE} sx={{
-                            width: "33%",
+                            width: "20%",
                             gridColumn: "span 6",
                         }} onClick={() => {
                             setRefMode(TEMPLATE);
                             setMaxRefIndex(refs.length - 1);
                         }} >Templates</ToggleButton>
                         <ToggleButton value={UPLOAD} sx={{
-                            width: "33%",
+                            width: "20%",
                             gridColumn: "span 6",
                         }}onClick={() => setRefMode(UPLOAD)}>Upload owm image</ToggleButton>
                     </ToggleButtonGroup>
 
-                    {refMode===REFERENCE && (
-                        <Box display="flex"
-                            //gap="0.5rem"
-                            borderRadius="5px"
-                            p="0.5rem"
-                                sx={{
-                                    overflow: "auto",
-                                    overflowY: "scroll",
-                                    gridColumn: "span 6"
-                            }}
-                        >
-                            {refs.map((ref, index) => (
-                                <FlexBetween>
-                                    <Button
-                                        ref={(el) => (buttonRefs.current[index] = el)}
-                                        onClick={() => {
-                                            setSelectedRefPath(ref.picturePath);
-                                            console.log("CLICK Should: set path to '" + ref.picturePath + "' and index to " + index);
-                                            //console.log("CLICK Does: set path to '" + selectedRefPath + "' and index to " + selectedRefIndex);
-                                            setSelectedRefIndex(index);
-                                    }}
-                                        width="100px"
-                                        height="100px"
-                                        alt="ref"
-                                        sx={{
-                                            "color": medium,
-                                            "&:focus": {
-                                                border: 1,
-                                                borderColor: palette.primary.dark
-                                            }
-                                        }}
-                                        p="1rem"
-                                >
-                                    <img
-                                        src={`http://localhost:3001/assets/${ref.picturePath}`}
-                                        style={{ objectFit: "cover", borderRadius: "3%" }}
-                                        width="100px"
-                                        height="100px"
-                                        alt="ref"
-                                        p="1rem"
-                                        sx={{
-                                            "&:hover": { color: light, border: 1, 
-                                                borderColor: medium },
-                                            "&:selected": {
-                                                border: 1, 
-                                                borderColor: medium },
-                                        }}
-                                        />
-                                </Button>
-                                </FlexBetween>
-                            ))
-                        }
-                        </Box>)
+                    {refMode === REFERENCE && (
+                    
+                        <>{MemeSelection(imgs)}</>
+                        
+                    )
                     }
-                    {refMode===TEMPLATE && (
-                        <Box display="flex"
-                            borderRadius="5px"
-                            p="0.5rem"
-                                sx={{
-                                    overflow: "auto",
-                                    overflowY: "scroll",
-                                    gridColumn: "span 6"
-                            }}
-                        >
-                            
-                            {posts.map((post, index) => (
-                                (post.picturePath !=="") &&  (post.picturePath !==null) &&
-                                <FlexBetween>
-                                    <Button
-                                        //ref={(el) => (buttonRefs.current[index] = el)}
-                                        onClick={() => {
-                                            if (selectedRefPath !== null && selectedRefPath !== "") { 
-                                                //setSelectedRefPath(post.picturePath);
-                                                //setSelectedRefIndex(index);
-
-                                        }
-                                    }}
-                                        width="100px"
-                                        height="100px"
-                                        alt="ref"
-                                        sx={{
-                                            "color": medium,
-                                            "&:focus": {
-                                                border: 1,
-                                                borderColor: palette.primary.dark
-                                            }
-                                        }}
-                                        p="1rem"
-                                    >
-                                        <img
-                                            src={`http://localhost:3001/assets/${post.picturePath}`}
-                                            style={{ objectFit: "cover", borderRadius: "3%" }}
-                                            width="100px"
-                                            height="100px"
-                                            alt="ref"
-                                            p="1rem"
-                                            sx={{
-                                                "&:hover": {
-                                                    color: light, border: 1,
-                                                    borderColor: medium
-                                                },
-                                                "&:selected": {
-                                                    border: 1,
-                                                    borderColor: medium
-                                                },
-                                            }}
-                                        />
-                                    </Button>
-                                </FlexBetween>
-                            ))
-                        }
-                        </Box>)
+                    {refMode === TEMPLATE && (
+                        <>{MemeSelection(refs)}</>
+                    )
+                    }
+                    {refMode === DRAFT && (
+                        <>{MemeSelection(posts)}</>
+                        )
                     }
                     {refMode === UPLOAD && (
                     <Box
@@ -339,7 +379,6 @@ const MyPostWidget = ({ picturePath }) => {
                         acceptedFiles=".jpg,.jpeg,.png,"
                         multiple={false}
                         display="flex"
-                        width="100%"
                         sx={{
                             gridColumn: "span 6"
                         }}
@@ -351,9 +390,7 @@ const MyPostWidget = ({ picturePath }) => {
                                     {...getRootProps()}
                                     border={`2px dashed ${palette.primary.main}`}
                                     p="1rem"
-                                    width="100%"
-                                    display="flex"
-                                    sx={{ "&:hover": { cursor: "pointer" } , gridColumn: "span 6" }}
+                                    sx={{ "&:hover": { cursor: "pointer" }}}
                                     >
                                     <input {...getInputProps()} />
                                     {!image ? (
@@ -396,66 +433,21 @@ const MyPostWidget = ({ picturePath }) => {
                                 setSelectedRefIndex(selectedRefIndex - 1);
                             }} sx = {{ color: medium, gridColumn: "span 1" }} />
                         )}
-                        <div ref={exportRef}>
-                        <img
-                            src={`http://localhost:3001/assets/${selectedRefPath}`}
-                            style={{ objectFit: "contain", width:"100%" }}
-                            alt="Select or upload a Reference first..."
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            sx={{
-                                gridColumn: "span 4",
-                            }}
-                            />
-                        <Draggable>
-                        <Box
-                            position="absolute"
-                            top="1rem"
-                            left="12rem"
-                            width="fit-content"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}>
-                                <Typography
-                                    variant="h4"
-                                    color="white"
-                                    fontWeight="500"
-                                        style={{
-                                            textTransform: 'uppercase',
-                                            fontWeight: 'bold',
-                                            textShadow: '2px 2px black',
-                                            cursor: "grab"
-                                        }}>
-                                        {topCaption}</Typography>
-                            </Box>
-                        </Draggable>
-                        <Draggable>
-                        <Box
-                            position="absolute"
-                            top="12rem"
-                            left="12rem"
-                            width="fit-content"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}
-                            >
-                            <Typography
-                                variant="h4"
-                                color="white"
-                                fontWeight="500"
-                                        style={{
-                                            textTransform: 'uppercase',
-                                            fontWeight: 'bold',
-                                            textShadow: '2px 2px black',
-                                            cursor: "grab",
-                                        }}
-                                >{bottomCaption}</Typography>
-                            </Box>
-                            </Draggable>
-                            </div>
+                        <Meme exportRef={exportRef}
+                            selectedRefPath={selectedRefPath}
+                            topCaption={topCaption}
+                            bottomCaption={bottomCaption}
+                            topCaptionX={0}
+                            bottomCaptionX={0}
+                            topCaptionY={0}
+                            bottomCaptionY={0}
+                            font={""}
+                            fontSize={""}
+                            fontColor={""}
+                            fontBackground={""}
+                            canvasHeight={0}
+                            canvasWidth={0}
+                        />
                         {(selectedRefIndex === maxRefIndex) && (
                             <ArrowForwardIosIcon disabled sx={{ color: light, gridColumn: "span 1" }} />
                         )}
@@ -497,8 +489,8 @@ const MyPostWidget = ({ picturePath }) => {
                     <UserImage gap="2rem" mr="1rem" image={picturePath} sx={{ gridColumn: "span 1" }}/>
                     <InputBase
                         placeholder="Leave a comment..."
-                        onChange={(e) => setPost(e.target.value)}
-                        value={post}
+                        onChange={(e) => setDesc(e.target.value)}
+                        value={desc}
                         ml="3rem"
                         sx={{
                             width: "100%",
@@ -510,7 +502,7 @@ const MyPostWidget = ({ picturePath }) => {
                         }}
                     />
                     <Button
-                        disabled={!post}
+                        disabled={!desc}
                         onClick={handlePost}
                         sx={{
                             width: "100%",
@@ -560,3 +552,4 @@ const MyPostWidget = ({ picturePath }) => {
 };
 
 export default MyPostWidget;
+

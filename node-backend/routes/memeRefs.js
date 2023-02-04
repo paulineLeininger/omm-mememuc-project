@@ -1,13 +1,17 @@
 import express from "express";
 import {
-    getFeedPosts,
+    getRefs, getUserRefs, useRef
 } from "../controllers/memeRefs.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
 /* READ */
-//router.get("/", verifyToken, getFeedPosts); // user feed on home page
-router.get("/:userId/refs", verifyToken, getFeedPosts);
+router.get("/", verifyToken, getRefs);
+router.get("/:userId/refs", verifyToken, getUserRefs);
+router.get("/:userId/:refId/refs", verifyToken, getRefs);
+
+/* UPDATE */
+router.patch("/:id/use", verifyToken, useRef);
 
 export default router;

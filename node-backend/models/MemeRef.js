@@ -17,7 +17,10 @@ const postSchema = mongoose.Schema(
         type: String,
         required: true,
         },
-        picturePath: String,
+        picturePath: { 
+        type: String,
+        required: true,
+        },
         userPicturePath: String,
         topCaption: String,
         bottomCaption : String,

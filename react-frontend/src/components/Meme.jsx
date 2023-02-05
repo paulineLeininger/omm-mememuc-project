@@ -55,57 +55,71 @@ const Meme = ({
 }) => {
     
     const { palette } = useTheme();
+    const [outline, setOutline] = useState("white");
+
+    useEffect(() => {
+        if (fontColor === "white" || fontColor === "yellow") {
+            setOutline("black");
+        }
+        else {
+            setOutline("grey");
+        }
+    }, [fontColor]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <div ref={exportRef}>
+        <div ref={exportRef} style={{ objectFit: "contain",display: 'flex', justifyContent: 'center' }}>
                         <img
                             src={`http://localhost:3001/assets/${selectedRefPath}`}
-                            style={{ objectFit: "contain", width:"100%" }}
+                            style={{ objectFit: "contain", width:"100%", margin: 'auto' }}
                             alt="Select or upload a Reference first..."
-                            display="flex"
                             sx={{
                                 gridColumn: "span 4",
                             }}
                             />
                         <Draggable>
                         <Box
+                            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                             position="absolute"
-                            top="1rem"
-                            left="12rem"
+                            top="10%"
                             width="fit-content"
                             display="flex"
-                            sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}>
-                                <Typography
-                                    variant="h4"
-                                    color="white"
-                                    fontWeight="500"
-                                        style={{
-                                            textTransform: 'uppercase',
-                                            fontWeight: 'bold',
-                                            textShadow: '2px 2px black',
-                                            cursor: "grab"
-                                        }}>
-                                        {topCaption}</Typography>
+                            sx={{ "&:hover": { border: `1px dashed ${palette.primary.main}` } }}>
+
+                            <Typography
+                                variant="h4"
+                                color={fontColor}
+                                fontWeight="500"
+                                style={{
+                                    fontFamily: font,
+                                    fontSize: fontSize/2+"rem",
+                                    textTransform: 'uppercase',
+                                    fontWeight: 'bold',
+                                    textShadow: '2px 2px '+outline,
+                                    cursor: "grab"
+                                }}
+                                >
+                                    {topCaption}</Typography>
                             </Box>
                         </Draggable>
                         <Draggable>
-                        <Box
+                        <Box  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                             position="absolute"
-                            top="12rem"
-                            left="12rem"
+                            top="80%"
                             width="fit-content"
                             display="flex"
                             sx={{"&:hover": {border:`1px dashed ${palette.primary.main}`}}}
                             >
                             <Typography
                                 variant="h4"
-                                color="white"
+                                color={fontColor}
                                 fontWeight="500"
-                                        style={{
-                                            textTransform: 'uppercase',
-                                            fontWeight: 'bold',
-                                            textShadow: '2px 2px black',
-                                            cursor: "grab",
+                        style={{
+                                    fontSize: fontSize/2+"rem",
+                                    fontFamily: font,
+                                    textTransform: 'uppercase',
+                                    fontWeight: 'bold',
+                                    textShadow: '2px 2px '+outline,
+                                    cursor: "grab",
                                         }}
                                 >{bottomCaption}</Typography>
                             </Box>

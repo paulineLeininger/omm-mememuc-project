@@ -6,6 +6,7 @@ import {
     ImageOutlined,
     MicOutlined,
     MoreHorizOutlined,
+    UploadFile,
 } from "@mui/icons-material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -14,6 +15,24 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import exportAsImage from "helpers/exportAsImage"
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import PublishIcon from '@mui/icons-material/Publish';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import InputLabel from '@mui/material/InputLabel';
+import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
+import TextDecreaseIcon from '@mui/icons-material/TextDecrease';
+import Stack from '@mui/material/Stack';
+import Slider from '@mui/material/Slider';
+import ImageSearchIcon from '@mui/icons-material/ImageSearch';
+import BrowseGalleryIcon from '@mui/icons-material/BrowseGallery';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
 import {
     Box,
     Divider,
@@ -72,6 +91,12 @@ const MyPostWidget = ({ picturePath }) => {
     const UPLOAD = "upload";
     const HISTORY = "history";
     const DRAFT = "draft";
+    const FONT_WHITE = "white";
+    const FONT_YELLOW = "yellow";
+    const FONT_BLACK = "black";
+    const FONT_ANTON = "'Anton', sans-serif";
+    const FONT_BANGERS = "'Bangers', cursive";
+    const FONT_RUBIK = "'Rubik', sans-serif";
 
     //for meme display
     const [selectedRefPath, setSelectedRefPath] = useState("");
@@ -81,6 +106,13 @@ const MyPostWidget = ({ picturePath }) => {
     const [maxRefIndex, setMaxRefIndex] = useState(0);
     const [topCaption, setTopCaption] = useState("");
     const [bottomCaption, setBottomCaption] = useState("");
+    const [isDraft, setIsDraft] = useState(false);
+    const [font, setFont] = useState(FONT_ANTON);
+    const [fontSize, setFontSize] = useState(5);
+    const [fontColor, setFontColor] = useState(FONT_WHITE);
+    const [fontBackground, setFontBackground] = useState("transparent");
+
+
 
     //download
     const exportRef = useRef();
@@ -112,18 +144,20 @@ const MyPostWidget = ({ picturePath }) => {
         setDesc("");
     };
 
-    const handleRef = async() => {
+    const handleRefPost = async() => {
         const formData = new FormData();
         formData.append("userId", _id);
         formData.append("topCaption", topCaption);
         formData.append("bottomCaption", bottomCaption);
+        formData.append("isDraft", isDraft);
+        formData.append("font", font);
+        formData.append("fontSize", fontSize);
+        formData.append("fontColor", fontColor);
+        formData.append("fontBackground", fontBackground);
 
         if (selectedRefPath !== "") {
             formData.append("picturePath", selectedRefPath);
-        }
-        if (image) {
-            formData.append("picture", image);
-        }
+        }      
         const response = await fetch(`http://localhost:3001/refs`, {
             method: "POST",
             headers: { Authorization: `Bearer ${token}` },
@@ -169,6 +203,19 @@ const MyPostWidget = ({ picturePath }) => {
         const data = await response.json();
         dispatch(setPosts({ posts: data }));
     };
+
+    const handleFontChange = (event) => {
+        setFont(event.target.value);
+    };
+
+    const handleFontSizeChange = (event, newValue) => {
+    setFontSize(newValue);
+    };
+    
+    const handleFontColorChange = (event) => {
+        setFontColor(event.target.value);
+    }
+
 
     useEffect(() => {
         getRefs();
@@ -301,7 +348,7 @@ const MyPostWidget = ({ picturePath }) => {
                         }}
                     >Create your own Meme
                     </Typography>
-                    <ToggleButtonGroup
+                    <Tabs
                         value={refMode}
                         display="flex"
                         sx={{
@@ -311,8 +358,10 @@ const MyPostWidget = ({ picturePath }) => {
                             p: "0.25rem 0rem",
                         }}
                         >
-                        <ToggleButton 
+                        <Tab 
                             value={REFERENCE}
+                            icon={<ImageSearchIcon />}
+                            label="references"
                             sx={{
                                 width: "20%",
                                 gridColumn: "span 6",
@@ -320,34 +369,45 @@ const MyPostWidget = ({ picturePath }) => {
                             onClick={() => {
                                 setRefMode(REFERENCE);
                                 setMaxRefIndex(refs.length - 1);
-                            }}>
-                            All Images</ToggleButton>
-                        <ToggleButton value={HISTORY} sx={{
+                            }}/>
+                        <Tab value={HISTORY}
+                            icon={<BrowseGalleryIcon />}
+                            label="history"
+                            sx={{
                             width: "20%",
                             gridColumn: "span 6",
                         }} onClick={() => {
                             setRefMode(HISTORY);
                             setMaxRefIndex(refs.length - 1);
-                            }} >History</ToggleButton>
-                        <ToggleButton value={DRAFT} sx={{
+                            }} />
+                        <Tab value={DRAFT}
+                            icon={<CollectionsBookmarkIcon />}
+                            label="drafts"
+                            sx={{
                             width: "20%",
                             gridColumn: "span 6",
                         }} onClick={() => {
                             setRefMode(DRAFT);
                             setMaxRefIndex(refs.length - 1);
-                        }} >Drafts</ToggleButton>
-                        <ToggleButton value={TEMPLATE} sx={{
+                        }} />
+                        <Tab value={TEMPLATE}
+                            icon={<CollectionsIcon />}
+                            label="templates"
+                            sx={{
                             width: "20%",
                             gridColumn: "span 6",
                         }} onClick={() => {
                             setRefMode(TEMPLATE);
                             setMaxRefIndex(refs.length - 1);
-                        }} >Templates</ToggleButton>
-                        <ToggleButton value={UPLOAD} sx={{
+                        }} />
+                        <Tab value={UPLOAD}
+                            icon={<UploadFile />}
+                            label="upload"
+                            sx={{
                             width: "20%",
                             gridColumn: "span 6",
-                        }}onClick={() => setRefMode(UPLOAD)}>Upload owm image</ToggleButton>
-                    </ToggleButtonGroup>
+                        }}onClick={() => setRefMode(UPLOAD)}/>
+                    </Tabs>
 
                     {refMode === REFERENCE && (
                     
@@ -420,7 +480,7 @@ const MyPostWidget = ({ picturePath }) => {
                         gap="2rem"
                         borderRadius="5px"
                         position="relative"
-                        style={{ objectFit: "contain", width:"100%" }}
+                        style={{ objectFit: "contain", width:"100%", display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                         sx={{
                             gridColumn: "span 6"
                         }}>
@@ -433,7 +493,8 @@ const MyPostWidget = ({ picturePath }) => {
                                 setSelectedRefIndex(selectedRefIndex - 1);
                             }} sx = {{ color: medium, gridColumn: "span 1" }} />
                         )}
-                        <Meme exportRef={exportRef}
+                        <Meme 
+                            exportRef={exportRef}
                             selectedRefPath={selectedRefPath}
                             topCaption={topCaption}
                             bottomCaption={bottomCaption}
@@ -441,9 +502,9 @@ const MyPostWidget = ({ picturePath }) => {
                             bottomCaptionX={0}
                             topCaptionY={0}
                             bottomCaptionY={0}
-                            font={""}
-                            fontSize={""}
-                            fontColor={""}
+                            font={font}
+                            fontSize={fontSize}
+                            fontColor={fontColor}
                             fontBackground={""}
                             canvasHeight={0}
                             canvasWidth={0}
@@ -459,8 +520,83 @@ const MyPostWidget = ({ picturePath }) => {
                         } />
                         )}
                     </Box>
+                    <Box  display="grid"
+                        gap="2rem"
+                        borderRadius="5px"
+                        position="relative"
+                        p="0.5rem 1.5rem"
+                        style={{ objectFit: "contain", width:"100%" }}
+                        sx={{
+                            gridColumn: "span 6",
+                            backgroundColor: palette.neutral.light 
+                        }}>
+                            <FormControl  sx={{
+                            gridColumn: "span 2",
+                        }}>
+                            <FormLabel id="demo-row-radio-buttons-group-label">Font Color</FormLabel>
+                            <RadioGroup
+                                row
+                                aria-labelledby="demo-row-radio-buttons-group-label"
+                                name="row-radio-buttons-group"
+                            >
+                                <FormControlLabel
+                                    value={FONT_WHITE}
+                                    control={<Radio
+                                        onChange={handleFontColorChange}
+                                        sx={{
+                                        color: FONT_WHITE,
+                                        '&.Mui-checked': {
+                                        color: FONT_WHITE,
+                                        },
+                                    }}/>}
+                                    />
+                                <FormControlLabel value={FONT_YELLOW} control={<Radio
+                                    onChange={handleFontColorChange}
+                                    sx={{
+                                        color: FONT_YELLOW,
+                                        '&.Mui-checked': {
+                                        color: FONT_YELLOW,
+                                        },
+                                    }}/>} />
+                                <FormControlLabel value={FONT_BLACK}
+                                    onChange={handleFontColorChange}
+                                    control={<Radio sx={{
+                                        color: FONT_BLACK,
+                                        '&.Mui-checked': {
+                                        color: FONT_BLACK,
+                                        },
+                                    }}/>} />
+                            </RadioGroup>
+                        </FormControl>
+                        <FormControl sx={{
+                            gridColumn: "span 2",
+                        }}>
+                            <InputLabel>Font</InputLabel>
+                            <Select
+                                value={font}
+                                label="Font"
+                                sx={{fontFamily: font}}
+                                onChange={handleFontChange}
+                            >
+                                <MenuItem value={FONT_RUBIK} sx={{fontFamily: FONT_RUBIK}}>Rubik</MenuItem>
+                                <MenuItem value={FONT_BANGERS} sx={{fontFamily: FONT_BANGERS}}>Bangers</MenuItem>
+                                <MenuItem value={FONT_ANTON} sx={{fontFamily: FONT_ANTON}}>Anton</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <Stack spacing={2} direction="row" sx={{ mb: 1, gridColumn: "span 2" }}>
+                            <TextDecreaseIcon />
+                            <Slider defaultValue={5}
+                                step={1}
+                                marks
+                                min={1}
+                                max={10}
+                                valueLabelDisplay="auto" value={fontSize} onChange={handleFontSizeChange} />
+                            <TextIncreaseIcon/>
+                        </Stack>
+                    </Box>
                     <InputBase
                         placeholder="Top Caption"
+                        font-family = {font}
                         onChange={(e) => (setTopCaption(e.target.value))}
                         sx={{
                             width: "100%",
@@ -501,8 +637,8 @@ const MyPostWidget = ({ picturePath }) => {
                             gridColumn: "span 4",
                         }}
                     />
-                    <Button
-                        disabled={!desc}
+                    <IconButton
+                        disabled={(bottomCaption==="" && topCaption==="")}
                         onClick={handlePost}
                         sx={{
                             width: "100%",
@@ -513,8 +649,8 @@ const MyPostWidget = ({ picturePath }) => {
                             gridColumn: "span 1"
                         }}
                     >
-                        POST
-                    </Button>
+                        <PublishIcon/>
+                    </IconButton>
                 </Box>
         </FlexBetween>
          {/*<FlexBetween>

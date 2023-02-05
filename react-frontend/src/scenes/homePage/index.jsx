@@ -1,7 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import { useSelector } from "react-redux";
 import UserWidget from "scenes/widgets/UserWidget";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
+import MemeEditorWidget from "scenes/widgets/MemeEditorWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import NavBar from "scenes/navBar";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
@@ -29,7 +29,7 @@ const HomePage = () => {
             </Box>
             
             <Box flexBasis={isNonMobileScreens ? "58%" : undefined} mt={isNonMobileScreens ? undefined : "2rem"} >
-                <MyPostWidget picturePath={picturePath} />
+                <MemeEditorWidget picturePath={picturePath} />
             </Box>
                 
                 <Box flexBasis={isNonMobileScreens ? "20%" : undefined} mt={isNonMobileScreens ? undefined : "2rem"}>

@@ -11,7 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
-import PostDialogWidget from "./PostDialogWidget";
+import MemeDialogWidget from "./MemeDialogWidget";
 
 const PostWidget = ({
     postId,
@@ -75,7 +75,7 @@ const PostWidget = ({
             />
             )}
             {!isDetail && 
-                <PostDialogWidget postId={postId} userId={postUserId} />
+                <MemeDialogWidget postId={postId} userId={postUserId} />
             }
             {/* <Box
             position="absolute"

@@ -7,6 +7,7 @@ import {
     MicOutlined,
     MoreHorizOutlined,
     UploadFile,
+    Download,
 } from "@mui/icons-material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -32,6 +33,9 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import LinkIcon from '@mui/icons-material/Link';
+import PublicIcon from '@mui/icons-material/Public';
+import LockIcon from '@mui/icons-material/Lock';
 
 import {
     Box,
@@ -56,7 +60,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts, setRefs, setImgs } from "state";
 import Meme from "components/Meme";
 
-const MyPostWidget = ({ picturePath }) => {
+const MemeEditorWidget = ({ picturePath }) => {
     //for post
     const dispatch = useDispatch();
 
@@ -106,6 +110,10 @@ const MyPostWidget = ({ picturePath }) => {
     const [maxRefIndex, setMaxRefIndex] = useState(0);
     const [topCaption, setTopCaption] = useState("");
     const [bottomCaption, setBottomCaption] = useState("");
+    const [topCaptionPosEd, setTopCaptionPosEd] = useState({ x: 0, y: 0 });
+    const [bottomCaptionPosEd, setBottomCaptionPosEd] = useState({ x: 0, y: 0 });
+    const [isPrivate, setIsPrivate] = useState(false);
+    const [isUnlisted, setIsUnlisted] = useState(false);
     const [isDraft, setIsDraft] = useState(false);
     const [font, setFont] = useState(FONT_ANTON);
     const [fontSize, setFontSize] = useState(5);
@@ -154,6 +162,10 @@ const MyPostWidget = ({ picturePath }) => {
         formData.append("fontSize", fontSize);
         formData.append("fontColor", fontColor);
         formData.append("fontBackground", fontBackground);
+        formData.append("topCaptionX", topCaptionPosEd.x);
+        formData.append("topCaptionY", topCaptionPosEd.y);
+        formData.append("bottomCaptionX", bottomCaptionPosEd.x);
+        formData.append("bottomCaptionY", bottomCaptionPosEd.y);
 
         if (selectedRefPath !== "") {
             formData.append("picturePath", selectedRefPath);
@@ -216,6 +228,17 @@ const MyPostWidget = ({ picturePath }) => {
         setFontColor(event.target.value);
     }
 
+    const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
+        setTopCaptionPosEd(topCaptionPos);
+        setBottomCaptionPosEd(bottomCaptionPos);
+    };
+    useEffect(() => {
+        console.log("-----editor: topCaption: x=" + topCaptionPosEd.x + " y=" + topCaptionPosEd.y);
+    }, [topCaptionPosEd]); 
+
+    useEffect(() => {
+        console.log("-----editor: topCaption: x=" + topCaptionPosEd.x + " y=" + topCaptionPosEd.y);
+    }, [bottomCaptionPosEd]); 
 
     useEffect(() => {
         getRefs();
@@ -250,8 +273,8 @@ const MyPostWidget = ({ picturePath }) => {
     useEffect(() => {
     if (imgs.length > 0 && refMode===REFERENCE) {
         setRefPaths(imgs.map(element => element.picturePath));
-        console.log("imgpaths " + refPaths.length);
-        console.log("maxIndex: " + maxRefIndex);
+        //console.log("imgpaths " + refPaths.length);
+        //console.log("maxIndex: " + maxRefIndex);
     }
     }, [imgs]);
 
@@ -265,13 +288,13 @@ const MyPostWidget = ({ picturePath }) => {
                 buttonRefs.current[0].focus();
             }
         }
-        console.log("selected ref path: " + selectedRefPath); 
+        //console.log("selected ref path: " + selectedRefPath); 
     }, [selectedRefPath]);
 
     //selectedRefIndex changed
     useEffect(() => {
         setSelectedRefPath(refPaths[selectedRefIndex]);
-        console.log("selected ref index: " + selectedRefIndex);
+        //console.log("selected ref index: " + selectedRefIndex);
     }, [selectedRefIndex]);
 
     const MemeSelection = (input_imgs) => {
@@ -281,8 +304,8 @@ const MyPostWidget = ({ picturePath }) => {
                 p="0.5rem"
                 sx={{
                     overflow: "auto",
-                    overflowY: "scroll",
-                    gridColumn: "span 6"
+                    gridColumn: "span 6",
+                    '&::-webkit-scrollbar': { display:  "none"  }
                 }}
             >
                 {input_imgs.map((img, index) => (
@@ -293,8 +316,8 @@ const MyPostWidget = ({ picturePath }) => {
                                 setSelectedRefPath(img.picturePath);
                                 setSelectedRefIndex(index);
                             }}
-                            width="100px"
-                            height="100px"
+                            width="70px"
+                            height="70px"
                             alt="ref"
                             sx={{
                                 "color": medium,
@@ -307,21 +330,11 @@ const MyPostWidget = ({ picturePath }) => {
                         >
                             <img
                                 src={`http://localhost:3001/assets/${img.picturePath}`}
-                                style={{ objectFit: "cover", borderRadius: "3%" }}
-                                width="100px"
-                                height="100px"
+                                style={{ objectFit: "cover", borderRadius: "5px" }}
+                                width="70px"
+                                height="70px"
                                 alt="ref"
                                 p="1rem"
-                                sx={{
-                                    "&:hover": {
-                                        color: light, border: 1,
-                                        borderColor: medium
-                                    },
-                                    "&:selected": {
-                                        border: 1,
-                                        borderColor: medium
-                                    },
-                                }}
                             />
                         </Button>
                     </FlexBetween>
@@ -493,15 +506,16 @@ const MyPostWidget = ({ picturePath }) => {
                                 setSelectedRefIndex(selectedRefIndex - 1);
                             }} sx = {{ color: medium, gridColumn: "span 1" }} />
                         )}
-                        <Meme 
+                        <Meme childToParent={childCaptionPosToParent}
+                            isDraggable={true}
                             exportRef={exportRef}
                             selectedRefPath={selectedRefPath}
                             topCaption={topCaption}
                             bottomCaption={bottomCaption}
-                            topCaptionX={0}
-                            bottomCaptionX={0}
-                            topCaptionY={0}
-                            bottomCaptionY={0}
+                            topX={40}
+                            bottomX={40}
+                            topY={10}
+                            bottomY={70}
                             font={font}
                             fontSize={fontSize}
                             fontColor={fontColor}
@@ -520,6 +534,25 @@ const MyPostWidget = ({ picturePath }) => {
                         } />
                         )}
                     </Box>
+                    <Box sx={{ margin: "0.25rem 0", gridColumn: "span 5" }}></Box>
+                    <Box sx={{ margin: "0.25rem 0", gridColumn: "span 1" }}>
+                        <IconButton 
+                            onClick={() => setIsDraft(!isDraft)}
+                        >
+                            {isDraft &&
+                                <BookmarkIcon />
+                            }
+                            {!isDraft &&
+                                <BookmarkBorderIcon />
+                            }
+                        </IconButton>
+                        <IconButton 
+                            onClick={() => exportAsImage(exportRef.current, selectedRefPath)}
+                        >
+                            <Download/>
+                        </IconButton>
+                    </Box>
+                    <Divider sx={{ margin: "0.25rem 0", gridColumn: "span 6"  }} />
                     <Box  display="grid"
                         gap="2rem"
                         borderRadius="5px"
@@ -682,10 +715,9 @@ const MyPostWidget = ({ picturePath }) => {
             )}
 
         </FlexBetween>*/}
-            <Button onClick={() => exportAsImage(exportRef.current, "test")}>Download</Button>
         </WidgetWrapper>
     );
 };
 
-export default MyPostWidget;
+export default MemeEditorWidget;
 

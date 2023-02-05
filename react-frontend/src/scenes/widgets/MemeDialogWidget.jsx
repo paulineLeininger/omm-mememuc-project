@@ -64,7 +64,7 @@ function BootstrapDialogTitle(props) {
     onClose: PropTypes.func.isRequired,
 };
 
-const PostDialogWidget = ({postId, userId, isProfile = false }) => { 
+const MemeDialogWidget = ({postId, userId, isProfile = false }) => { 
     const dispatch = useDispatch();
     const posts = useSelector((state) => state.posts);
     const token = useSelector((state) => state.token);
@@ -103,10 +103,8 @@ const PostDialogWidget = ({postId, userId, isProfile = false }) => {
     useEffect(() => {
         if (isProfile) {
             getUserPosts();
-            console.log("get user post............");
         } else {
             getPosts();
-            console.log("get post............");
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -300,4 +298,4 @@ const PostDialogWidget = ({postId, userId, isProfile = false }) => {
         </div>
     );
 }; 
-export default PostDialogWidget;
+export default MemeDialogWidget;

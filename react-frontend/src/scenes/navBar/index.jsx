@@ -27,28 +27,28 @@ import FlexBetween from 'components/FlexBetween';
 
 const NavBar = () => {
   const [isMobileMenuToggled, setMobileMenuToggled] = useState(false);
-  //you need this to dispatch actions from reducers
+  // you need this to dispatch actions from reducers
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  const isNonMobileScreen = useMediaQuery('(min-width:1000px)'); //hook into mui
+  const isNonMobileScreen = useMediaQuery('(min-width:1000px)'); // hook into mui
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
-  const dark = theme.palette.neutral.dark;
+  const { dark } = theme.palette.neutral;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
-  const alt = theme.palette.background.alt;
+  const { alt } = theme.palette.background;
 
   const fullName = `${user.userName}`;
 
-  //const fullName = `${user.firstName} ${user.lastName}`;
-  //const fullName = "Pauline Leininger";
+  // const fullName = `${user.firstName} ${user.lastName}`;
+  // const fullName = "Pauline Leininger";
 
-  //uses component and you can add stuff (only in box components)
-  //clamp = css function (min value, preferred, max)
-  //sx: different state css properties
-  //padding with 2 values = top+bottom, left+right
+  // uses component and you can add stuff (only in box components)
+  // clamp = css function (min value, preferred, max)
+  // sx: different state css properties
+  // padding with 2 values = top+bottom, left+right
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
@@ -62,8 +62,7 @@ const NavBar = () => {
               color: primaryLight,
               cursor: 'pointer'
             }
-          }}
-        >
+          }}>
           MemeGenerator
         </Typography>
         {isNonMobileScreen && (
@@ -71,8 +70,7 @@ const NavBar = () => {
             backgroundColor={neutralLight}
             borderRadius="9px"
             gap="3rem"
-            padding="0.1rem 1.5rem"
-          >
+            padding="0.1rem 1.5rem">
             <InputBase placeholder="Search..." />
             <IconButton>
               <Search />
@@ -91,10 +89,10 @@ const NavBar = () => {
               <LightMode sx={{ color: dark, fontSize: '25px' }} />
             )}
           </IconButton>
-          {/*<Message sx={{ fontSize: "25px" }} />
+          {/* <Message sx={{ fontSize: "25px" }} />
                 <Notifications sx={{ fontSize: "25px" }} />
                 <Help sx={{ fontSize: "25px" }} />
-                    <FormControl variant="standard" value={fullName} />*/}
+                    <FormControl variant="standard" value={fullName} /> */}
           <Select
             value={fullName}
             sx={{
@@ -110,8 +108,7 @@ const NavBar = () => {
                 backgroundColor: neutralLight
               }
             }}
-            input={<InputBase />}
-          >
+            input={<InputBase />}>
             <MenuItem value={fullName}>
               <Typography>{fullName}</Typography>
             </MenuItem>
@@ -133,8 +130,7 @@ const NavBar = () => {
           zIndex="10"
           maxWidth="500px"
           minWidth="300px"
-          backgroundColor={background}
-        >
+          backgroundColor={background}>
           {/* CLOSE ICON */}
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton onClick={() => setMobileMenuToggled(!isMobileMenuToggled)}>
@@ -148,8 +144,7 @@ const NavBar = () => {
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
-            gap="3rem"
-          >
+            gap="3rem">
             <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: '25px' }}>
               {theme.palette.mode === 'dark' ? (
                 <DarkMode sx={{ fontSize: '25px' }} />
@@ -176,8 +171,7 @@ const NavBar = () => {
                     backgroundColor: neutralLight
                   }
                 }}
-                input={<InputBase />}
-              >
+                input={<InputBase />}>
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>

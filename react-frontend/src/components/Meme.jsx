@@ -30,9 +30,7 @@ import FlexBetween from 'components/FlexBetween';
 import Dropzone from 'react-dropzone';
 import UserImage from 'components/UserImage';
 import WidgetWrapper from 'components/WidgetWrapper';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts, setRefs, setImgs } from 'state';
 import Draggable from 'react-draggable';
@@ -93,7 +91,7 @@ const Meme = ({
       x: Math.floor((newX / imageWidth) * 100),
       y: Math.floor((newY / imageHeight) * 100)
     });
-    console.log('topCaption is: x=' + topCaptionPos.x + ' y=' + topCaptionPos.y);
+    console.log(`topCaption is: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
   };
 
   const onBottomCaptionStop = (e, data) => {
@@ -133,16 +131,15 @@ const Meme = ({
         objectFit: 'contain',
         display: 'flex',
         justifyContent: 'center'
-      }}
-    >
+      }}>
       <img
         ref={imageRef}
         src={`http://localhost:3001/assets/${selectedRefPath}`}
         style={{ objectFit: 'contain', width: '100%', borderRadius: '5px' }}
         alt="Select or upload a Reference first..."
-        sx={{
-          gridColumn: 'span 4'
-        }}
+        // sx={{
+        //   gridColumn: 'span 4'
+        // }}
       />
 
       <Draggable onStop={onTopCaptionStop} bounds="parent" disabled={!isDraggable}>
@@ -150,8 +147,8 @@ const Meme = ({
           ref={topCaptionRef}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           position="absolute"
-          top={topY + '%'}
-          left={topX + '%'}
+          top={`${topY}%`}
+          left={`${topX}%`}
           width="fit-content"
           sx={{ '&:hover': { border: `${hoverBorder}px dashed ${palette.primary.main}` } }}
         >
@@ -165,10 +162,9 @@ const Meme = ({
               fontSize: recalcFontSize+"%",
               textTransform: 'uppercase',
               fontWeight: 'bold',
-              textShadow: '2px 2px ' + outline,
+              textShadow: `2px 2px ${outline}`,
               cursor: 'grab'
-            }}
-          >
+            }}>
             {topCaption}
           </Typography>
         </Box>
@@ -178,8 +174,8 @@ const Meme = ({
           ref={bottomCaptionRef}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           position="absolute"
-          top={bottomY + '%'}
-          left={bottomX + '%'}
+          top={`${bottomY}%`}
+          left={`${bottomX}%`}
           width="fit-content"
           sx={{ '&:hover': { border: `${hoverBorder}px dashed ${palette.primary.main}` } }}
         >
@@ -193,10 +189,9 @@ const Meme = ({
               fontFamily: font,
               textTransform: 'uppercase',
               fontWeight: 'bold',
-              textShadow: '2px 2px ' + outline,
+              textShadow: `2px 2px ${outline}`,
               cursor: 'grab'
-            }}
-          >
+            }}>
             {bottomCaption}
           </Typography>
         </Box>

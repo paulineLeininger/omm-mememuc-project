@@ -17,23 +17,23 @@ const UserWidget = ({ userId, picturePath }) => {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
-  const dark = palette.neutral.dark;
-  const medium = palette.neutral.medium;
-  const light = palette.neutral.light;
-  const main = palette.neutral.main;
+  const { dark } = palette.neutral;
+  const { medium } = palette.neutral;
+  const { light } = palette.neutral;
+  const { main } = palette.neutral;
 
-  //grab user from backend --> API call
+  // grab user from backend --> API call
   const getUser = async () => {
     const response = await fetch(`http://localhost:3001/users/${userId}`, {
       method: 'GET',
-      //we specified "Bearer..." in server/middleware/auth.js
+      // we specified "Bearer..." in server/middleware/auth.js
       headers: { Authorization: `Bearer ${token}` }
     });
     const data = await response.json();
     setUser(data);
   };
 
-  //this is called when you render this component for the first time
+  // this is called when you render this component for the first time
   useEffect(() => {
     getUser();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -42,7 +42,7 @@ const UserWidget = ({ userId, picturePath }) => {
     return null;
   }
 
-  //destructure items from the user
+  // destructure items from the user
   const { firstName, lastName, userName, location, friends } = user;
 
   return (
@@ -50,9 +50,8 @@ const UserWidget = ({ userId, picturePath }) => {
       {/* FIRST ROW */}
       <FlexBetween
         gap="0.5rem"
-        pb="1.1rem" //padding bottom
-        onClick={() => navigate(`/profile/${userId}`)}
-      >
+        pb="1.1rem" // padding bottom
+        onClick={() => navigate(`/profile/${userId}`)}>
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />
           <Box>
@@ -65,8 +64,7 @@ const UserWidget = ({ userId, picturePath }) => {
                   color: palette.primary.light,
                   cursor: 'pointer'
                 }
-              }}
-            >
+              }}>
               {userName}
             </Typography>
             <Typography pt="0.5rem" color={medium}>

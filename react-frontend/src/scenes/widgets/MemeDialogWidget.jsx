@@ -1,7 +1,7 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -9,13 +9,10 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import PostWidget from './MemePostWidget';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { setPosts } from 'state';
-import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
@@ -24,6 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import LinearProgress from '@mui/material/LinearProgress';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import PostWidget from './MemePostWidget';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -34,7 +32,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   }
 }));
 
-function BootstrapDialogTitle(props) {
+const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props;
   const { palette } = useTheme();
 
@@ -51,31 +49,34 @@ function BootstrapDialogTitle(props) {
             top: 8,
             color: palette.neutral.medium,
             '&:hover': { color: palette.neutral.dark }
-          }}
-        >
+          }}>
           <CloseIcon />
         </IconButton>
       ) : null}
     </DialogTitle>
   );
-}
-BootstrapDialogTitle.propTypes = {
-  children: PropTypes.node,
-  onClose: PropTypes.func.isRequired
 };
+// BootstrapDialogTitle.propTypes = {
+//   children: PropTypes.node,
+//   onClose: PropTypes.func.isRequired
+// };
 
-const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
+const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   const [isShuffleChecked, setIsShuffleChecked] = React.useState(true);
   const [nextPostIndex, setNextPostIndex] = React.useState(0);
-  const [post_id, setPost_id] = React.useState(postId);
+  const [currentPostId, setCurrentPostId] = React.useState();
   const [progress, setProgress] = React.useState(0);
   const [isSlideShow, setIsSlideShow] = React.useState(false);
 
   const { palette } = useTheme();
+
+  useEffect(() => {
+    setCurrentPostId(postId);
+  }, [postId]);
 
   // API call to server/routes/posts.js getFeedPosts
   const getPosts = async () => {
@@ -104,7 +105,13 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  React.useEffect(() => {
+  const handleShuffle = () => {
+    const rand = Math.floor(Math.random() * posts.length);
+    console.log(`rand: ${rand}`);
+    setCurrentPostId(posts[rand]._id);
+  };
+
+  useEffect(() => {
     if (isSlideShow) {
       const timer = setInterval(() => {
         setProgress((oldProgress) => {
@@ -118,53 +125,45 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
         });
       }, 300);
 
-      return () => {
-        clearInterval(timer);
-      };
+      clearInterval(timer);
     }
   }, [isSlideShow]);
 
-  const handleClickOpen = () => {
-    setPost_id(postId);
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-    setIsSlideShow(false);
-  };
+  // const handleClickOpen = () => {
+  //   setCurrentPostId(postId);
+  //   setOpen(true);
+  // };
+  // const handleClose = () => {
+  //   setOpen(false);
+  //   setIsSlideShow(false);
+  // };
 
   const handleSlideShow = () => {
     setIsSlideShow(!isSlideShow);
   };
 
   const handleClickNext = () => {
-    for (let i = 0; i < posts.length; i++) {
-      if (posts[i]._id === post_id) {
+    for (let i = 0; i < posts.length; i += 1) {
+      if (posts[i]._id === currentPostId) {
         const postIndex = i;
         if (postIndex < posts.length - 1) {
           setNextPostIndex(postIndex + 1);
-          setPost_id(posts[nextPostIndex]._id);
+          setCurrentPostId(posts[nextPostIndex]._id);
         }
       }
     }
   };
 
   const handleClickPrevious = () => {
-    for (let i = 0; i < posts.length; i++) {
-      if (posts[i]._id === post_id) {
+    for (let i = 0; i < posts.length; i += 1) {
+      if (posts[i]._id === currentPostId) {
         const postIndex = i;
         if (postIndex > 0) {
           setNextPostIndex(postIndex - 1);
-          setPost_id(posts[nextPostIndex]._id);
+          setCurrentPostId(posts[nextPostIndex]._id);
         }
       }
     }
-  };
-
-  const handleShuffle = () => {
-    const rand = Math.floor(Math.random() * posts.length);
-    console.log('rand: ' + rand);
-    setPost_id(posts[rand]._id);
   };
 
   const handleChange = (event) => {
@@ -173,17 +172,19 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
 
   return (
     <div>
-      <Button variant="outlined" width="100%" height="100%" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" width="100%" height="100%" onClick={handleClickOpen}>
         View Details
-      </Button>
-      <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+      </Button> */}
+      <BootstrapDialog
+        onClose={() => setOpen(false)}
+        aria-labelledby="customized-dialog-title"
+        open={isOpen}>
         <BootstrapDialogTitle
           id="customized-dialog-title"
-          onClose={handleClose}
+          onClose={() => setOpen(false)}
           variant="h4"
           color={palette.neutral.dark}
-          fontWeight="500"
-        >
+          fontWeight="500">
           Post Details
         </BootstrapDialogTitle>
         <DialogContent dividers>
@@ -230,7 +231,6 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
               {posts.map(
                 ({
                   _id,
-                  userId,
                   firstName,
                   lastName,
                   userName,
@@ -241,7 +241,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
                   likes,
                   comments
                 }) =>
-                  post_id === _id && (
+                  currentPostId === _id && (
                     <PostWidget
                       key={_id}
                       postId={_id}
@@ -254,7 +254,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false }) => {
                       userPicturePath={userPicturePath}
                       likes={likes}
                       comments={comments}
-                      isDetail={true}
+                      isDetail
                     />
                   )
               )}

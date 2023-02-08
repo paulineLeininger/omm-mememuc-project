@@ -1,4 +1,4 @@
-//mui icon imports
+// mui icon imports
 import {
   EditOutlined,
   DeleteOutlined,
@@ -19,7 +19,7 @@ import {
   Public as PublicIcon,
   Lock as LockIcon
 } from '@mui/icons-material';
-//mui components imports
+// mui components imports
 import {
   Box,
   Divider,
@@ -48,19 +48,18 @@ import FlexBetween from 'components/FlexBetween';
 import Dropzone from 'react-dropzone';
 import UserImage from 'components/UserImage';
 import WidgetWrapper from 'components/WidgetWrapper';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts, setRefs, setImgs } from 'state';
 import Meme from 'components/Meme';
 import exportAsImage from 'helpers/exportAsImage';
+import MemeSelection from './MemeSelection';
 
 const MemeEditorWidget = ({ picturePath }) => {
-  //for post
+  // for post
   const dispatch = useDispatch();
 
-  //state hooks
+  // state hooks
   const [isImage, setIsImage] = useState(false);
   const [isGif, setIsGif] = useState(false);
   const [image, setImage] = useState(null);
@@ -68,23 +67,19 @@ const MemeEditorWidget = ({ picturePath }) => {
   const [desc, setDesc] = useState('');
   const { palette } = useTheme();
 
-  //state
+  // state
   const { _id } = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const refs = useSelector((state) => state.refs);
   const imgs = useSelector((state) => state.imgs);
   const posts = useSelector((state) => state.posts);
 
-  //test
-  //const [isTest, setIsTest] = useState(false);
+  // test
+  // const [isTest, setIsTest] = useState(false);
 
-  //gui
+  // gui
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
-  const mediumMain = palette.neutral.mediumMain;
-  const lightMain = palette.neutral.lightMain;
-  const darkMain = palette.neutral.darkMain;
-  const medium = palette.neutral.medium;
-  const light = palette.neutral.light;
+  const { mediumMain, lightMain, darkMain, medium, light } = palette.neutral;
   const REFERENCE = 'reference';
   const TEMPLATE = 'template';
   const UPLOAD = 'upload';
@@ -97,7 +92,7 @@ const MemeEditorWidget = ({ picturePath }) => {
   const FONT_BANGERS = "'Bangers', cursive";
   const FONT_RUBIK = "'Rubik', sans-serif";
 
-  //for meme display
+  // for meme display
   const [selectedRefPath, setSelectedRefPath] = useState('');
   const [refPaths, setRefPaths] = useState([]);
   const [refMode, setRefMode] = useState(REFERENCE);
@@ -115,7 +110,7 @@ const MemeEditorWidget = ({ picturePath }) => {
   const [fontColor, setFontColor] = useState(FONT_WHITE);
   const [fontBackground, setFontBackground] = useState('transparent');
 
-  //download
+  // download
   const exportRef = useRef();
 
   const handlePost = async () => {
@@ -142,14 +137,13 @@ const MemeEditorWidget = ({ picturePath }) => {
       formData.append('picture', image);
     }
 
-    const response = await fetch(`http://localhost:3001/posts`, {
+    const response = await fetch('http://localhost:3001/posts', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData
     });
-    //then bekomme foto zurück
-    const posts = await response.json();
-    dispatch(setPosts({ posts }));
+    const postsResponse = await response.json();
+    dispatch(setPosts({ postsResponse }));
     setImage(null);
     setDesc('');
   };
@@ -171,19 +165,18 @@ const MemeEditorWidget = ({ picturePath }) => {
     if (selectedRefPath !== '') {
       formData.append('picturePath', selectedRefPath);
     }
-    const response = await fetch(`http://localhost:3001/refs`, {
+    const response = await fetch('http://localhost:3001/refs', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData
     });
-    const refs = await response.json();
-    dispatch(setRefs({ refs }));
+    const refsResponse = await response.json();
+    dispatch(setRefs({ refsResponse }));
     setImage(null);
   };
 
   const getRefs = async () => {
-    console.log('user token: ' + token);
-    const response = await fetch(`http://localhost:3001/refs`, {
+    const response = await fetch('http://localhost:3001/refs', {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -192,7 +185,7 @@ const MemeEditorWidget = ({ picturePath }) => {
   };
 
   const getImgs = async () => {
-    const response = await fetch(`http://localhost:3001/imgs`, {
+    const response = await fetch('http://localhost:3001/imgs', {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` }
     });
@@ -226,23 +219,23 @@ const MemeEditorWidget = ({ picturePath }) => {
     setBottomCaptionPosEd(bottomCaptionPos);
   };
   useEffect(() => {
-    console.log('-----editor: topCaption: x=' + topCaptionPosEd.x + ' y=' + topCaptionPosEd.y);
+    console.log(`-----editor: topCaption: x=${topCaptionPosEd.x} y=${topCaptionPosEd.y}`);
   }, [topCaptionPosEd]);
 
   useEffect(() => {
-    console.log('-----editor: topCaption: x=' + topCaptionPosEd.x + ' y=' + topCaptionPosEd.y);
+    console.log(`-----editor: topCaption: x=${topCaptionPosEd.x} y=${topCaptionPosEd.y}`);
   }, [bottomCaptionPosEd]);
 
   useEffect(() => {
     getRefs();
     getImgs();
-    console.log('imgs: ' + imgs.length);
-    console.log('refs: ' + refs.length);
+    console.log(`imgs: ${imgs.length}`);
+    console.log(`refs: ${refs.length}`);
     getUserPosts();
     setMaxRefIndex(refs.length - 1);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  //reference Mode changed
+  // reference Mode changed
   useEffect(() => {
     switch (refMode) {
       case REFERENCE:
@@ -263,71 +256,67 @@ const MemeEditorWidget = ({ picturePath }) => {
     }
   }, [refMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  //refs changed
+  // refs changed
   useEffect(() => {
     if (refs.length > 0 && refMode === TEMPLATE) {
       setRefPaths(refs.map((element) => element.picturePath));
     }
   }, [refs]);
 
-  //imgs changed
+  // imgs changed
   useEffect(() => {
     if (imgs.length > 0 && refMode === REFERENCE) {
       setRefPaths(imgs.map((element) => element.picturePath));
     }
   }, [imgs]);
 
-  //selectedRefIndex changed
+  // selectedRefIndex changed
   useEffect(() => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
-    //console.log("selected ref index: " + selectedRefIndex);
+    // console.log("selected ref index: " + selectedRefIndex);
   }, [selectedRefIndex]);
 
-  const MemeSelection = (input_imgs) => {
-    return (
-      <Box
-        display="flex"
-        borderRadius="5px"
-        p="0.5rem"
-        sx={{
-          overflow: 'auto',
-          gridColumn: 'span 6',
-          '&::-webkit-scrollbar': { display: 'none' }
-        }}
-      >
-        {input_imgs.map((img, index) => (
-          <FlexBetween>
-            <Button
-              onClick={() => {
-                setSelectedRefPath(img.picturePath);
-                setSelectedRefIndex(index);
-              }}
-              width="70px"
-              height="70px"
-              alt="ref"
-              sx={{
-                color: medium,
-                '&:focus': {
-                  border: 1,
-                  borderColor: palette.primary.dark
-                }
-              }}
-              p="1rem"
-            >
-              <img
-                src={`http://localhost:3001/assets/${img.picturePath}`}
-                style={{ objectFit: 'cover', borderRadius: '5px' }}
-                width="70px"
-                height="70px"
-                alt="ref"
-                p="1rem"
-              />
-            </Button>
-          </FlexBetween>
-        ))}
-      </Box>
-    );
-  };
+  // const MemeSelection = (input_imgs) => (
+  //   <Box
+  //     display="flex"
+  //     borderRadius="5px"
+  //     p="0.5rem"
+  //     sx={{
+  //       overflow: 'auto',
+  //       gridColumn: 'span 6',
+  //       '&::-webkit-scrollbar': { display: 'none' }
+  //     }}>
+  //     {input_imgs.map((img, index) => (
+  //       <FlexBetween key={index}>
+  //         <Button
+  //           onClick={() => {
+  //             setSelectedRefPath(img.picturePath);
+  //             setSelectedRefIndex(index);
+  //           }}
+  //           width="70px"
+  //           height="70px"
+  //           alt="ref"
+  //           sx={{
+  //             color: medium,
+  //             '&:focus': {
+  //               border: 1,
+  //               borderColor: palette.primary.dark
+  //             }
+  //           }}
+  //           p="1rem">
+  //           <img
+  //             src={`http://localhost:3001/assets/${img.picturePath}`}
+  //             style={{ objectFit: 'cover', borderRadius: '5px' }}
+  //             width="70px"
+  //             height="70px"
+  //             alt="ref"
+  //             // p="1rem"
+  //           />
+  //         </Button>
+  //       </FlexBetween>
+  //     ))}
+  //   </Box>
+  // );
 
   return (
     <WidgetWrapper>
@@ -339,8 +328,7 @@ const MemeEditorWidget = ({ picturePath }) => {
             fontWeight="500"
             sx={{
               gridColumn: 'span 6'
-            }}
-          >
+            }}>
             Create your own Meme
           </Typography>
           <Tabs
@@ -351,8 +339,7 @@ const MemeEditorWidget = ({ picturePath }) => {
               gridColumn: 'span 6',
               borderRadius: '0.5rem',
               p: '0.25rem 0rem'
-            }}
-          >
+            }}>
             <Tab
               value={REFERENCE}
               icon={<ImageSearchIcon />}
@@ -417,9 +404,15 @@ const MemeEditorWidget = ({ picturePath }) => {
             />
           </Tabs>
 
-          {refMode === REFERENCE && <>{MemeSelection(imgs)}</>}
-          {refMode === TEMPLATE && <>{MemeSelection(refs)}</>}
-          {refMode === DRAFT && <>{MemeSelection(posts)}</>}
+          {refMode === REFERENCE && (
+            <MemeSelection
+              inputImgs={imgs}
+              setSelectedRefIndex={setSelectedRefIndex}
+              setSelectedRefPath={setSelectedRefPath}
+            />
+          )}
+          {refMode === TEMPLATE && <MemeSelection inputImgs={refs} />}
+          {refMode === DRAFT && <MemeSelection inputImgs={posts} />}
           {refMode === UPLOAD && (
             <Box
               border={`1px solid ${medium}`}
@@ -430,8 +423,7 @@ const MemeEditorWidget = ({ picturePath }) => {
               width="100%"
               sx={{
                 gridColumn: 'span 6'
-              }}
-            >
+              }}>
               <Dropzone
                 acceptedFiles=".jpg,.jpeg,.png,"
                 multiple={false}
@@ -439,16 +431,14 @@ const MemeEditorWidget = ({ picturePath }) => {
                 sx={{
                   gridColumn: 'span 6'
                 }}
-                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
-              >
+                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}>
                 {({ getRootProps, getInputProps }) => (
                   <FlexBetween>
                     <Box
                       {...getRootProps()}
                       border={`2px dashed ${palette.primary.main}`}
                       p="1rem"
-                      sx={{ '&:hover': { cursor: 'pointer' } }}
-                    >
+                      sx={{ '&:hover': { cursor: 'pointer' } }}>
                       <input {...getInputProps()} />
                       {!image ? (
                         <p>Add Image Here</p>
@@ -483,15 +473,14 @@ const MemeEditorWidget = ({ picturePath }) => {
             }}
             sx={{
               gridColumn: 'span 6'
-            }}
-          >
+            }}>
             {selectedRefIndex < 1 && (
               <ArrowBackIosIcon disabled sx={{ color: light, gridColumn: 'span 1' }} />
             )}
             {selectedRefIndex >= 1 && (
               <ArrowBackIosIcon
                 onClick={() => {
-                  console.log('sel ref i: ' + selectedRefIndex);
+                  console.log(`sel ref i: ${selectedRefIndex}`);
                   setSelectedRefIndex(selectedRefIndex - 1);
                 }}
                 sx={{ color: medium, gridColumn: 'span 1' }}
@@ -499,7 +488,7 @@ const MemeEditorWidget = ({ picturePath }) => {
             )}
             <Meme
               childToParent={childCaptionPosToParent}
-              isDraggable={true}
+              isDraggable
               exportRef={exportRef}
               selectedRefPath={selectedRefPath}
               topCaption={topCaption}
@@ -511,7 +500,7 @@ const MemeEditorWidget = ({ picturePath }) => {
               font={font}
               fontSize={fontSize}
               fontColor={fontColor}
-              fontBackground={''}
+              fontBackground=""
               canvasHeight={0}
               canvasWidth={0}
             />
@@ -521,14 +510,14 @@ const MemeEditorWidget = ({ picturePath }) => {
             {selectedRefIndex >= 0 && selectedRefIndex < maxRefIndex && (
               <ArrowForwardIosIcon
                 onClick={() => {
-                  console.log('sel ref i: ' + selectedRefIndex);
+                  console.log(`sel ref i: ${selectedRefIndex}`);
                   setSelectedRefIndex(selectedRefIndex + 1);
                 }}
                 sx={{ color: mediumMain, gridColumn: 'span 1' }}
               />
             )}
           </Box>
-          <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 5' }}></Box>
+          <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 5' }} />
           <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 1' }}>
             <IconButton onClick={() => setIsDraft(!isDraft)}>
               {isDraft && <BookmarkIcon />}
@@ -549,19 +538,16 @@ const MemeEditorWidget = ({ picturePath }) => {
             sx={{
               gridColumn: 'span 6',
               backgroundColor: palette.neutral.light
-            }}
-          >
+            }}>
             <FormControl
               sx={{
                 gridColumn: 'span 2'
-              }}
-            >
+              }}>
               <FormLabel id="demo-row-radio-buttons-group-label">Font Color</FormLabel>
               <RadioGroup
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
+                name="row-radio-buttons-group">
                 <FormControlLabel
                   value={FONT_WHITE}
                   control={
@@ -609,15 +595,13 @@ const MemeEditorWidget = ({ picturePath }) => {
             <FormControl
               sx={{
                 gridColumn: 'span 2'
-              }}
-            >
+              }}>
               <InputLabel>Font</InputLabel>
               <Select
                 value={font}
                 label="Font"
                 sx={{ fontFamily: font }}
-                onChange={handleFontChange}
-              >
+                onChange={handleFontChange}>
                 <MenuItem value={FONT_RUBIK} sx={{ fontFamily: FONT_RUBIK }}>
                   Rubik
                 </MenuItem>
@@ -646,7 +630,7 @@ const MemeEditorWidget = ({ picturePath }) => {
           </Box>
           <InputBase
             placeholder="Top Caption"
-            font-family={font}
+            fontFamily={font}
             onChange={(e) => setTopCaption(e.target.value)}
             sx={{
               width: '100%',
@@ -695,13 +679,12 @@ const MemeEditorWidget = ({ picturePath }) => {
               backgroundColor: palette.primary.main,
               borderRadius: '0.5em',
               gridColumn: 'span 1'
-            }}
-          >
+            }}>
             <PublishIcon />
           </IconButton>
         </Box>
       </FlexBetween>
-      {/*<FlexBetween>
+      {/* <FlexBetween>
            <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
             <ImageOutlined sx={{ color: mediumMain }} />
             <Typography
@@ -729,7 +712,7 @@ const MemeEditorWidget = ({ picturePath }) => {
             </FlexBetween>
             )}
 
-        </FlexBetween>*/}
+        </FlexBetween> */}
     </WidgetWrapper>
   );
 };

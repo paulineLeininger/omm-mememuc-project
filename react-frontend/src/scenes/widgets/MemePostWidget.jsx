@@ -4,15 +4,14 @@ import {
   FavoriteOutlined,
   ShareOutlined
 } from '@mui/icons-material';
-import { Box, Divider, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
-import MemeDialogWidget from './MemeDialogWidget';
-import Meme from 'components/Meme';
+// import MemeDialogWidget from './MemeDialogWidget';
 
 const MemePostWidget = ({
   postId,
@@ -34,7 +33,8 @@ const MemePostWidget = ({
   userPicturePath,
   likes,
   comments,
-  isDetail = false
+  openDetailView
+  // isDetail = false
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -42,10 +42,10 @@ const MemePostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-  const is_Detail = Object.keys(isDetail);
+  // const is_Detail = Object.keys(isDetail);
 
   const { palette } = useTheme();
-  const main = palette.neutral.main;
+  const { main } = palette.neutral;
   const primary = palette.primary.main;
 
   const patchLike = async () => {
@@ -124,7 +124,7 @@ const MemePostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>{/*<ShareOutlined />*/}</IconButton>
+        <IconButton>{/* <ShareOutlined /> */}</IconButton>
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

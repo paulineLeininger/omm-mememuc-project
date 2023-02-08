@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "scenes/navBar";
 import FriendListWidget from "scenes/widgets/FriendListWidget";
 import MemeEditorWidget from "scenes/widgets/MemeEditorWidget";
-import PostsWidget from "scenes/widgets/PostsWidget";
+import PostsWidget from "scenes/widgets/MemeFeedWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 
 const ProfilePage = () => {

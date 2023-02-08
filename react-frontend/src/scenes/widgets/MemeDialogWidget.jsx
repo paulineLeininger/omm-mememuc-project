@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import PostWidget from './PostWidget';
+import PostWidget from './MemePostWidget';
 import { useState } from "react";
 import { setPosts } from "state";
 import { useEffect } from "react";

@@ -1,42 +1,25 @@
+//mui icon imports
 import {
     EditOutlined,
     DeleteOutlined,
-    AttachFileOutlined,
-    GifBoxOutlined,
-    ImageOutlined,
-    MicOutlined,
-    MoreHorizOutlined,
     UploadFile,
     Download,
+    ArrowBackIos as ArrowBackIosIcon,
+    ArrowForwardIos as ArrowForwardIosIcon,
+    Bookmark as BookmarkIcon,
+    BookmarkBorder as BookmarkBorderIcon,
+    Publish as PublishIcon,
+    TextIncrease as TextIncreaseIcon,
+    TextDecrease as TextDecreaseIcon,
+    ImageSearch as ImageSearchIcon,
+    BrowseGallery as BrowseGalleryIcon,
+    Collections as CollectionsIcon,
+    CollectionsBookmark as CollectionsBookmarkIcon,
+    Link as LinkIcon,
+    Public as PublicIcon,
+    Lock as LockIcon
 } from "@mui/icons-material";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import exportAsImage from "helpers/exportAsImage"
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import PublishIcon from '@mui/icons-material/Publish';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import InputLabel from '@mui/material/InputLabel';
-import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
-import TextDecreaseIcon from '@mui/icons-material/TextDecrease';
-import Stack from '@mui/material/Stack';
-import Slider from '@mui/material/Slider';
-import ImageSearchIcon from '@mui/icons-material/ImageSearch';
-import BrowseGalleryIcon from '@mui/icons-material/BrowseGallery';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import LinkIcon from '@mui/icons-material/Link';
-import PublicIcon from '@mui/icons-material/Public';
-import LockIcon from '@mui/icons-material/Lock';
-
+//mui components imports
 import {
     Box,
     Divider,
@@ -47,7 +30,19 @@ import {
     IconButton,
     useMediaQuery,
     Select,
-    MenuItem
+    MenuItem,
+    Tab,
+    Tabs,
+    Stack, 
+    Slider,
+    InputLabel,
+    FormLabel,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    ToggleButton,
+    ToggleButtonGroup
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
@@ -59,6 +54,8 @@ import { useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts, setRefs, setImgs } from "state";
 import Meme from "components/Meme";
+import exportAsImage from "helpers/exportAsImage"
+
 
 const MemeEditorWidget = ({ picturePath }) => {
     //for post
@@ -78,7 +75,6 @@ const MemeEditorWidget = ({ picturePath }) => {
     const refs = useSelector((state) => state.refs);
     const imgs = useSelector((state) => state.imgs);
     const posts = useSelector((state) => state.posts);
-    const buttonRefs = useRef([]);
 
     //test
     //const [isTest, setIsTest] = useState(false);
@@ -264,8 +260,6 @@ const MemeEditorWidget = ({ picturePath }) => {
     useEffect(() => {
     if (refs.length > 0 && refMode===TEMPLATE) {
         setRefPaths(refs.map(element => element.picturePath));
-        //console.log("refpaths " + refPaths.length);
-        //console.log("maxIndex: " + maxRefIndex);
     }
     }, [refs]);
 
@@ -273,23 +267,8 @@ const MemeEditorWidget = ({ picturePath }) => {
     useEffect(() => {
     if (imgs.length > 0 && refMode===REFERENCE) {
         setRefPaths(imgs.map(element => element.picturePath));
-        //console.log("imgpaths " + refPaths.length);
-        //console.log("maxIndex: " + maxRefIndex);
     }
     }, [imgs]);
-
-    //selectedRefPath changed
-    useEffect(() => {
-        if (buttonRefs !== null && buttonRefs.length>0) {
-            if (selectedRefPath !== "") {
-                buttonRefs.current[selectedRefIndex].focus();
-            }
-            else {
-                buttonRefs.current[0].focus();
-            }
-        }
-        //console.log("selected ref path: " + selectedRefPath); 
-    }, [selectedRefPath]);
 
     //selectedRefIndex changed
     useEffect(() => {
@@ -311,7 +290,6 @@ const MemeEditorWidget = ({ picturePath }) => {
                 {input_imgs.map((img, index) => (
                     <FlexBetween>
                         <Button
-                            ref={(el) => (buttonRefs.current[index] = el)}
                             onClick={() => {
                                 setSelectedRefPath(img.picturePath);
                                 setSelectedRefIndex(index);

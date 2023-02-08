@@ -84,13 +84,6 @@ mongoose
         app.listen(PORT, () => console.log(`Server Port: ${PORT}`)); // callback function
 
       /* ADD DATA ONE TIME */
-     /* users.forEach(user => {
-        User.find({ _id: user._id }).then((existingUsers) => {
-          if (existingUsers.length === 0) {
-          User.create(user).catch((error) => console.log(error));
-          }
-        });
-      });*/
 
         //User.insertMany(users);
         //MemePost.insertMany(posts);

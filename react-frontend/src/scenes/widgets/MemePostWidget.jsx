@@ -12,15 +12,23 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
 import MemeDialogWidget from './MemeDialogWidget';
+import Meme from 'components/Meme';
 
-const PostWidget = ({
+const MemePostWidget = ({
   postId,
   postUserId,
   userName,
   name,
-  topCaption,
-  bottomCaption,
-  description,
+  topCaption = "",
+  bottomCaption = "",
+  description = "",
+  topX,
+  topY,
+  bottomX,
+  bottomY,
+  font,
+  fontSize,
+  fontColor,
   location,
   picturePath,
   userPicturePath,
@@ -53,6 +61,12 @@ const PostWidget = ({
     dispatch(setPost({ post: updatedPost }));
   };
 
+  const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
+    console.log("dummy");
+    //setTopCaptionPosEd(topCaptionPos);
+    //setBottomCaptionPosEd(bottomCaptionPos);
+  };
+
   return (
     <WidgetWrapper m="2rem 0" sx={{ backgroundColor: palette.neutral.light }}>
       <Friend
@@ -66,47 +80,33 @@ const PostWidget = ({
         {description}
       </Typography>
       {picturePath && (
-        <img
+        /*<img
           width="100%"
           height="auto"
           alt="post"
           style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
           src={`http://localhost:3001/assets/${picturePath}`}
+        />*/
+        <Meme
+              childToParent={childCaptionPosToParent}
+              isDraggable={false}
+              exportRef={null}
+              selectedRefPath={picturePath}
+              topCaption={topCaption}
+              bottomCaption={bottomCaption}
+              topX={topX}
+              bottomX={bottomX}
+              topY={topY}
+              bottomY={bottomY}
+              font={font}
+              fontSize={fontSize}
+              fontColor={fontColor}
+              fontBackground={''}
+              canvasHeight={0}
+              canvasWidth={0}
         />
       )}
       {!isDetail && <MemeDialogWidget postId={postId} userId={postUserId} />}
-      {/* <Box
-            position="absolute"
-            top={-80}
-            left={0}
-            width="100%"
-            height="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center">
-            <Typography
-            variant="h4"
-                color="white"
-                fontWeight="500"
-                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black' }}>
-                {topCaption}</Typography>
-        </Box>
-        <Box
-            position="absolute"
-            top={80}
-            left={0}
-            width="100%"
-            height="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center">
-            <Typography
-                variant="h4"
-                color="white"
-                fontWeight="500"
-                style={{ textTransform: 'uppercase', fontWeight: 'bold', textShadow: '2px 2px black'}}
-            >{bottomCaption}</Typography>
-        </Box>     */}
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
@@ -141,4 +141,4 @@ const PostWidget = ({
   );
 };
 
-export default PostWidget;
+export default MemePostWidget;

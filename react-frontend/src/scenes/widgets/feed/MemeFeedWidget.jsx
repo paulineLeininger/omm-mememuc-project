@@ -60,6 +60,15 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           lastName,
           userName,
           description,
+          topCaption,
+          bottomCaption,
+          topCaptionX,
+          bottomCaptionX,
+          topCaptionY,
+          bottomCaptionY,
+          font,
+          fontSize,
+          fontColor,
           location,
           picturePath,
           userPicturePath,
@@ -73,6 +82,15 @@ const PostsWidget = ({ userId, isProfile = false }) => {
             userName={userName}
             name={`${firstName} ${lastName}`}
             description={description}
+            topCaption={topCaption}
+            bottomCaption={bottomCaption}
+            topX={topCaptionX}
+            topY={topCaptionY}
+            bottomX={bottomCaptionX}
+            bottomY={bottomCaptionY}
+            font={font}
+            fontSize={fontSize}
+            fontColor={fontColor}
             location={location}
             picturePath={picturePath}
             userPicturePath={userPicturePath}

@@ -55,6 +55,8 @@ const Meme = ({
 }) => {
   const { palette } = useTheme();
   const [outline, setOutline] = useState('white');
+  const [hoverBorder, setHoverBorder] = useState(1);
+  const [recalcFontSize, setRecalcFontSize] = useState(3);
   const [topCaptionPos, setTopCaptionPos] = useState({ x: 0, y: 0 });
   const [bottomCaptionPos, setBottomCaptionPos] = useState({ x: 0, y: 0 });
   const topCaptionRef = useRef();
@@ -62,6 +64,14 @@ const Meme = ({
   const imageRef = useRef();
   const topTextRef = useRef();
   const bottomTextRef = useRef();
+
+  useEffect(() => {
+    if (!isDraggable) {
+      setHoverBorder(0);
+    }
+    const imageWidth = imageRef.current.clientWidth;
+    setRecalcFontSize(fontSize * imageWidth * 0.1);
+  }, []);
 
   useEffect(() => {
     console.log(`topCaption is effect: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
@@ -103,6 +113,16 @@ const Meme = ({
     }
   }, [fontColor]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    const imageWidth = imageRef.current.clientWidth;
+    setRecalcFontSize(fontSize * imageWidth * 0.1);
+  }, [topCaption || bottomCaption]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const imageWidth = imageRef.current.clientWidth;
+    setRecalcFontSize(fontSize * imageWidth * 0.1);
+  }, [fontSize]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div
       ref={exportRef}
@@ -130,15 +150,15 @@ const Meme = ({
           top={`${topY}%`}
           left={`${topX}%`}
           width="fit-content"
-          sx={{ '&:hover': { border: `1px dashed ${palette.primary.main}` } }}>
+          sx={{ '&:hover': { border: `${hoverBorder}px ${palette.primary.main}` } }}>
           <Typography
             ref={topTextRef}
             variant="h4"
             color={fontColor}
             fontWeight="500"
             style={{
-              fontFamily: font,
-              fontSize: `${fontSize / 2}rem`,
+              fontFamily: { font },
+              fontSize: `${recalcFontSize}%`,
               textTransform: 'uppercase',
               fontWeight: 'bold',
               textShadow: `2px 2px ${outline}`,
@@ -156,15 +176,15 @@ const Meme = ({
           top={`${bottomY}%`}
           left={`${bottomX}%`}
           width="fit-content"
-          sx={{ '&:hover': { border: `1px dashed ${palette.primary.main}` } }}>
+          sx={{ '&:hover': { border: `${hoverBorder}px ${palette.primary.main}` } }}>
           <Typography
             ref={bottomTextRef}
             variant="h4"
             color={fontColor}
             fontWeight="500"
             style={{
-              fontSize: `${fontSize / 2}rem`,
-              fontFamily: font,
+              fontSize: `${recalcFontSize}%`,
+              fontFamily: { font },
               textTransform: 'uppercase',
               fontWeight: 'bold',
               textShadow: `2px 2px ${outline}`,

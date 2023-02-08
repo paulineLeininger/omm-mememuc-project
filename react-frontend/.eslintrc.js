@@ -5,6 +5,14 @@ module.exports = {
     jest: true,
     node: true
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        moduleDirectory: ['.', 'node_modules']
+      }
+    }
+  },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -15,10 +23,7 @@ module.exports = {
   overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true
-    }
+    sourceType: 'module'
   },
   plugins: ['react', 'react-hooks'],
   rules: {

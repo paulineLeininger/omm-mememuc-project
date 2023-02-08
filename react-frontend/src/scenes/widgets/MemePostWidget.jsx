@@ -4,14 +4,14 @@ import {
   FavoriteOutlined,
   ShareOutlined
 } from '@mui/icons-material';
-import { Box, Divider, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
-import MemeDialogWidget from './MemeDialogWidget';
+// import MemeDialogWidget from './MemeDialogWidget';
 
 const PostWidget = ({
   postId,
@@ -26,7 +26,8 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
-  isDetail = false
+  openDetailView
+  // isDetail = false
 }) => {
   const [isComments, setIsComments] = useState(false);
   const dispatch = useDispatch();
@@ -34,10 +35,10 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-  const is_Detail = Object.keys(isDetail);
+  // const is_Detail = Object.keys(isDetail);
 
   const { palette } = useTheme();
-  const main = palette.neutral.main;
+  const { main } = palette.neutral;
   const primary = palette.primary.main;
 
   const patchLike = async () => {
@@ -66,15 +67,22 @@ const PostWidget = ({
         {description}
       </Typography>
       {picturePath && (
-        <img
-          width="100%"
-          height="auto"
-          alt="post"
-          style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
-          src={`http://localhost:3001/assets/${picturePath}`}
-        />
+        <Button
+          onClick={() => {
+            openDetailView(postId);
+            console.log('image clicked');
+          }}>
+          <img
+            width="100%"
+            height="auto"
+            alt="post"
+            style={{ borderRadius: '0.75rem', marginTop: '0.75rem' }}
+            src={`http://localhost:3001/assets/${picturePath}`}
+          />
+        </Button>
       )}
-      {!isDetail && <MemeDialogWidget postId={postId} userId={postUserId} />}
+      {/* {!isDetail && <MemeDialogWidget postId={postId} userId={postUserId} />} */}
+
       {/* <Box
             position="absolute"
             top={-80}
@@ -124,7 +132,7 @@ const PostWidget = ({
           </FlexBetween>
         </FlexBetween>
 
-        <IconButton>{/*<ShareOutlined />*/}</IconButton>
+        <IconButton>{/* <ShareOutlined /> */}</IconButton>
       </FlexBetween>
       {isComments && (
         <Box mt="0.5rem">

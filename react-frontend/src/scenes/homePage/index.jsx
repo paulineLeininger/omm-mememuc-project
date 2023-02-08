@@ -19,8 +19,7 @@ const HomePage = () => {
         padding="2rem 6%"
         display={isNonMobileScreens ? 'flex' : 'block'}
         gap="0.5rem"
-        justifyContent="space-between"
-      >
+        justifyContent="space-between">
         <Box flexBasis={isNonMobileScreens ? '20%' : undefined}>
           <UserWidget userId={_id} picturePath={picturePath} />
           <Box padding="2rem 0rem">
@@ -30,15 +29,13 @@ const HomePage = () => {
 
         <Box
           flexBasis={isNonMobileScreens ? '58%' : undefined}
-          mt={isNonMobileScreens ? undefined : '2rem'}
-        >
+          mt={isNonMobileScreens ? undefined : '2rem'}>
           <MemeEditorWidget picturePath={picturePath} />
         </Box>
 
         <Box
           flexBasis={isNonMobileScreens ? '20%' : undefined}
-          mt={isNonMobileScreens ? undefined : '2rem'}
-        >
+          mt={isNonMobileScreens ? undefined : '2rem'}>
           <PostsWidget userId={_id} />
         </Box>
       </Box>

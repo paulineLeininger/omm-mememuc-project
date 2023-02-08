@@ -31,6 +31,7 @@ module.exports = {
     'react/jsx-filename-extension': [0],
     'react/prop-types': 0,
     'react/jsx-props-no-spreading': 'off',
+    'react/no-array-index-key': 'warn',
     'react/function-component-definition': [
       2,
       {
@@ -39,6 +40,7 @@ module.exports = {
       }
     ],
     'no-unused-vars': 'warn',
-    'no-nested-ternary': 'warn'
+    'no-nested-ternary': 'warn',
+    'no-underscore-dangle': 'warn'
   }
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -35,11 +36,11 @@ export const authSlice = createSlice({
       state.posts = action.payload.posts;
     },
     setRefs: (state, action) => {
-      //console.log("setting refs.....")
+      // console.log("setting refs.....")
       state.refs = action.payload.refs;
     },
     setImgs: (state, action) => {
-      //console.log("setting imgs.....")
+      // console.log("setting imgs.....")
       state.imgs = action.payload.imgs;
     },
     setPost: (state, action) => {
@@ -49,13 +50,13 @@ export const authSlice = createSlice({
       });
       state.posts = updatedPosts;
     }
-    /*setRef: (state, action) => {
+    /* setRef: (state, action) => {
         const updatedRefs = state.refs.map((ref) => {
             if (ref._id === action.payload.ref._id) return action.payload.refs;
             return ref;
         });
         state.refs = updatedRefs;
-        },*/
+        }, */
   }
 });
 

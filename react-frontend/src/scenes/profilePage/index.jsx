@@ -37,8 +37,7 @@ const ProfilePage = () => {
         padding="2rem 6%"
         display={isNonMobileScreens ? 'flex' : 'block'}
         gap="2rem"
-        justifyContent="center"
-      >
+        justifyContent="center">
         <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
@@ -46,8 +45,7 @@ const ProfilePage = () => {
         </Box>
         <Box
           flexBasis={isNonMobileScreens ? '42%' : undefined}
-          mt={isNonMobileScreens ? undefined : '2rem'}
-        >
+          mt={isNonMobileScreens ? undefined : '2rem'}>
           <MemeEditorWidget picturePath={user.picturePath} />
           <Box m="2rem 0" />
           <PostsWidget userId={userId} isProfile />

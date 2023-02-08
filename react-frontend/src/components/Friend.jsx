@@ -16,8 +16,7 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
-  const main = palette.neutral.main;
-  const medium = palette.neutral.medium;
+  const { main, medium } = palette.neutral;
 
   const isFriend = friends.find((friend) => friend._id === friendId);
 
@@ -41,8 +40,7 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
           onClick={() => {
             navigate(`/profile/${friendId}`);
             navigate(0);
-          }}
-        >
+          }}>
           <Typography
             color={main}
             variant="h5"
@@ -52,8 +50,7 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
                 color: palette.primary.light,
                 cursor: 'pointer'
               }
-            }}
-          >
+            }}>
             {userName}
           </Typography>
           <Typography pt="0.5rem" color={medium}>
@@ -67,8 +64,7 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
       {_id !== friendId && (
         <IconButton
           onClick={() => patchFriend()}
-          sx={{ backgroundColor: primaryLight, p: '0.6rem' }}
-        >
+          sx={{ backgroundColor: primaryLight, p: '0.6rem' }}>
           {isFriend ? (
             <PersonRemoveOutlined sx={{ color: primaryDark }} />
           ) : (

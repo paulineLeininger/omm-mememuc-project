@@ -51,23 +51,24 @@ const Form = () => {
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
     const formData = new FormData();
-    for (let value in values) {
+
+    values.forEach((value) => {
       formData.append(value, values[value]);
-    }
+    });
+
     formData.append('picturePath', values.picture.name);
 
-    //fetch catch response from api
-    const savedUserResponse = await fetch('http://localhost:3001/auth/register', {
+    // fetch catch response from api
+    fetch('http://localhost:3001/auth/register', {
       method: 'POST',
       body: formData
-    });
-    //save response from server as a savedUser
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm(); //specific to Formik
+    })
+      .then((res) => res.json())
+      .then((savedUser) => {
+        setPageType('login');
+      });
 
-    if (savedUser) {
-      setPageType('login');
-    }
+    onSubmitProps.resetForm(); // specific to Formik
   };
 
   const login = async (values, onSubmitProps) => {
@@ -81,7 +82,7 @@ const Form = () => {
     if (loggedIn) {
       dispatch(
         setLogin({
-          //coming from redux state
+          // coming from redux state
           user: loggedIn.user,
           token: loggedIn.token
         })
@@ -90,7 +91,7 @@ const Form = () => {
     }
   };
 
-  //funtionality that calls backend
+  // funtionality that calls backend
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
@@ -100,8 +101,7 @@ const Form = () => {
     <Formik
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerSchema}
-    >
+      validationSchema={isLogin ? loginSchema : registerSchema}>
       {({
         values,
         errors,
@@ -114,16 +114,15 @@ const Form = () => {
       }) => (
         <form onSubmit={handleSubmit}>
           {' '}
-          {/*form html tag*/}
+          {/* form html tag */}
           <Box
             display="grid"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
-              //any child that is a div
+              // any child that is a div
               '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' }
-            }}
-          >
+            }}>
             {isRegister && (
               <>
                 <TextField
@@ -170,20 +169,17 @@ const Form = () => {
                   gridColumn="span 4"
                   border={`1px solid ${palette.neutral.medium}`}
                   borderRadius="5px"
-                  p="1rem"
-                >
+                  p="1rem">
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) => setFieldValue('picture', acceptedFiles[0])}
-                  >
+                    onDrop={(acceptedFiles) => setFieldValue('picture', acceptedFiles[0])}>
                     {({ getRootProps, getInputProps }) => (
                       <Box
                         {...getRootProps()}
                         border={`2px dashed ${palette.primary.main}`}
                         p="1rem"
-                        sx={{ '&:hover': { cursor: 'pointer' } }}
-                      >
+                        sx={{ '&:hover': { cursor: 'pointer' } }}>
                         <input {...getInputProps()} />
                         {!values.picture ? (
                           <p>Add Picture Here</p>
@@ -233,8 +229,7 @@ const Form = () => {
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
                 '&:hover': { color: palette.primary.main }
-              }}
-            >
+              }}>
               {isLogin ? 'LOGIN' : 'REGISTER'}
             </Button>
             <Typography
@@ -249,8 +244,7 @@ const Form = () => {
                   cursor: 'pointer',
                   color: palette.primary.light
                 }
-              }}
-            >
+              }}>
               {isLogin
                 ? "Don't have an account? Sign Up here."
                 : 'Already have an account? Login here.'}

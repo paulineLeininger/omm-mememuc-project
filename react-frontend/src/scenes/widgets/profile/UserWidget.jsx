@@ -11,8 +11,10 @@ import WidgetWrapper from 'components/WidgetWrapper';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAPI from 'hooks/useAPI';
 
 const UserWidget = ({ userId, picturePath }) => {
+  const { getUser } = useAPI();
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
@@ -22,20 +24,9 @@ const UserWidget = ({ userId, picturePath }) => {
   const { light } = palette.neutral;
   const { main } = palette.neutral;
 
-  // grab user from backend --> API call
-  const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: 'GET',
-      // we specified "Bearer..." in server/middleware/auth.js
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    setUser(data);
-  };
-
   // this is called when you render this component for the first time
   useEffect(() => {
-    getUser();
+    getUser(userId).then((res) => setUser(res));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {

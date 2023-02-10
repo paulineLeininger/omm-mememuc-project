@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 
+// horizontale galerie in meme editor
 const MemeSelection = ({ inputImgs, setSelectedRefIndex, setSelectedRefPath }) => {
   const { palette } = useTheme();
   const { medium } = palette.neutral;

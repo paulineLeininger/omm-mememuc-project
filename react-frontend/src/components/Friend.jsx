@@ -1,5 +1,6 @@
 import { PersonAddOutlined, PersonRemoveOutlined } from '@mui/icons-material';
 import { Box, IconButton, Typography, useTheme } from '@mui/material';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setFriends } from 'state';
@@ -20,12 +21,18 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
 
   const isFriend = friends.find((friend) => friend._id === friendId);
 
+  useEffect(() => {
+    console.log(`id${_id}`);
+    console.log(`friendid${friendId}`);
+    console.log(`isFriend: ${isFriend}`);
+  }, []);
+
   const patchFriend = async () => {
     const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`
+        // 'Content-Type': 'text/plain'
       }
     });
     const data = await response.json();

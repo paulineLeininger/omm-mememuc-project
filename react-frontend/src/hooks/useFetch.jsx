@@ -85,22 +85,28 @@ const useFetch = () => {
     return Promise.reject(new Error('No token found.'));
   };
 
+  /**
+   * patch request to the backend
+   *
+   * @param {string} url the API url that you want to access to patch something
+   * @param {BodyInit} body the body of the patch request (attention: needs to be in JSON format!)
+   * @return {Promise} a promise of the request
+   */
   const patchRequest = (url, body) => {
     if (token !== null) {
       return fetch(url, {
         method: 'PATCH',
-        body,
+        body: body || {},
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       }).then((response) => {
-        if (response.status !== 200) {
-          throw Error(`Error during patch request. Error code: ${response.status}`);
-        } else {
+        if (response.status === 200 || response.status === 201) {
           console.log('SUCCESS');
           return response;
         }
+        throw Error(`Error during patch request. Error code: ${response.status}`);
       });
     }
     return Promise.reject(new Error('No token found.'));

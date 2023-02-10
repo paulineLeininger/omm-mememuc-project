@@ -25,6 +25,8 @@ import MemeImg from "./models/MemeImg.js"
 import { register } from "./controllers/auth.js";
 import { verifyToken } from "./middleware/auth.js";
 import { createPost } from "./controllers/memePosts.js";
+import { createImg } from "./controllers/memeImgs.js";
+
 
 //var app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -47,7 +49,7 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // se
 //from github repo of multer: how you save a file
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "public/assets");
+        cb(null, "public/assets/memes");
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
@@ -62,6 +64,8 @@ const upload = multer({ storage });
 //                          (happens before logic)
 app.post("/auth/register", upload.single("picture"), register);
 app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post("/imgs", verifyToken, upload.single("picture"), createImg);
+
 
 /* ROUTES */
 app.use("/auth", authRoutes);
@@ -86,10 +90,10 @@ mongoose
       /* ADD DATA ONE TIME */
 
         // User.insertMany(users);
-        MemePost.insertMany(posts);
+        //MemePost.insertMany(posts);
         // MemeRef.insertMany(refs);
         // MemeImg.insertMany(imgs);
     })
-  .catch((error) => console.log(`${error} did not connect`));
+    .catch((error) => console.log(`${error} did not connect`));
     
 export default app;

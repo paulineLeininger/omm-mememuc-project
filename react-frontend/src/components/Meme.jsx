@@ -66,7 +66,7 @@ const Meme = ({
   const bottomTextRef = useRef();
 
   useEffect(() => {
-    console.log('is draggable: ' + isDraggable);
+    // console.log('is draggable: ' + isDraggable);
     if (!isDraggable) {
       setHoverBorder(0);
     }

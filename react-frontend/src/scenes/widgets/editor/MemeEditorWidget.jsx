@@ -60,7 +60,7 @@ import MemeSelection from './MemeSelection';
 const MemeEditorWidget = ({ picturePath }) => {
   // for post
   const dispatch = useDispatch();
-  const { postPosts, getPosts, getImgs, getRefs, getUserPosts } = useAPI();
+  const { postPosts, postImg, getPosts, getImgs, getRefs, getUserPosts } = useAPI();
 
   // state hooks
   const [isImage, setIsImage] = useState(false); // vllt besser: mediaType und dann für beides
@@ -148,6 +148,22 @@ const MemeEditorWidget = ({ picturePath }) => {
     });
   };
 
+  const handleImgPost = async () => {
+    const formData = new FormData();
+
+    if (image) {
+      formData.append('picture', image);
+      formData.append('picturePath', `${image.name}`);
+      console.log(`upload image ${image.name}`);
+    }
+    postImg(formData).then(() => {
+      getImgs().then((res) => {
+        dispatch(setImgs({ imgs: res }));
+        setImage(null);
+      });
+    });
+  };
+
   const handleRefPost = async () => {
     const formData = new FormData();
     formData.append('userId', _id);
@@ -192,6 +208,19 @@ const MemeEditorWidget = ({ picturePath }) => {
     setTopCaptionPosEd(topCaptionPos);
     setBottomCaptionPosEd(bottomCaptionPos);
   };
+
+  const handleImageDrop = (acceptedFiles) => {
+    setImage(acceptedFiles[0]);
+    console.log(`accepted files length:  ${acceptedFiles.length}`);
+  };
+
+  useEffect(() => {
+    if (image !== null) {
+      setSelectedRefPath(`memes/${image.name}`);
+      handleImgPost();
+    }
+  }, [image]);
+
   useEffect(() => {
     console.log(`-----editor: topCaption: x=${topCaptionPosEd.x} y=${topCaptionPosEd.y}`);
   }, [topCaptionPosEd]);
@@ -249,6 +278,11 @@ const MemeEditorWidget = ({ picturePath }) => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
     // console.log("selected ref index: " + selectedRefIndex);
   }, [selectedRefIndex]);
+
+  // selectedRefIndex changed
+  useEffect(() => {
+    console.log(`selected image ${selectedRefPath}`);
+  }, [selectedRefPath]);
 
   return (
     <WidgetWrapper>
@@ -363,7 +397,7 @@ const MemeEditorWidget = ({ picturePath }) => {
                 sx={{
                   gridColumn: 'span 6'
                 }}
-                onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}>
+                onDrop={(acceptedFiles) => handleImageDrop(acceptedFiles)}>
                 {({ getRootProps, getInputProps }) => (
                   <FlexBetween>
                     <Box

@@ -17,9 +17,9 @@ const useAPI = () => {
     patchRequest(`http://localhost:3001/posts/${postId}/like`, JSON.stringify({ userId }));
 
   // POST REQUESTS
-  const postPosts = (postData) => postRequest('http://localhost:3001/posts', postData);
-
-  return { getUserPosts, getPosts, patchPostLike, postPosts, getRefs, getImgs, getUser };
+  const postPosts = (postData) => postRequest('http://localhost:3001/posts', postData); // single post
+  const postImg = (imgData) => postRequest('http://localhost:3001/imgs', imgData);
+  return { getUserPosts, getPosts, patchPostLike, postPosts, postImg, getRefs, getImgs, getUser };
 };
 
 export default useAPI;

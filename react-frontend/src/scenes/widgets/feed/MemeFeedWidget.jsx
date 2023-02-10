@@ -7,7 +7,7 @@ import useAPI from 'hooks/useAPI';
 import PostWidget from './MemePostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const MemeFeedWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
@@ -96,4 +96,4 @@ const PostsWidget = ({ userId, isProfile = false }) => {
   );
 };
 
-export default PostsWidget;
+export default MemeFeedWidget;

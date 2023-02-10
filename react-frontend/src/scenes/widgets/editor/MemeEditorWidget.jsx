@@ -53,6 +53,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setPosts, setRefs, setImgs } from 'state';
 import Meme from 'components/Meme';
 import exportAsImage from 'helpers/exportAsImage';
+import convertToImage from 'helpers/convertToImage';
 import useAPI from 'hooks/useAPI';
 import MemeSelection from './MemeSelection';
 
@@ -121,13 +122,15 @@ const MemeEditorWidget = ({ picturePath }) => {
     formData.append('userId', _id);
     formData.append('topCaption', topCaption);
     formData.append('bottomCaption', bottomCaption);
-    // formData.append('font', font);
-    // formData.append('fontSize', fontSize);
-    // formData.append('fontColor', fontColor);
-    // formData.append('topCaptionX', topCaptionPosEd.x);
-    // formData.append('topCaptionY', topCaptionPosEd.y);
-    // formData.append('bottomCaptionX', bottomCaptionPosEd.x);
-    // formData.append('bottomCaptionY', bottomCaptionPosEd.y);
+    formData.append('font', font);
+    formData.append('fontSize', fontSize);
+    formData.append('fontColor', fontColor);
+    formData.append('topCaptionX', topCaptionPosEd.x);
+    formData.append('topCaptionY', topCaptionPosEd.y);
+    formData.append('bottomCaptionX', bottomCaptionPosEd.x);
+    formData.append('bottomCaptionY', bottomCaptionPosEd.y);
+    formData.append('isPrivate', isPrivate);
+    formData.append('isUnlisted', isUnlisted);
 
     if (selectedRefPath !== '') {
       formData.append('picturePath', selectedRefPath);
@@ -153,7 +156,7 @@ const MemeEditorWidget = ({ picturePath }) => {
 
     if (image) {
       formData.append('picture', image);
-      formData.append('picturePath', `${image.name}`);
+      formData.append('picturePath', `memes/${image.name}`);
       console.log(`upload image ${image.name}`);
     }
     postImg(formData).then(() => {
@@ -192,6 +195,13 @@ const MemeEditorWidget = ({ picturePath }) => {
     setImage(null);
   };
 
+  const handleImageDownload = () => {
+    exportAsImage(exportRef.current, selectedRefPath, setImage);
+  };
+  const handleImageConversion = () => {
+    convertToImage(exportRef.current, selectedRefPath, setImage);
+  };
+
   const handleFontChange = (event) => {
     setFont(event.target.value);
   };
@@ -211,11 +221,12 @@ const MemeEditorWidget = ({ picturePath }) => {
 
   const handleImageDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
-    console.log(`accepted files length:  ${acceptedFiles.length}`);
+    console.log(`accepted files :  ${acceptedFiles[0]}`);
   };
 
   useEffect(() => {
     if (image !== null) {
+      console.log(`set image:  ${image.name}`);
       setSelectedRefPath(`memes/${image.name}`);
       handleImgPost();
     }
@@ -489,7 +500,7 @@ const MemeEditorWidget = ({ picturePath }) => {
               {isDraft && <BookmarkIcon />}
               {!isDraft && <BookmarkBorderIcon />}
             </IconButton>
-            <IconButton onClick={() => exportAsImage(exportRef.current, selectedRefPath)}>
+            <IconButton onClick={() => handleImageConversion()}>
               <Download />
             </IconButton>
           </Box>

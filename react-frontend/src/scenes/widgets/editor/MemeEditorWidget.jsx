@@ -118,6 +118,13 @@ const MemeEditorWidget = ({ picturePath }) => {
     formData.append('userId', _id);
     formData.append('topCaption', topCaption);
     formData.append('bottomCaption', bottomCaption);
+    // formData.append('font', font);
+    // formData.append('fontSize', fontSize);
+    // formData.append('fontColor', fontColor);
+    // formData.append('topCaptionX', topCaptionPosEd.x);
+    // formData.append('topCaptionY', topCaptionPosEd.y);
+    // formData.append('bottomCaptionX', bottomCaptionPosEd.x);
+    // formData.append('bottomCaptionY', bottomCaptionPosEd.y);
 
     if (selectedRefPath !== '') {
       formData.append('picturePath', selectedRefPath);

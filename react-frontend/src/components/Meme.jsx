@@ -66,6 +66,7 @@ const Meme = ({
   const bottomTextRef = useRef();
 
   useEffect(() => {
+    console.log('is draggable: ' + isDraggable);
     if (!isDraggable) {
       setHoverBorder(0);
     }
@@ -116,7 +117,12 @@ const Meme = ({
   useEffect(() => {
     const imageWidth = imageRef.current.clientWidth;
     setRecalcFontSize(fontSize * imageWidth * 0.1);
-  }, [topCaption || bottomCaption]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [topCaption]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const imageWidth = imageRef.current.clientWidth;
+    setRecalcFontSize(fontSize * imageWidth * 0.1);
+  }, [bottomCaption]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const imageWidth = imageRef.current.clientWidth;
@@ -137,9 +143,6 @@ const Meme = ({
         src={`http://localhost:3001/assets/${selectedRefPath}`}
         style={{ objectFit: 'contain', width: '100%', borderRadius: '5px' }}
         alt="Select or upload a Reference first..."
-        // sx={{
-        //   gridColumn: 'span 4'
-        // }}
       />
 
       <Draggable onStop={onTopCaptionStop} bounds="parent" disabled={!isDraggable}>
@@ -157,7 +160,7 @@ const Meme = ({
             color={fontColor}
             fontWeight="500"
             style={{
-              fontFamily: { font },
+              fontFamily: font,
               fontSize: `${recalcFontSize}%`,
               textTransform: 'uppercase',
               fontWeight: 'bold',
@@ -184,7 +187,7 @@ const Meme = ({
             fontWeight="500"
             style={{
               fontSize: `${recalcFontSize}%`,
-              fontFamily: { font },
+              fontFamily: font,
               textTransform: 'uppercase',
               fontWeight: 'bold',
               textShadow: `2px 2px ${outline}`,

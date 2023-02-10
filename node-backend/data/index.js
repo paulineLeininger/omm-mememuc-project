@@ -61,9 +61,20 @@ export const users = [
         lastName: "Ralph",
         userName: "ralphy",
         location: "New York, CA",
+        topCaption: "hmmm again",
+        bottomCaption: "whats happening?",
         description: "Hahahaha so funny",
         picturePath: "memes/wonka.jpg",
-        userPicturePath: "p3.jpeg",
+            userPicturePath: "p3.jpeg",
+        font: "'Bangers', cursive",
+        fontColor: "yellow",
+        fontSize: 5,
+        topCaptionX: 20,
+        topCaptionY: 20,
+        bottomCaptionX: 50,
+        bottomCaptionY: 70,
+        isPrivate: false,
+        isUnlisted : false,
         likes: new Map([
         [userIds[0], true],
         ]),
@@ -74,7 +85,8 @@ export const users = [
         "another random comment",
         "yet another random comment",
         ],
-    },
+        },
+        
     ];
 
 export const imgs = [

@@ -4,7 +4,22 @@ import MemePost from "../models/MemePost.js";
 export const createPost = async (req, res) => {
     try {
         //what frontend sends us
-        const { userId, topCaption, bottomCaption, description, picturePath } = req.body;
+        const {
+            userId,
+            topCaption,
+            bottomCaption,
+            description,
+            font,
+            fontSize,
+            fontColor,
+            topCaptionX,
+            topCaptionY,
+            bottomCaptionX,
+            bottomCaptionY,
+            picturePath,
+            isPrivate,
+            isUnlisted
+        } = req.body;
         const user = await User.findById(userId);
         const newPost = new MemePost({
             userId,
@@ -17,6 +32,15 @@ export const createPost = async (req, res) => {
             description,
             picturePath,
             userPicturePath: user.picturePath,
+            font,
+            fontColor,
+            fontSize,
+            topCaptionX,
+            topCaptionY,
+            bottomCaptionX,
+            bottomCaptionY,
+            isPrivate,
+            isUnlisted,
             likes: {},
             comments: []
 

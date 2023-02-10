@@ -26,7 +26,6 @@ const postSchema = mongoose.Schema(
     userPicturePath: String,
     font: String,
     fontColor: String,
-    fontBackground: String,
     fontSize: Number,
     topCaptionX: Number,
     topCaptionY: Number,

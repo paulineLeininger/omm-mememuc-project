@@ -36,11 +36,9 @@ export const authSlice = createSlice({
       state.posts = action.payload.posts;
     },
     setRefs: (state, action) => {
-      // console.log("setting refs.....")
       state.refs = action.payload.refs;
     },
     setImgs: (state, action) => {
-      // console.log("setting imgs.....")
       state.imgs = action.payload.imgs;
     },
     setPost: (state, action) => {

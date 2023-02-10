@@ -86,7 +86,7 @@ mongoose
       /* ADD DATA ONE TIME */
 
         // User.insertMany(users);
-        // MemePost.insertMany(posts);
+        MemePost.insertMany(posts);
         // MemeRef.insertMany(refs);
         // MemeImg.insertMany(imgs);
     })

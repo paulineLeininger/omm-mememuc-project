@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from 'scenes/navBar';
 import FriendListWidget from 'scenes/widgets/friends/FriendListWidget';
 import MemeEditorWidget from 'scenes/widgets/editor/MemeEditorWidget';
-import PostsWidget from 'scenes/widgets/feed/MemeFeedWidget';
+import MemeFeedWidget from 'scenes/widgets/feed/MemeFeedWidget';
 import UserWidget from 'scenes/widgets/profile/UserWidget';
 
 const ProfilePage = () => {
@@ -48,7 +48,7 @@ const ProfilePage = () => {
           mt={isNonMobileScreens ? undefined : '2rem'}>
           <MemeEditorWidget picturePath={user.picturePath} />
           <Box m="2rem 0" />
-          <PostsWidget userId={userId} isProfile />
+          <MemeFeedWidget userId={userId} isProfile />
         </Box>
       </Box>
     </Box>

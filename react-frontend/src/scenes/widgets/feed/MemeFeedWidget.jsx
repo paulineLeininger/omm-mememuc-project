@@ -3,59 +3,65 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 import WidgetWrapper from 'components/WidgetWrapper';
+import useAPI from 'hooks/useAPI';
 import PostWidget from './MemePostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
 
-const PostsWidget = ({ userId, isProfile = false }) => {
+const MemeFeedWidget = ({ isProfile = false }) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
+  const { getPosts, getUserPosts } = useAPI();
 
   const [selectedPost, setSelectedPost] = useState('');
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     console.log(token);
   }, [token]);
 
-  const { palette } = useTheme();
+  // // API call to server/routes/posts.js getFeedPosts
+  // const getPosts = async () => {
+  //   const response = await fetch('http://localhost:3001/posts', {
+  //     method: 'GET',
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   });
+  //   const data = await response.json();
+  //   dispatch(setPosts({ posts: data }));
+  // };
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // API call to server/routes/posts.js getFeedPosts
-  const getPosts = async () => {
-    const response = await fetch('http://localhost:3001/posts', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-  // API call to server/routes/posts.js getUserPosts
-  const getUserPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${userId}/posts`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
+  // // API call to server/routes/posts.js getUserPosts
+  // const getUserPosts = async () => {
+  //   const response = await fetch(`http://localhost:3001/posts/${userId}/posts`, {
+  //     method: 'GET',
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   });
+  //   const data = await response.json();
+  //   dispatch(setPosts({ posts: data }));
+  // };
 
   useEffect(() => {
     if (isProfile) {
-      getUserPosts();
+      getUserPosts(user._id).then((res) => dispatch(setPosts({ posts: res })));
       console.log('get user post............');
     } else {
-      getPosts();
+      getPosts().then((res) => dispatch(setPosts({ posts: res })));
       console.log('get post............');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    console.log(`Posts: ${JSON.stringify(posts)}`);
+  }, [posts]);
+
   return (
     <WidgetWrapper>
       <Typography> Explore popular memes</Typography>
-      {posts.map(
+      {posts?.map(
         ({
           _id,
+          userId,
           firstName,
           lastName,
           userName,
@@ -89,11 +95,11 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         isOpen={isDialogOpen}
         setOpen={setDialogOpen}
         postId={selectedPost}
-        userId={userId}
-        isProfile={false}
+        userId={user._id}
+        isProfile={isProfile}
       />
     </WidgetWrapper>
   );
 };
 
-export default PostsWidget;
+export default MemeFeedWidget;

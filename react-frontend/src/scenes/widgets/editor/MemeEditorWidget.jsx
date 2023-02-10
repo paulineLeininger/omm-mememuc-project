@@ -53,14 +53,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setPosts, setRefs, setImgs } from 'state';
 import Meme from 'components/Meme';
 import exportAsImage from 'helpers/exportAsImage';
+import useAPI from 'hooks/useAPI';
 import MemeSelection from './MemeSelection';
 
+// der gesamte meme editor
 const MemeEditorWidget = ({ picturePath }) => {
   // for post
   const dispatch = useDispatch();
+  const { postPosts, getPosts, getImgs, getRefs, getUserPosts } = useAPI();
 
   // state hooks
-  const [isImage, setIsImage] = useState(false);
+  const [isImage, setIsImage] = useState(false); // vllt besser: mediaType und dann für beides
   const [isGif, setIsGif] = useState(false);
   const [image, setImage] = useState(null);
   const [gif, setGif] = useState(null);
@@ -137,15 +140,13 @@ const MemeEditorWidget = ({ picturePath }) => {
       formData.append('picture', image);
     }
 
-    const response = await fetch('http://localhost:3001/posts', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData
+    postPosts(formData).then(() => {
+      getPosts().then((res) => {
+        dispatch(setPosts({ posts: res }));
+        setImage(null);
+        setDesc('');
+      });
     });
-    const postsResponse = await response.json();
-    dispatch(setPosts({ postsResponse }));
-    setImage(null);
-    setDesc('');
   };
 
   const handleRefPost = async () => {
@@ -171,35 +172,8 @@ const MemeEditorWidget = ({ picturePath }) => {
       body: formData
     });
     const refsResponse = await response.json();
-    dispatch(setRefs({ refsResponse }));
+    dispatch(setRefs({ refs: refsResponse }));
     setImage(null);
-  };
-
-  const getRefs = async () => {
-    const response = await fetch('http://localhost:3001/refs', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setRefs({ refs: data }));
-  };
-
-  const getImgs = async () => {
-    const response = await fetch('http://localhost:3001/imgs', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setImgs({ imgs: data }));
-  };
-
-  const getUserPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${_id}/posts`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
   };
 
   const handleFontChange = (event) => {
@@ -227,11 +201,11 @@ const MemeEditorWidget = ({ picturePath }) => {
   }, [bottomCaptionPosEd]);
 
   useEffect(() => {
-    getRefs();
-    getImgs();
+    getRefs().then((res) => dispatch(setRefs({ refs: res })));
+    getImgs().then((res) => dispatch(setImgs({ imgs: res })));
     console.log(`imgs: ${imgs.length}`);
     console.log(`refs: ${refs.length}`);
-    getUserPosts();
+    getUserPosts(_id).then((res) => dispatch(setPosts({ posts: res })));
     setMaxRefIndex(refs.length - 1);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -275,48 +249,6 @@ const MemeEditorWidget = ({ picturePath }) => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
     // console.log("selected ref index: " + selectedRefIndex);
   }, [selectedRefIndex]);
-
-  // const MemeSelection = (input_imgs) => (
-  //   <Box
-  //     display="flex"
-  //     borderRadius="5px"
-  //     p="0.5rem"
-  //     sx={{
-  //       overflow: 'auto',
-  //       gridColumn: 'span 6',
-  //       '&::-webkit-scrollbar': { display: 'none' }
-  //     }}>
-  //     {input_imgs.map((img, index) => (
-  //       <FlexBetween key={index}>
-  //         <Button
-  //           onClick={() => {
-  //             setSelectedRefPath(img.picturePath);
-  //             setSelectedRefIndex(index);
-  //           }}
-  //           width="70px"
-  //           height="70px"
-  //           alt="ref"
-  //           sx={{
-  //             color: medium,
-  //             '&:focus': {
-  //               border: 1,
-  //               borderColor: palette.primary.dark
-  //             }
-  //           }}
-  //           p="1rem">
-  //           <img
-  //             src={`http://localhost:3001/assets/${img.picturePath}`}
-  //             style={{ objectFit: 'cover', borderRadius: '5px' }}
-  //             width="70px"
-  //             height="70px"
-  //             alt="ref"
-  //             // p="1rem"
-  //           />
-  //         </Button>
-  //       </FlexBetween>
-  //     ))}
-  //   </Box>
-  // );
 
   return (
     <WidgetWrapper>

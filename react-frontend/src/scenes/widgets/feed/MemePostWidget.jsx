@@ -8,9 +8,10 @@ import { Box, Button, Divider, IconButton, Typography, useTheme } from '@mui/mat
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
+import useAPI from 'hooks/useAPI';
 // import MemeDialogWidget from './MemeDialogWidget';
 
 const MemePostWidget = ({
@@ -47,25 +48,22 @@ const MemePostWidget = ({
   const { palette } = useTheme();
   const { main } = palette.neutral;
   const primary = palette.primary.main;
+  const { patchPostLike } = useAPI();
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: loggedInUserId })
-    });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+    console.log(`post id: ${postId}`);
+    patchPostLike(loggedInUserId, postId).then((res) =>
+      dispatch(setPost({ post: JSON.stringify(res) }))
+    );
   };
 
   const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
     console.log("dummy");
-    //setTopCaptionPosEd(topCaptionPos);
-    //setBottomCaptionPosEd(bottomCaptionPos);
   };
+  
+  useEffect(() => {
+    console.log(`postuserid${postUserId}`);
+  }, []);
 
   return (
     <WidgetWrapper m="2rem 0" sx={{ backgroundColor: palette.neutral.light }}>

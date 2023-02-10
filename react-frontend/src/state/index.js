@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import useAPI from 'hooks/useAPI';
 
 const initialState = {
   mode: 'light',

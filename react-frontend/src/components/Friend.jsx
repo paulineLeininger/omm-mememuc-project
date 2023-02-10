@@ -24,14 +24,15 @@ const Friend = ({ friendId, userName, name, subtitle, userPicturePath }) => {
   useEffect(() => {
     console.log(`id${_id}`);
     console.log(`friendid${friendId}`);
+    console.log(`isFriend: ${isFriend}`);
   }, []);
 
   const patchFriend = async () => {
     const response = await fetch(`http://localhost:3001/users/${_id}/${friendId}`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`
+        // 'Content-Type': 'text/plain'
       }
     });
     const data = await response.json();

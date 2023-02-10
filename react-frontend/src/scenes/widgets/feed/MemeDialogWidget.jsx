@@ -21,6 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import LinearProgress from '@mui/material/LinearProgress';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import useAPI from 'hooks/useAPI';
 import PostWidget from './MemePostWidget';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -56,16 +57,11 @@ const BootstrapDialogTitle = (props) => {
     </DialogTitle>
   );
 };
-// BootstrapDialogTitle.propTypes = {
-//   children: PropTypes.node,
-//   onClose: PropTypes.func.isRequired
-// };
 
 const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }) => {
   const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
-  const token = useSelector((state) => state.token);
-  // const [open, setOpen] = React.useState(false);
+
   const [isShuffleChecked, setIsShuffleChecked] = React.useState(true);
   const [nextPostIndex, setNextPostIndex] = React.useState(0);
   const [currentPostId, setCurrentPostId] = React.useState();
@@ -74,36 +70,41 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
 
   const { palette } = useTheme();
 
+  const { getUserPosts, getPosts } = useAPI();
+
   useEffect(() => {
     setCurrentPostId(postId);
   }, [postId]);
 
-  // API call to server/routes/posts.js getFeedPosts
-  const getPosts = async () => {
-    const response = await fetch('http://localhost:3001/posts', {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
-  // API call to server/routes/posts.js getUserPosts
-  const getUserPosts = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${userId}/posts`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await response.json();
-    dispatch(setPosts({ posts: data }));
-  };
+  // // API call to server/routes/posts.js getFeedPosts
+  // const getPosts = () => {
+  //   fetch('http://localhost:3001/posts', {
+  //     method: 'GET',
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => dispatch(setPosts({ posts: data })));
+  //   // const data = await response.json();
+  // };
+
+  // // API call to server/routes/posts.js getUserPosts
+  // const getUserPosts = () => {
+  //   fetch(`http://localhost:3001/posts/${userId}/posts`, {
+  //     method: 'GET',
+  //     headers: { Authorization: `Bearer ${token}` }
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => dispatch(setPosts({ posts: data })));
+  //   // const data = await response.json();
+  // };
 
   useEffect(() => {
     if (isProfile) {
-      getUserPosts();
+      getUserPosts(userId).then((res) => dispatch(setPosts({ posts: res }))); // TODO: DOES NOT WORK
     } else {
-      getPosts();
+      getPosts().then((res) => dispatch(setPosts({ posts: res })));
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleShuffle = () => {
     const rand = Math.floor(Math.random() * posts.length);
@@ -128,15 +129,6 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
       clearInterval(timer);
     }
   }, [isSlideShow]);
-
-  // const handleClickOpen = () => {
-  //   setCurrentPostId(postId);
-  //   setOpen(true);
-  // };
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   setIsSlideShow(false);
-  // };
 
   const handleSlideShow = () => {
     setIsSlideShow(!isSlideShow);
@@ -172,9 +164,6 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
 
   return (
     <div>
-      {/* <Button variant="outlined" width="100%" height="100%" onClick={handleClickOpen}>
-        View Details
-      </Button> */}
       <BootstrapDialog
         onClose={() => setOpen(false)}
         aria-labelledby="customized-dialog-title"

@@ -11,6 +11,7 @@ import WidgetWrapper from 'components/WidgetWrapper';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
+import useAPI from 'hooks/useAPI';
 import Meme from 'components/Meme';
 
 const PostWidget = ({
@@ -47,16 +48,10 @@ const PostWidget = ({
   const { palette } = useTheme();
   const { main } = palette.neutral;
   const primary = palette.primary.main;
+  const { patchPostLike } = useAPI();
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ userId: loggedInUserId })
-    });
+    const response = patchPostLike(loggedInUserId, postId);
     const updatedPost = await response.json();
     dispatch(setPost({ post: updatedPost }));
   };

@@ -50,4 +50,4 @@ const convertToImage = async (element, imageFileName) => {
   return image;
 };
 
-export default exportAsImage;
+export { exportAsImage, convertToImage };

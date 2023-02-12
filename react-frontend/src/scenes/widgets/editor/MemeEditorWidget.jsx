@@ -52,7 +52,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts, setRefs, setImgs } from 'state';
 import Meme from 'components/Meme';
-import exportAsImage from 'helpers/exportAsImage';
+import { exportAsImage } from 'helpers/exportAsImage';
 import useAPI from 'hooks/useAPI';
 import MemeSelection from './MemeSelection';
 

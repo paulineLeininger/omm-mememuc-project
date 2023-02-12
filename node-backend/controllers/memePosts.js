@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import MemePost from "../models/MemePost.js";
 
 export const createPost = async (req, res) => {
+    
     try {
         //what frontend sends us
         const {
@@ -21,6 +22,7 @@ export const createPost = async (req, res) => {
             isUnlisted
         } = req.body;
         const user = await User.findById(userId);
+        console.log(req.body)
         const newPost = new MemePost({
             userId,
             firstName: user.firstName,

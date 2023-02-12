@@ -1,10 +1,10 @@
-import { Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 import WidgetWrapper from 'components/WidgetWrapper';
 import useAPI from 'hooks/useAPI';
-import PostWidget from './MemePostWidget';
+import PostWidget from './PostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
 
 const MemeFeedWidget = ({ isProfile = false }) => {
@@ -13,6 +13,7 @@ const MemeFeedWidget = ({ isProfile = false }) => {
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const { getPosts, getUserPosts } = useAPI();
+  const { palette } = useTheme();
 
   const [selectedPost, setSelectedPost] = useState('');
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -57,58 +58,68 @@ const MemeFeedWidget = ({ isProfile = false }) => {
 
   return (
     <WidgetWrapper>
-      <Typography> Explore popular memes</Typography>
-      {posts?.map(
-        ({
-          _id,
-          userId,
-          firstName,
-          lastName,
-          userName,
-          description,
-          topCaption,
-          bottomCaption,
-          topCaptionX,
-          bottomCaptionX,
-          topCaptionY,
-          bottomCaptionY,
-          font,
-          fontSize,
-          fontColor,
-          location,
-          picturePath,
-          userPicturePath,
-          likes,
-          comments
-        }) => (
-          <PostWidget
-            key={_id}
-            postId={_id}
-            postUserId={userId}
-            userName={userName}
-            name={`${firstName} ${lastName}`}
-            description={description}
-            topCaption={topCaption}
-            bottomCaption={bottomCaption}
-            topX={topCaptionX}
-            topY={topCaptionY}
-            bottomX={bottomCaptionX}
-            bottomY={bottomCaptionY}
-            font={font}
-            fontSize={fontSize}
-            fontColor={fontColor}
-            location={location}
-            picturePath={picturePath}
-            userPicturePath={userPicturePath}
-            likes={likes}
-            comments={comments}
-            openDetailView={(postid) => {
-              setDialogOpen(true);
-              setSelectedPost(postid);
-            }}
-          />
-        )
-      )}
+      <Typography
+        variant="h4"
+        color={palette.neutral.dark}
+        fontWeight="500"
+        sx={{
+          gridColumn: 'span 6'
+        }}>
+        {isProfile ? 'Your recent posts' : 'Explore popular memes'}
+      </Typography>
+      <Box maxWidth="800px">
+        {posts?.map(
+          ({
+            _id,
+            userId,
+            firstName,
+            lastName,
+            userName,
+            description,
+            topCaption,
+            bottomCaption,
+            topCaptionX,
+            bottomCaptionX,
+            topCaptionY,
+            bottomCaptionY,
+            font,
+            fontSize,
+            fontColor,
+            location,
+            picturePath,
+            userPicturePath,
+            likes,
+            comments
+          }) => (
+            <PostWidget
+              key={_id}
+              postId={_id}
+              postUserId={userId}
+              userName={userName}
+              name={`${firstName} ${lastName}`}
+              description={description}
+              topCaption={topCaption}
+              bottomCaption={bottomCaption}
+              topX={topCaptionX}
+              topY={topCaptionY}
+              bottomX={bottomCaptionX}
+              bottomY={bottomCaptionY}
+              font={font}
+              fontSize={fontSize}
+              fontColor={fontColor}
+              location={location}
+              picturePath={picturePath}
+              userPicturePath={userPicturePath}
+              likes={likes}
+              comments={comments}
+              openDetailView={(postid) => {
+                setDialogOpen(true);
+                setSelectedPost(postid);
+              }}
+            />
+          )
+        )}
+      </Box>
       <MemeDialogWidget
         isOpen={isDialogOpen}
         setOpen={setDialogOpen}

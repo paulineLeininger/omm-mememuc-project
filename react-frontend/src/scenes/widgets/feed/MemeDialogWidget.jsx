@@ -22,7 +22,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import useAPI from 'hooks/useAPI';
-import PostWidget from './MemePostWidget';
+import PostWidget from './PostWidget';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {

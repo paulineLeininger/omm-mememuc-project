@@ -90,7 +90,7 @@ const References = () => {
   useEffect(() => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
     // console.log("selected ref index: " + selectedRefIndex);
-  }, [selectedRefIndex]);
+  }, [refPaths]);
 
   // convert data URL to Blob object
   function dataURLtoBlob(dataurl) {

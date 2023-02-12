@@ -80,7 +80,7 @@ const PostWidget = ({
           }}>
           <img
             src={`http://localhost:3001/assets/${picturePath}`}
-            style={{ objectFit: 'contain', width: '100%', borderRadius: '5px' }}
+            style={{ objectFit: 'contain', width: '100%', maxWidth: '400px', borderRadius: '5px' }}
             alt="meme"
           />
           {/* <Meme

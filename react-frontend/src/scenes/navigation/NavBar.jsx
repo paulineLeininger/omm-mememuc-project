@@ -65,7 +65,7 @@ const NavBar = () => {
           }}>
           MemeGenerator
         </Typography>
-        {isNonMobileScreen && (
+        {/* {isNonMobileScreen && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
@@ -76,7 +76,7 @@ const NavBar = () => {
               <Search />
             </IconButton>
           </FlexBetween>
-        )}
+        )} */}
       </FlexBetween>
 
       {/* DESKTOP NAV */}

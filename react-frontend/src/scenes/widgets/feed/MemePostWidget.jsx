@@ -19,16 +19,16 @@ const PostWidget = ({
   postUserId,
   userName,
   name,
-  topCaption,
-  bottomCaption,
+  // topCaption,
+  // bottomCaption,
   description,
-  topX,
-  topY,
-  bottomX,
-  bottomY,
-  font,
-  fontSize,
-  fontColor,
+  // topX,
+  // topY,
+  // bottomX,
+  // bottomY,
+  // font,
+  // fontSize,
+  // fontColor,
   location,
   picturePath,
   userPicturePath,
@@ -60,10 +60,6 @@ const PostWidget = ({
     console.log('dummy');
   };
 
-  useEffect(() => {
-    console.log(`postuserid${postUserId}`);
-  }, []);
-
   return (
     <WidgetWrapper m="2rem 0" sx={{ backgroundColor: palette.neutral.light }}>
       <Friend
@@ -82,7 +78,12 @@ const PostWidget = ({
             openDetailView(postId);
             console.log('image clicked');
           }}>
-          <Meme
+          <img
+            src={`http://localhost:3001/assets/${picturePath}`}
+            style={{ objectFit: 'contain', width: '100%', borderRadius: '5px' }}
+            alt="meme"
+          />
+          {/* <Meme
             childToParent={childCaptionPosToParent}
             isDraggable={false}
             selectedRefPath={picturePath}
@@ -97,7 +98,7 @@ const PostWidget = ({
             fontColor={fontColor}
             canvasHeight={0}
             canvasWidth={0}
-          />
+          /> */}
         </Button>
       )}
       <FlexBetween mt="0.25rem">

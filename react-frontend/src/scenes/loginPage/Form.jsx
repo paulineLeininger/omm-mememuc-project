@@ -61,7 +61,7 @@ const Form = () => {
       formData.append(value, values[value]);
     }
 
-    formData.append('picturePath', values.picture.name);
+    formData.append('pictureName', `${values.picture.name}`);
 
     // fetch catch response from api
     fetch('http://localhost:3001/auth/register', {

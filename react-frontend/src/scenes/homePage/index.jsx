@@ -5,6 +5,7 @@ import MemeEditorWidget from 'scenes/widgets/editor/MemeEditorWidget';
 import MemeFeedWidget from 'scenes/widgets/feed/MemeFeedWidget';
 import NavBar from 'scenes/navBar';
 import FriendListWidget from 'scenes/widgets/friends/FriendListWidget';
+import MemeEditor from 'scenes/widgets/editor/MemeEditor';
 
 const HomePage = () => {
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
@@ -13,7 +14,6 @@ const HomePage = () => {
   return (
     <Box>
       <NavBar />
-
       <Box
         width="100%"
         padding="2rem 6%"
@@ -30,7 +30,8 @@ const HomePage = () => {
         <Box
           flexBasis={isNonMobileScreens ? '58%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}>
-          <MemeEditorWidget picturePath={picturePath} />
+          {/* <MemeEditorWidget picturePath={picturePath} /> */}
+          <MemeEditor />
         </Box>
 
         <Box

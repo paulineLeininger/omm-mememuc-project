@@ -5,10 +5,10 @@ import debug from "debug";
 export const createImg = async (req, res) => {
     try {
         //what frontend sends us
-        const { userId, picturePath } = req.body;
+        const { userId,  pictureName } = req.body;
         //const user = await User.findById(userId);
         const newImg = new MemeImg({
-            picturePath,
+            picturePath: `imgs/${pictureName}`,
         });
         await newImg.save(); //save to mongodb
         

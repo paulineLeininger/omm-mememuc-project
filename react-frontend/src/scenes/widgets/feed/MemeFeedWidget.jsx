@@ -51,9 +51,9 @@ const MemeFeedWidget = ({ isProfile = false }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(() => {
-    console.log(`Posts: ${JSON.stringify(posts)}`);
-  }, [posts]);
+  // useEffect(() => {
+  //   console.log(`Posts: ${JSON.stringify(posts)}`);
+  // }, [posts]);
 
   return (
     <WidgetWrapper>

@@ -11,7 +11,7 @@ export const register = async (req, res) => {
             userName,
             email,
             password,
-            picturePath,
+            pictureName,
             friends,
             location,
         } = req.body;
@@ -28,11 +28,12 @@ export const register = async (req, res) => {
             email,
             password: passwordHash,
             userName,
-            picturePath,
+            picturePath: `profileImgs/${pictureName}`,
             friends,
             location
         });
         const savedUser = await newUser.save();
+        console.log("saved user "+savedUser)
         // function provided by express
         res.status(201).json(savedUser);
     } catch (err) {

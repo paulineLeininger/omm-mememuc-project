@@ -67,7 +67,7 @@ const MemeFeedWidget = ({ isProfile = false }) => {
         }}>
         {isProfile ? 'Your recent posts' : 'Explore popular memes'}
       </Typography>
-      <Box maxWidth="800px">
+      <Box maxWidth="400px" display="flex-row">
         {posts?.map(
           ({
             _id,

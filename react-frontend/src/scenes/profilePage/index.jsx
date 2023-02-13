@@ -38,13 +38,14 @@ const ProfilePage = () => {
         display={isNonMobileScreens ? 'flex' : 'block'}
         gap="2rem"
         justifyContent="center">
-        <Box flexBasis={isNonMobileScreens ? '70%' : undefined}>
-          <MemeFeedWidget isProfile />
-        </Box>
         <Box flexBasis={isNonMobileScreens ? '30%' : undefined}>
           <UserWidget userId={userId} picturePath={user.picturePath} />
           <Box m="2rem 0" />
           <FriendListWidget userId={userId} />
+          <Box m="2rem 0" />
+        </Box>
+        <Box flexBasis={isNonMobileScreens ? '70%' : undefined}>
+          <MemeFeedWidget isProfile />
         </Box>
       </Box>
     </PageWrapper>

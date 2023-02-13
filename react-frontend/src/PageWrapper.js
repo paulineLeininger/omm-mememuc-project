@@ -9,15 +9,18 @@ const PageWrapper = ({ children }) => {
   return (
     <>
       <NavBar />
+
       <Box
         width="100%"
         padding="2rem 6%"
         display={isNonMobileScreens ? 'flex' : 'block'}
         gap="0.5rem"
         justifyContent="space-between">
-        <Box flexBasis={isNonMobileScreens ? '20%' : undefined}>
-          <Navigation />
-        </Box>
+        {isNonMobileScreens && (
+          <Box flexBasis="20%">
+            <Navigation />
+          </Box>
+        )}
 
         <Box
           flexBasis={isNonMobileScreens ? '80%' : undefined}

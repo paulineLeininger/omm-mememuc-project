@@ -61,7 +61,7 @@ const PostWidget = ({
   };
 
   return (
-    <WidgetWrapper m="2rem 0" sx={{ backgroundColor: palette.neutral.light }}>
+    <WidgetWrapper m="1rem 0" sx={{ backgroundColor: palette.neutral.light }}>
       <Friend
         friendId={postUserId}
         userName={userName}
@@ -80,7 +80,7 @@ const PostWidget = ({
           }}>
           <img
             src={`http://localhost:3001/assets/${picturePath}`}
-            style={{ objectFit: 'contain', width: '100%', maxWidth: '400px', borderRadius: '5px' }}
+            style={{ objectFit: 'contain', width: '100%', maxWidth: '300px', borderRadius: '5px' }}
             alt="meme"
           />
           {/* <Meme

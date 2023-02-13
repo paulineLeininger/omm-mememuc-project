@@ -15,7 +15,7 @@ export const createImg = async (req, res) => {
         //this grabs ALL posts
         const post = await MemeImg.find();
 
-        res.status(201).json(post);
+        res.status(201).json({picturePath: newImg.picturePath});
     } catch (err) {
         res.status(409).json({ error: err.message });
     }

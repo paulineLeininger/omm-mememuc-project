@@ -13,12 +13,10 @@ import References from './References';
 import History from './History';
 import Drafts from './Drafts';
 import Templates from './Templates';
-import Upload from './Upload';
 
 const MemeEditor = () => {
   const REFERENCE = 'reference';
   const TEMPLATE = 'template';
-  const UPLOAD = 'upload';
   const HISTORY = 'history';
   const DRAFT = 'draft';
 
@@ -53,7 +51,7 @@ const MemeEditor = () => {
               icon={<ImageSearchIcon />}
               label="references"
               sx={{
-                width: '20%',
+                width: '25%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -66,7 +64,7 @@ const MemeEditor = () => {
               icon={<BrowseGalleryIcon />}
               label="history"
               sx={{
-                width: '20%',
+                width: '25%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -79,7 +77,7 @@ const MemeEditor = () => {
               icon={<CollectionsBookmarkIcon />}
               label="drafts"
               sx={{
-                width: '20%',
+                width: '25%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -92,7 +90,7 @@ const MemeEditor = () => {
               icon={<CollectionsIcon />}
               label="templates"
               sx={{
-                width: '20%',
+                width: '25%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -100,21 +98,10 @@ const MemeEditor = () => {
                 // setMaxRefIndex(refs.length - 1);
               }}
             />
-            <Tab
-              value={UPLOAD}
-              icon={<UploadFile />}
-              label="upload"
-              sx={{
-                width: '20%',
-                gridColumn: 'span 6'
-              }}
-              onClick={() => setRefMode(UPLOAD)}
-            />
           </Tabs>
           {selectedTab === REFERENCE && <References />}
           {selectedTab === HISTORY && <History />}
           {selectedTab === DRAFT && <Drafts />}
-          {selectedTab === UPLOAD && <Upload />}
           {selectedTab === TEMPLATE && <Templates />}
         </Box>
       </FlexBetween>

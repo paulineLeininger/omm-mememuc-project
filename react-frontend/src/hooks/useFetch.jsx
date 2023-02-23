@@ -14,7 +14,7 @@ const useFetch = () => {
 
   const getRequest = (url) => {
     if (token !== null) {
-      console.log(url);
+      // console.log(url);
       return fetch(url, {
         method: 'GET',
         headers: {

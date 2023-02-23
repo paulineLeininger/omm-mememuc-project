@@ -40,9 +40,9 @@ const Navigation = ({ isMobile }) => {
       gap="2rem">
       <Stack spacing={2}>
         {pages.map((page, id) => (
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={2} key={id}>
             {page.icon}
-            <Link to={page.path} key={id}>
+            <Link to={page.path}>
               <Typography
                 variant="h4"
                 color={palette.neutral.dark}

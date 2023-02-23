@@ -5,8 +5,18 @@ import { setImgs, setPosts } from 'state';
 import { exportAsImage, convertToImage } from 'helpers/exportAsImage';
 import UserImage from 'components/UserImage';
 import _uniqueId from 'lodash/uniqueId';
+import {
+  UploadFile,
+  TextIncrease as TextIncreaseIcon,
+  Publish as PublishIcon,
+  TextDecrease as TextDecreaseIcon,
+  Download,
+  ArrowBackIos as ArrowBackIosIcon,
+  ArrowForwardIos as ArrowForwardIosIcon
+} from '@mui/icons-material/';
 
 import {
+  Button,
   IconButton,
   InputBase,
   useTheme,
@@ -23,16 +33,10 @@ import {
   RadioGroup,
   FormLabel
 } from '@mui/material';
-import {
-  TextIncrease as TextIncreaseIcon,
-  Publish as PublishIcon,
-  TextDecrease as TextDecreaseIcon,
-  Download,
-  ArrowBackIos as ArrowBackIosIcon,
-  ArrowForwardIos as ArrowForwardIosIcon
-} from '@mui/icons-material/';
+
 import Meme from 'components/Meme';
 import MemeSelection from './MemeSelection';
+import UploadDialog from './UploadDialog';
 
 const References = () => {
   const FONT_WHITE = 'white';
@@ -52,6 +56,8 @@ const References = () => {
   const [selectedRefIndex, setSelectedRefIndex] = useState(0);
   const [selectedRefPath, setSelectedRefPath] = useState('');
   const [refPaths, setRefPaths] = useState([]);
+
+  const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
   const exportRef = useRef(); // download
 
@@ -90,7 +96,7 @@ const References = () => {
   useEffect(() => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
     // console.log("selected ref index: " + selectedRefIndex);
-  }, [refPaths]);
+  }, [refPaths, selectedRefIndex]);
 
   // convert data URL to Blob object
   function dataURLtoBlob(dataurl) {
@@ -127,6 +133,7 @@ const References = () => {
     }
 
     if (uploadedImage) {
+      // console.log(dataURLtoBlob(uploadedImage));
       formData.append('picture', dataURLtoBlob(uploadedImage), generatedImageName);
     }
 
@@ -148,10 +155,42 @@ const References = () => {
 
   return (
     <>
-      <MemeSelection
-        inputImgs={imgs}
+      <Box
+        // width="70px"
+        height="90px"
+        sx={{
+          gridColumn: 'span 6',
+          display: 'flex',
+          flexDirection: 'row'
+        }}>
+        <Button
+          onClick={() => setOpenUploadDialog(true)}
+          sx={{
+            m: '1rem', // TODO
+            backgroundColor: palette.primary.main,
+            color: palette.primary.contrastText,
+            flexDirection: 'column',
+            '&:focus': {
+              border: 1,
+              borderColor: palette.primary.dark
+            }
+          }}>
+          <UploadFile />
+          Upload
+        </Button>
+
+        <MemeSelection
+          inputImgs={imgs}
+          selectedRefIndex={selectedRefIndex}
+          setSelectedRefIndex={setSelectedRefIndex}
+          setSelectedRefPath={setSelectedRefPath}
+        />
+      </Box>
+
+      <UploadDialog
+        open={openUploadDialog}
+        setOpen={setOpenUploadDialog}
         setSelectedRefIndex={setSelectedRefIndex}
-        setSelectedRefPath={setSelectedRefPath}
       />
 
       <Box

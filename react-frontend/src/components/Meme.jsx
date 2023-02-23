@@ -140,9 +140,11 @@ const Meme = ({
       }}>
       <img
         ref={imageRef}
-        src={`http://localhost:3001/assets/${selectedRefPath}`}
+        src={selectedRefPath && `http://localhost:3001/assets/${selectedRefPath}`}
         style={{ objectFit: 'contain', width: '100%', borderRadius: '5px' }}
         alt="Select or upload a Reference first..."
+        height="340vw"
+        width="auto"
       />
 
       <Draggable onStop={onTopCaptionStop} bounds="parent" disabled={!isDraggable}>

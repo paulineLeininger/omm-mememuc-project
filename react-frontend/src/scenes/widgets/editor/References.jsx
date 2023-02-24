@@ -72,6 +72,7 @@ const References = () => {
   const [desc, setDesc] = useState('');
   const [captions, setCaptions] = useState([
     { text: '', position: { x: 0, y: 0 } },
+    { text: '', position: { x: 0, y: 0 } },
     { text: '', position: { x: 0, y: 0 } }
   ]);
   // const [topCaption, setTopCaption] = useState('');
@@ -149,7 +150,8 @@ const References = () => {
   const handleClear = () => {
     setCaptions([
       { text: '', position: { x: 0, y: 0 } },
-      { text: '', position: { x: 0, y: 0 } }
+      { text: '', position: { x: 0, y: 0 } },
+      { text: '', position: { x: 0, y: 0 } },
     ]);
   };
 
@@ -238,10 +240,13 @@ const References = () => {
           exportRef={exportRef}
           selectedRefPath={selectedRefPath}
           topCaption={captions[0].text}
-          bottomCaption={captions[1].text}
+          middleCaption={captions[1].text}
+          bottomCaption={captions[2].text}
           topX={40}
+          middleX={40}
           bottomX={40}
           topY={10}
+          middleY={40}
           bottomY={70}
           font={font}
           fontSize={fontSize}
@@ -396,7 +401,7 @@ const References = () => {
           backgroundColor: palette.neutral.light,
           borderRadius: '0.5rem',
           padding: '1rem',
-          gridColumn: 'span 3'
+          gridColumn: 'span 2'
         }}
       />
       <InputBase
@@ -409,7 +414,20 @@ const References = () => {
           backgroundColor: palette.neutral.light,
           borderRadius: '0.5rem',
           padding: '1rem',
-          gridColumn: 'span 3'
+          gridColumn: 'span 2'
+        }}
+      />
+      <InputBase
+        placeholder="Text 3"
+        value={captions[2].text}
+        onChange={(e) => updateCaption(e.target.value, 2)}
+        sx={{
+          width: '100%',
+          height: '70%',
+          backgroundColor: palette.neutral.light,
+          borderRadius: '0.5rem',
+          padding: '1rem',
+          gridColumn: 'span 2'
         }}
       />
       <Divider sx={{ margin: '0.25rem 0', gridColumn: 'span 6' }} />

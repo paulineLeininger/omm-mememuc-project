@@ -41,12 +41,15 @@ const Meme = ({
   exportRef,
   selectedRefPath,
   topCaption,
+  middleCaption,
   bottomCaption,
   font,
   fontSize,
   fontColor,
   topX,
   topY,
+  middleX,
+  middleY,
   bottomX,
   bottomY,
   fontBackground,
@@ -58,11 +61,14 @@ const Meme = ({
   const [hoverBorder, setHoverBorder] = useState(1);
   const [recalcFontSize, setRecalcFontSize] = useState(3);
   const [topCaptionPos, setTopCaptionPos] = useState({ x: 0, y: 0 });
+  const [middleCaptionPos, setMiddleCaptionPos] = useState({ x: 0, y: 0 });
   const [bottomCaptionPos, setBottomCaptionPos] = useState({ x: 0, y: 0 });
   const topCaptionRef = useRef();
+  const middleCaptionRef = useRef();
   const bottomCaptionRef = useRef();
   const imageRef = useRef();
   const topTextRef = useRef();
+  const middleTextRef = useRef();
   const bottomTextRef = useRef();
 
   useEffect(() => {
@@ -76,11 +82,15 @@ const Meme = ({
 
   useEffect(() => {
     console.log(`topCaption is effect: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
-    childCaptionPosToParent(topCaptionPos, bottomCaptionPos);
+    childCaptionPosToParent(topCaptionPos, middleCaptionPos, bottomCaptionPos);
   }, [topCaptionPos]);
 
   useEffect(() => {
-    childCaptionPosToParent(topCaptionPos, bottomCaptionPos);
+    childCaptionPosToParent(topCaptionPos, middleCaptionPos, bottomCaptionPos);
+  }, [middleCaptionPos]);
+
+  useEffect(() => {
+    childCaptionPosToParent(topCaptionPos, middleCaptionPos, bottomCaptionPos);
   }, [bottomCaptionPos]);
 
   const onTopCaptionStop = (e, data) => {
@@ -93,6 +103,18 @@ const Meme = ({
       y: Math.floor((newY / imageHeight) * 100)
     });
     console.log(`topCaption is: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
+  };
+
+  const onMiddleCaptionStop = (e, data) => {
+    const newX = data.x + middleCaptionRef.current.offsetLeft;
+    const imageWidth = imageRef.current.clientWidth;
+    const newY = data.y + middleCaptionRef.current.offsetTop;
+    const imageHeight = imageRef.current.clientHeight;
+    setMiddleCaptionPos({
+      x: Math.floor((newX / imageWidth) * 100),
+      y: Math.floor((newY / imageHeight) * 100)
+    });
+    console.log(`middleCaption is: x=${middleCaptionPos.x} y=${middleCaptionPos.y}`);
   };
 
   const onBottomCaptionStop = (e, data) => {
@@ -170,6 +192,32 @@ const Meme = ({
               cursor: 'grab'
             }}>
             {topCaption}
+          </Typography>
+        </Box>
+      </Draggable>
+      <Draggable onStop={onMiddleCaptionStop} bounds="parent" disabled={!isDraggable}>
+        <Box
+          ref={middleCaptionRef}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          position="absolute"
+          top={`${middleY}%`}
+          left={`${middleX}%`}
+          width="fit-content"
+          sx={{ '&:hover': { border: `${hoverBorder}px ${palette.primary.main}` } }}>
+          <Typography
+            ref={middleTextRef}
+            variant="h4"
+            color={fontColor}
+            fontWeight="500"
+            style={{
+              fontFamily: font,
+              fontSize: `${recalcFontSize}%`,
+              textTransform: 'uppercase',
+              fontWeight: 'bold',
+              textShadow: `2px 2px ${outline}`,
+              cursor: 'grab'
+            }}>
+            {middleCaption}
           </Typography>
         </Box>
       </Draggable>

@@ -3,12 +3,7 @@ import { Box, Button, useTheme } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 
 // horizontale galerie in meme editor
-const MemeSelection = ({
-  inputImgs,
-  selectedRefIndex,
-  setSelectedRefIndex,
-  setSelectedRefPath
-}) => {
+const MemeSelection = ({ inputImgs, selectedRefIndex, setSelectedRefIndex }) => {
   const { palette } = useTheme();
   const { medium } = palette.neutral;
   return (
@@ -24,7 +19,6 @@ const MemeSelection = ({
         <FlexBetween key={index}>
           <Button
             onClick={() => {
-              setSelectedRefPath(img.picturePath);
               setSelectedRefIndex(index);
             }}
             width="70px"
@@ -37,7 +31,7 @@ const MemeSelection = ({
             }}
             m="1rem">
             <img
-              src={`http://localhost:3001/assets/${img.picturePath}`}
+              src={`http://localhost:3001/assets/${img}`}
               style={{ objectFit: 'cover', borderRadius: '5px' }}
               width="70px"
               height="70px"

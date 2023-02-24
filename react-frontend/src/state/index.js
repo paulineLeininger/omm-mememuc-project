@@ -51,6 +51,13 @@ export const authSlice = createSlice({
         return post;
       });
       state.posts = updatedPosts;
+    },
+    setDraft: (state, action) => {
+      const updatedDrafts = state.drafts.map((draft) => {
+        if (draft._id === action.payload.draft._id) return action.payload.draft;
+        return draft;
+      });
+      state.drafts = updatedDrafts;
     }
     /* setRef: (state, action) => {
         const updatedRefs = state.refs.map((ref) => {
@@ -71,6 +78,7 @@ export const {
   setPost,
   setRefs,
   setImgs,
+  setDraft,
   setDrafts
 } = authSlice.actions;
 export default authSlice.reducer;

@@ -9,6 +9,7 @@ const useAPI = () => {
   const getUserPosts = (userId) => getRequest(`http://localhost:3001/posts/${userId}/posts`);
   const getPosts = () => getRequest('http://localhost:3001/posts');
   const getRefs = () => getRequest('http://localhost:3001/refs');
+  const getDrafts = (userId) => getRequest(`http://localhost:3001/drafts/${userId}`);
   const getImgs = () => getRequest('http://localhost:3001/imgs');
   const getUser = (userId) => getRequest(`http://localhost:3001/users/${userId}`);
   const getProxyImage = (imageUrl) =>
@@ -20,6 +21,7 @@ const useAPI = () => {
 
   // POST REQUESTS
   const postPosts = (postData) => postRequest('http://localhost:3001/posts', postData); // single post
+  const postDraft = (postData) => postRequest('http://localhost:3001/drafts', postData); // single post
   const postImg = (imgData) => postRequest('http://localhost:3001/imgs', imgData);
   return {
     getUserPosts,
@@ -30,6 +32,8 @@ const useAPI = () => {
     getRefs,
     getImgs,
     getUser,
+    getDrafts,
+    postDraft,
     getProxyImage
   };
 };

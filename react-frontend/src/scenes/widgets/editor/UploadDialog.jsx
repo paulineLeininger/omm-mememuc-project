@@ -19,6 +19,8 @@ import useAPI from 'hooks/useAPI';
 import { useDispatch } from 'react-redux';
 import { setImgs } from 'state';
 import _uniqueId from 'lodash/uniqueId';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { v4 as uuid } from 'uuid';
 import dataURLtoBlob from 'helpers/dataURLtoBlob';
 import Webcam from 'react-webcam';
 
@@ -101,7 +103,7 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
             'image/gif': 'gif'
           };
 
-          const fileName = `${_uniqueId()}.${mimeToExtMap[blob.type]}`;
+          const fileName = `${uuid()}.${mimeToExtMap[blob.type]}`;
           formData.append('picture', blob, fileName);
           formData.append('pictureName', fileName);
           postImg(formData)
@@ -123,7 +125,7 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
   const handleCamPicPost = async () => {
     if (picture) {
       const formData = new FormData();
-      const pictureName = `${_uniqueId()}.jpg`;
+      const pictureName = `${uuid()}.jpg`;
       formData.append('picture', dataURLtoBlob(picture), pictureName);
       formData.append('pictureName', pictureName);
       postImg(formData)

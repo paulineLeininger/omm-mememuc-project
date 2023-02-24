@@ -11,14 +11,14 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import postRoutes from "./routes/memePosts.js";
-import refsRoutes from "./routes/memeRefs.js";
+import draftRoutes from "./routes/memeDrafts.js";
 import imgsRoutes from "./routes/memeImgs.js"
 //data
 import User from "./models/User.js";
 import MemePost from "./models/MemePost.js";
-import { users, posts, refs, imgs } from "./data/index.js";
-import MemeRef from "./models/MemeRef.js";
+import { users, posts, imgs } from "./data/index.js";
 import MemeImg from "./models/MemeImg.js"
+import MemeDraft from "./models/MemeDraft.js";
 
 
 //import single function from controller 
@@ -49,7 +49,7 @@ app.use("/assets", express.static(path.join(__dirname, "public/assets"))); // se
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/posts", postRoutes);
-app.use("/refs", refsRoutes);
+app.use("/drafts", draftRoutes);
 app.use("/imgs", imgsRoutes);
 
 
@@ -69,7 +69,6 @@ mongoose
 
         User.insertMany(users);
         MemePost.insertMany(posts);
-        MemeRef.insertMany(refs);
         MemeImg.insertMany(imgs);
     })
     .catch((error) => console.log(`${error} did not connect`));

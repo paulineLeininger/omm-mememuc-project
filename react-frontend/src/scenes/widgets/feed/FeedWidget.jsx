@@ -75,57 +75,61 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
         {isProfile ? 'Your recent posts' : 'Explore recent memes'}
       </Typography>
       <Box maxWidth="400px" display="flex-row">
-        {posts.slice(0, maxPosts || visibleCount).map(
-          ({
-            _id,
-            userId,
-            firstName,
-            lastName,
-            userName,
-            description,
-            // topCaption,
-            // bottomCaption,
-            // topCaptionX,
-            // bottomCaptionX,
-            // topCaptionY,
-            // bottomCaptionY,
-            font,
-            fontSize,
-            fontColor,
-            location,
-            picturePath,
-            userPicturePath,
-            likes,
-            comments
-          }) => (
-            <PostWidget
-              key={_id}
-              postId={_id}
-              postUserId={userId}
-              userName={userName}
-              name={`${firstName} ${lastName}`}
-              description={description}
-              // topCaption={topCaption}
-              // bottomCaption={bottomCaption}
-              // topX={topCaptionX}
-              // topY={topCaptionY}
-              // bottomX={bottomCaptionX}
-              // bottomY={bottomCaptionY}
-              font={font}
-              fontSize={fontSize}
-              fontColor={fontColor}
-              location={location}
-              picturePath={picturePath}
-              userPicturePath={userPicturePath}
-              likes={likes}
-              comments={comments}
-              openDetailView={(postid) => {
-                setDialogOpen(true);
-                setSelectedPost(postid);
-              }}
-            />
-          )
-        )}
+        {posts
+          .slice(0)
+          .reverse()
+          .slice(0, maxPosts || visibleCount)
+          .map(
+            ({
+              _id,
+              userId,
+              firstName,
+              lastName,
+              userName,
+              description,
+              // topCaption,
+              // bottomCaption,
+              // topCaptionX,
+              // bottomCaptionX,
+              // topCaptionY,
+              // bottomCaptionY,
+              font,
+              fontSize,
+              fontColor,
+              location,
+              picturePath,
+              userPicturePath,
+              likes,
+              comments
+            }) => (
+              <PostWidget
+                key={_id}
+                postId={_id}
+                postUserId={userId}
+                userName={userName}
+                name={`${firstName} ${lastName}`}
+                description={description}
+                // topCaption={topCaption}
+                // bottomCaption={bottomCaption}
+                // topX={topCaptionX}
+                // topY={topCaptionY}
+                // bottomX={bottomCaptionX}
+                // bottomY={bottomCaptionY}
+                font={font}
+                fontSize={fontSize}
+                fontColor={fontColor}
+                location={location}
+                picturePath={picturePath}
+                userPicturePath={userPicturePath}
+                likes={likes}
+                comments={comments}
+                openDetailView={(postid) => {
+                  setDialogOpen(true);
+                  setSelectedPost(postid);
+                }}
+              />
+            )
+          )}
         <div ref={observerRef} />
       </Box>
       <MemeDialogWidget

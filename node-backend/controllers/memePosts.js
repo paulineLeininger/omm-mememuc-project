@@ -7,16 +7,17 @@ export const createPost = async (req, res) => {
         //what frontend sends us
         const {
             userId,
-            topCaption,
-            bottomCaption,
+            // topCaption,
+            // bottomCaption,
+            captions,
             description,
             font,
             fontSize,
             fontColor,
-            topCaptionX,
-            topCaptionY,
-            bottomCaptionX,
-            bottomCaptionY,
+            // topCaptionX,
+            // topCaptionY,
+            // bottomCaptionX,
+            // bottomCaptionY,
             picturePath,
             isPrivate,
             isUnlisted
@@ -29,18 +30,19 @@ export const createPost = async (req, res) => {
             lastName: user.lastName,
             userName: user.userName,
             location: user.location,
-            topCaption,
-            bottomCaption,
+            captions: captions,
+            // topCaption,
+            // bottomCaption,
             description,
             picturePath,
             userPicturePath: user.picturePath,
             font,
             fontColor,
             fontSize,
-            topCaptionX,
-            topCaptionY,
-            bottomCaptionX,
-            bottomCaptionY,
+            // topCaptionX,
+            // topCaptionY,
+            // bottomCaptionX,
+            // bottomCaptionY,
             isPrivate,
             isUnlisted,
             likes: {},
@@ -57,6 +59,8 @@ export const createPost = async (req, res) => {
         res.status(409).json({ error: err.message });
     }
 };
+
+
 
 export const getFeedPosts = async (req, res) => {
     try {        

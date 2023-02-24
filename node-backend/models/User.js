@@ -1,3 +1,5 @@
+/* MONGOOSE POST SCHEMA FOR USER*/
+
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(

@@ -1,3 +1,5 @@
+/* MONGOOSE POST SCHEMA FOR MEMEREF*/
+
 import mongoose from "mongoose";
 const postSchema = mongoose.Schema(
     {

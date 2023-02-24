@@ -10,7 +10,6 @@ const router = express.Router();
 
 
 /* FILE STORAGE --> a lot of configurations are coming from package instructions*/
-
 //from github repo of multer: how you save a file
 
 const storageImgs = multer.diskStorage({

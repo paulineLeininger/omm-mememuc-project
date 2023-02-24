@@ -1,4 +1,4 @@
-//mock data
+//mock data used for test imports
 
 import mongoose from "mongoose";
 

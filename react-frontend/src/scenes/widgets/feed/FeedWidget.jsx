@@ -7,6 +7,7 @@ import useAPI from 'hooks/useAPI';
 import { useParams } from 'react-router-dom';
 import PostWidget from './PostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
+import FlexBetween from 'components/FlexBetween';
 
 const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
   const dispatch = useDispatch();
@@ -64,7 +65,11 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper style={{
+    display: 'flex-row',
+    alignItems: 'center',
+    justifyContent: 'center',
+}}>
       <Typography
         variant="h4"
         color={palette.neutral.dark}
@@ -74,7 +79,7 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
         }}>
         {isProfile ? 'Your recent posts' : 'Explore recent memes'}
       </Typography>
-      <Box maxWidth="400px" display="flex-row">
+      <Box maxWidth="600px" display="flex-row">
         {posts.slice(0, maxPosts || visibleCount).map(
           ({
             _id,
@@ -83,12 +88,6 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
             lastName,
             userName,
             description,
-            // topCaption,
-            // bottomCaption,
-            // topCaptionX,
-            // bottomCaptionX,
-            // topCaptionY,
-            // bottomCaptionY,
             font,
             fontSize,
             fontColor,
@@ -98,32 +97,28 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
             likes,
             comments
           }) => (
-            <PostWidget
-              key={_id}
-              postId={_id}
-              postUserId={userId}
-              userName={userName}
-              name={`${firstName} ${lastName}`}
-              description={description}
-              // topCaption={topCaption}
-              // bottomCaption={bottomCaption}
-              // topX={topCaptionX}
-              // topY={topCaptionY}
-              // bottomX={bottomCaptionX}
-              // bottomY={bottomCaptionY}
-              font={font}
-              fontSize={fontSize}
-              fontColor={fontColor}
-              location={location}
-              picturePath={picturePath}
-              userPicturePath={userPicturePath}
-              likes={likes}
-              comments={comments}
-              openDetailView={(postid) => {
-                setDialogOpen(true);
-                setSelectedPost(postid);
-              }}
-            />
+            <FlexBetween>
+              <PostWidget
+                key={_id}
+                postId={_id}
+                postUserId={userId}
+                userName={userName}
+                name={`${firstName} ${lastName}`}
+                description={description}
+                font={font}
+                fontSize={fontSize}
+                fontColor={fontColor}
+                location={location}
+                picturePath={picturePath}
+                userPicturePath={userPicturePath}
+                likes={likes}
+                comments={comments}
+                openDetailView={(postid) => {
+                  setDialogOpen(true);
+                  setSelectedPost(postid);
+                }}
+                />
+            </FlexBetween>
           )
         )}
         <div ref={observerRef} />

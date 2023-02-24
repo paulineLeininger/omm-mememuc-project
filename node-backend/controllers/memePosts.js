@@ -64,6 +64,8 @@ export const createPost = async (req, res) => {
     }
 };
 
+/* READ */
+
 export const getFeedPosts = async (req, res) => {
     try {        
         //this grabs ALL posts
@@ -85,6 +87,8 @@ export const getUserPosts = async (req, res) => {
     }
 };
 
+/* PATCH */
+
 export const addComment = async (req, res) => {
     try {
         const { id} = req.params;
@@ -105,8 +109,6 @@ export const addComment = async (req, res) => {
         res.status(404).json({ error: err.message });
     }
 }
-
-/* READ */
 
 export const likePost = async (req, res) => {
     try { 

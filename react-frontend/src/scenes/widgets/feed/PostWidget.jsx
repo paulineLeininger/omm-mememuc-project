@@ -2,19 +2,9 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined,
   Send as SendIcon
 } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  TextField,
-  Typography,
-  useTheme,
-  InputBase
-} from '@mui/material';
+import { Box, Button, Divider, IconButton, Typography, useTheme, InputBase } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
@@ -22,7 +12,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPost } from 'state';
 import useAPI from 'hooks/useAPI';
-import Meme from 'components/Meme';
 
 const PostWidget = ({
   postId,
@@ -45,7 +34,6 @@ const PostWidget = ({
   likes,
   comments,
   openDetailView
-  // isDetail = false
 }) => {
   const [isComments, setIsComments] = useState(false);
   const [comment, setComment] = useState('');
@@ -55,15 +43,12 @@ const PostWidget = ({
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
 
-  // const is_Detail = Object.keys(isDetail);
-
   const { palette } = useTheme();
   const { main } = palette.neutral;
   const primary = palette.primary.main;
   const { patchPostLike, patchAddComment } = useAPI();
 
   const patchLike = async () => {
-    // console.log(`post id: ${postId}`);
     patchPostLike(loggedInUserId, postId)
       .then((res) => res.json())
       .then((post) => dispatch(setPost({ post })));
@@ -73,10 +58,6 @@ const PostWidget = ({
     patchAddComment(loggedInUserId, postId, comment)
       .then((res) => res.json())
       .then((post) => dispatch(setPost({ post })));
-  };
-
-  const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
-    console.log('dummy');
   };
 
   useEffect(() => {

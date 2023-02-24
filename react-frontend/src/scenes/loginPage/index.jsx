@@ -2,14 +2,9 @@ import { Box, Typography, useTheme, useMediaQuery } from '@mui/material';
 import Form from './Form';
 
 const LoginPage = () => {
-  const isNonMobileScreen = useMediaQuery('(min-width:1000px)'); // hook into mui
+  const isNonMobileScreen = useMediaQuery('(min-width:1000px)');
 
   const theme = useTheme();
-  // const neutralLight = theme.palette.neutral.light;
-  // const { dark } = theme.palette.neutral;
-  // const background = theme.palette.background.default;
-  // const primaryLight = theme.palette.primary.light;
-  // const { alt } = theme.palette.background;
   return (
     <Box>
       <Box

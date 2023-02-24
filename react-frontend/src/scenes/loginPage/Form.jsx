@@ -52,10 +52,6 @@ const Form = () => {
     // this allows us to send form info with image
     const formData = new FormData();
 
-    // values.forEach((value) => {
-    //   formData.append(value, values[value]);
-    // });
-
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const value in values) {
       formData.append(value, values[value]);

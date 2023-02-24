@@ -1,38 +1,5 @@
-import {
-  EditOutlined,
-  DeleteOutlined,
-  AttachFileOutlined,
-  GifBoxOutlined,
-  ImageOutlined,
-  MicOutlined,
-  MoreHorizOutlined
-} from '@mui/icons-material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import exportAsImage from 'helpers/exportAsImage';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import {
-  Box,
-  Divider,
-  Typography,
-  InputBase,
-  useTheme,
-  Button,
-  IconButton,
-  useMediaQuery,
-  Select,
-  MenuItem
-} from '@mui/material';
-import FlexBetween from 'components/FlexBetween';
-import Dropzone from 'react-dropzone';
-import UserImage from 'components/UserImage';
-import WidgetWrapper from 'components/WidgetWrapper';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPosts, setRefs, setImgs } from 'state';
 import Draggable from 'react-draggable';
 
 const Meme = ({
@@ -51,10 +18,7 @@ const Meme = ({
   middleX,
   middleY,
   bottomX,
-  bottomY,
-  fontBackground,
-  canvasHeight,
-  canvasWidth
+  bottomY
 }) => {
   const { palette } = useTheme();
   const [outline, setOutline] = useState('white');
@@ -72,7 +36,6 @@ const Meme = ({
   const bottomTextRef = useRef();
 
   useEffect(() => {
-    // console.log('is draggable: ' + isDraggable);
     if (!isDraggable) {
       setHoverBorder(0);
     }
@@ -81,7 +44,6 @@ const Meme = ({
   }, []);
 
   useEffect(() => {
-    console.log(`topCaption is effect: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
     childCaptionPosToParent(topCaptionPos, middleCaptionPos, bottomCaptionPos);
   }, [topCaptionPos]);
 
@@ -102,7 +64,6 @@ const Meme = ({
       x: Math.floor((newX / imageWidth) * 100),
       y: Math.floor((newY / imageHeight) * 100)
     });
-    console.log(`topCaption is: x=${topCaptionPos.x} y=${topCaptionPos.y}`);
   };
 
   const onMiddleCaptionStop = (e, data) => {
@@ -114,7 +75,6 @@ const Meme = ({
       x: Math.floor((newX / imageWidth) * 100),
       y: Math.floor((newY / imageHeight) * 100)
     });
-    console.log(`middleCaption is: x=${middleCaptionPos.x} y=${middleCaptionPos.y}`);
   };
 
   const onBottomCaptionStop = (e, data) => {

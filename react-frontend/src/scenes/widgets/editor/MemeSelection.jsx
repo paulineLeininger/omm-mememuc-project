@@ -12,7 +12,6 @@ const MemeSelection = ({ inputImgs, selectedRefIndex, setSelectedRefIndex }) => 
       borderRadius="5px"
       sx={{
         overflow: 'auto',
-        // gridColumn: 'span 6',
         '&::-webkit-scrollbar': { display: 'none' }
       }}>
       {inputImgs.map((img, index) => (
@@ -36,7 +35,6 @@ const MemeSelection = ({ inputImgs, selectedRefIndex, setSelectedRefIndex }) => 
               width="70px"
               height="70px"
               alt="ref"
-              // p="1rem"
             />
           </Button>
         </FlexBetween>

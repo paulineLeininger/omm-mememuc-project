@@ -1,14 +1,8 @@
-import {
-  ManageAccountsOutlined,
-  EditOutlined,
-  LocationOnOutlined,
-  WorkOutlineOutlined
-} from '@mui/icons-material';
+import { ManageAccountsOutlined, LocationOnOutlined } from '@mui/icons-material';
 import { Box, Typography, Divider, useTheme } from '@mui/material';
 import UserImage from 'components/UserImage';
 import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
-import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAPI from 'hooks/useAPI';
@@ -18,10 +12,8 @@ const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const { palette } = useTheme();
   const navigate = useNavigate();
-  const token = useSelector((state) => state.token);
   const { dark } = palette.neutral;
   const { medium } = palette.neutral;
-  const { light } = palette.neutral;
   const { main } = palette.neutral;
 
   // this is called when you render this component for the first time

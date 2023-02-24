@@ -18,13 +18,10 @@ import FlexBetween from 'components/FlexBetween';
 import useAPI from 'hooks/useAPI';
 import { useDispatch } from 'react-redux';
 import { setImgs } from 'state';
-import _uniqueId from 'lodash/uniqueId';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 as uuid } from 'uuid';
 import dataURLtoBlob from 'helpers/dataURLtoBlob';
 import Webcam from 'react-webcam';
-
-const WebcamComponent = () => <Webcam />;
 
 const videoConstraints = {
   width: 500,
@@ -34,12 +31,11 @@ const videoConstraints = {
 
 const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
   const { palette } = useTheme();
-  const { mediumMain, lightMain, darkMain, medium, light } = palette.neutral;
+  const { medium } = palette.neutral;
 
   const dispatch = useDispatch();
   const { postImg, getImgs, getProxyImage } = useAPI();
 
-  const [uploadedImgPath, setUploadedImgPath] = useState(''); // path to image after upload
   const [image, setImage] = useState(null); // image before upload
   const [link, setLink] = useState('');
   const [picture, setPicture] = useState('');
@@ -62,11 +58,6 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
 
   const handleImageDrop = (acceptedFiles) => {
     setImage(acceptedFiles[0]);
-    // setUploadedImgPath(`imgs/${acceptedFiles[0].name}`);
-    // console.log(acceptedFiles[0]);
-    // console.log(`accepted files length:  ${acceptedFiles.length}`);
-
-    // handleImgPost(acceptedFiles[0]);
   };
 
   const handleImgUploadPost = async () => {
@@ -83,7 +74,6 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
           });
           return response.json();
         })
-        .then((json) => setUploadedImgPath(`http://localhost:3001/assets/${json.picturePath}`))
         .then(() => setOpen(false)); // TODO
     }
   };
@@ -115,8 +105,6 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
               });
               return response.json();
             })
-            .then((json) => setUploadedImgPath(`http://localhost:3001/assets/${json.picturePath}`))
-
             .then(() => setOpen(false)); // TODO
         });
     }
@@ -138,7 +126,6 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
           });
           return response.json();
         })
-        .then((json) => setUploadedImgPath(`http://localhost:3001/assets/${json.picturePath}`))
         .then(() => setOpen(false)); // TODO
     }
   };

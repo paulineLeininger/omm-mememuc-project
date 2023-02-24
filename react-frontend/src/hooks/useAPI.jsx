@@ -1,8 +1,6 @@
 import useFetch from './useFetch';
 
 const useAPI = () => {
-  //   const posts = useSelector((state) => state.posts);
-
   const { getRequest, patchRequest, postRequest } = useFetch();
 
   // GET REQUESTS

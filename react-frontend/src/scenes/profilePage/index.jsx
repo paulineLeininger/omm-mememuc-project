@@ -1,15 +1,14 @@
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Navbar from 'scenes/navigation/NavBar';
 import FriendListWidget from 'scenes/widgets/friends/FriendListWidget';
 import MemeFeedWidget from 'scenes/widgets/feed/FeedWidget';
 import UserWidget from 'scenes/widgets/profile/UserWidget';
 import PageWrapper from 'PageWrapper';
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null); // TODO: not needed, state is saved in redux already
+  const [user, setUser] = useState(null);
   const { userId } = useParams();
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery('(min-width:1000px)');
@@ -33,7 +32,6 @@ const ProfilePage = () => {
     <PageWrapper>
       <Box
         width="100%"
-        // padding="2rem 6%"
         display={isNonMobileScreens ? 'flex' : 'block'}
         gap="2rem"
         justifyContent="center">

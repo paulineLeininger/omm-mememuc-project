@@ -5,7 +5,6 @@ import { setPosts } from 'state';
 import WidgetWrapper from 'components/WidgetWrapper';
 import useAPI from 'hooks/useAPI';
 import { useParams, Link } from 'react-router-dom';
-import FlexBetween from 'components/FlexBetween';
 import PostWidget from './PostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
 
@@ -93,12 +92,6 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
               lastName,
               userName,
               description,
-              // topCaption,
-              // bottomCaption,
-              // topCaptionX,
-              // bottomCaptionX,
-              // topCaptionY,
-              // bottomCaptionY,
               font,
               fontSize,
               fontColor,

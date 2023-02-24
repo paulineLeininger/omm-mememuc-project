@@ -3,7 +3,8 @@ import {
     getFeedPosts,
     getUserPosts,
     likePost,
-    createPost
+    createPost,
+    addComment
 } from "../controllers/memePosts.js";
 import { verifyToken } from "../middleware/auth.js";
 import multer from "multer";
@@ -29,5 +30,6 @@ router.post("/", verifyToken, multer({ storage: storagePosts }).single("picture"
 
 /* UPDATE */
 router.patch("/:id/like", verifyToken, likePost);
+router.patch("/:id/comment", verifyToken, addComment);
 
 export default router;

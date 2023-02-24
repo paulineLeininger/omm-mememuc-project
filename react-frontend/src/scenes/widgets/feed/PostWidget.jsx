@@ -2,9 +2,10 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  ShareOutlined
+  ShareOutlined,
+  Send as SendIcon
 } from '@mui/icons-material';
-import { Box, Button, Divider, IconButton, Typography, useTheme } from '@mui/material';
+import { Box, Button, Divider, IconButton, TextField, Typography, useTheme, InputBase } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
@@ -38,6 +39,7 @@ const PostWidget = ({
   // isDetail = false
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [comment, setComment] = useState("");
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -49,7 +51,7 @@ const PostWidget = ({
   const { palette } = useTheme();
   const { main } = palette.neutral;
   const primary = palette.primary.main;
-  const { patchPostLike } = useAPI();
+  const { patchPostLike, patchAddComment } = useAPI();
 
   const patchLike = async () => {
     // console.log(`post id: ${postId}`);
@@ -58,6 +60,12 @@ const PostWidget = ({
       .then((post) => dispatch(setPost({ post })));
   };
 
+  const patchComment = async () => {
+    patchAddComment(loggedInUserId, postId, comment)
+      .then((res) => res.json())
+      .then((post) => dispatch(setPost({ post })));
+};
+
   const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
     console.log('dummy');
   };
@@ -65,6 +73,10 @@ const PostWidget = ({
   useEffect(() => {
     console.log('like update');
   }, [likes]);
+
+  useEffect(() => {
+    console.log('comment added');
+  }, [comment]);
 
   return (
     <WidgetWrapper m="1rem 0" sx={{ backgroundColor: palette.neutral.light }}>
@@ -111,15 +123,31 @@ const PostWidget = ({
         <IconButton>{/* <ShareOutlined /> */}</IconButton>
       </FlexBetween>
       {isComments && (
+        <>
         <Box mt="0.5rem">
           {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`}>
+            <Box key={`${name}-${i}`} sx={{gridColumn: 'span 6'}}>
               <Divider />
               <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>{comment}</Typography>
             </Box>
           ))}
           <Divider />
-        </Box>
+          </Box>
+          <FlexBetween>
+              <InputBase
+                  placeholder="Comment"
+                  onChange={(e) => setComment(e.target.value)}
+                  sx={{
+                    backgroundColor: palette.neutral.light,
+                    borderRadius: '0.5rem',
+                    padding: '1rem',
+                    gridColumn: 'span 5'
+                  }}
+              />
+            <IconButton sx={{ gridColumn: 'span 1' }} onClick={patchComment}> <SendIcon /> </IconButton>
+          </FlexBetween>
+        
+          </>
       )}
     </WidgetWrapper>
   );

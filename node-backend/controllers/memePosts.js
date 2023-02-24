@@ -79,6 +79,27 @@ export const getUserPosts = async (req, res) => {
     }
 };
 
+export const addComment = async (req, res) => {
+    try {
+        const { id} = req.params;
+        const { userId, comment } = req.body;
+        const post = await MemePost.findById(id);
+        const comments = post.comments;
+        const user = await User.findById(userId);
+        const userName = user.userName;
+        comments.push(`${userName}: ${comment}`);
+        const updatedPost = await MemePost.findByIdAndUpdate(
+            id,
+            { comments: post.comments },
+            { new: true }
+        );
+        res.status(200).json(updatedPost);
+    }
+    catch (err) {
+        res.status(404).json({ error: err.message });
+    }
+}
+
 /* READ */
 
 export const likePost = async (req, res) => {

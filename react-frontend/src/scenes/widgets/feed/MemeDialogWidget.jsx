@@ -66,10 +66,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
   const [isShuffleChecked, setIsShuffleChecked] = React.useState(true);
   // const [nextPostIndex, setNextPostIndex] = React.useState(0);
   const [currentPostId, setCurrentPostId] = React.useState(postId);
-  const [progress, setProgress] = React.useState(0);
-  const [isSlideShow, setIsSlideShow] = React.useState(false);
   const urlLocation = useLocation();
-  const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const { palette } = useTheme();
 
@@ -105,38 +102,14 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
     setCurrentPostId(posts[rand]._id);
   };
 
-  useEffect(() => {
-    if (isSlideShow) {
-      const timer = setInterval(() => {
-        setProgress((oldProgress) => {
-          if (oldProgress === 100) {
-            console.log('timer finished');
-            handleShuffle();
-            return 0;
-          }
-          const diff = Math.random() * 10;
-          return Math.min(oldProgress + diff, 100);
-        });
-      }, 300);
-
-      clearInterval(timer);
-    }
-  }, [isSlideShow]);
-
-  const handleSlideShow = () => {
-    setIsSlideShow(!isSlideShow);
-  };
-
   const handleClickNext = () => {
     for (let i = 0; i < posts.length; i += 1) {
       if (posts[i]._id === currentPostId) {
         const postIndex = i;
         if (postIndex < posts.length - 1) {
           setCurrentPostId(posts[postIndex + 1]._id);
-          // setNextPostIndex(postIndex + 1);
         } else {
           setCurrentPostId(posts[0]._id);
-          // setNextPostIndex(0);
         }
       }
     }
@@ -148,10 +121,8 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
         const postIndex = i;
         if (postIndex > 0) {
           setCurrentPostId(posts[postIndex - 1]._id);
-          // setNextPostIndex(postIndex - 1);
         } else {
           setCurrentPostId(posts[posts.length - 1]._id);
-          // setNextPostIndex(posts.length - 1);
         }
       }
     }
@@ -159,7 +130,6 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
 
   const handleShuffleChange = (event) => {
     setIsShuffleChecked(event.target.checked);
-    // console.log(event.target.checked);
   };
 
   return (
@@ -191,7 +161,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
             <FlexBetween>
               <DialogActions>
                 <>
-                  {isShuffleChecked && !isSlideShow && (
+                  {isShuffleChecked && (
                     <ArrowBackIosIcon
                       onClick={handleShuffle}
                       sx={{
@@ -200,7 +170,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
                       }}
                     />
                   )}
-                  {!isShuffleChecked && !isSlideShow && (
+                  {!isShuffleChecked && (
                     <ArrowBackIosIcon
                       onClick={handleClickPrevious}
                       sx={{
@@ -209,14 +179,6 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
                       }}
                     />
                   )}
-                  {/* {(nextPostIndex === 0 && !isShuffleChecked) ||
-                    (isSlideShow && (
-                      <ArrowBackIosIcon
-                        sx={{
-                          color: palette.neutral.light
-                        }}
-                      />
-                    ))} */}
                 </>
               </DialogActions>
               {posts.map(
@@ -251,7 +213,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
               )}
               <DialogActions>
                 <>
-                  {isShuffleChecked && !isSlideShow && (
+                  {isShuffleChecked && (
                     <ArrowForwardIosIcon
                       onClick={handleShuffle}
                       sx={{
@@ -260,7 +222,7 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
                       }}
                     />
                   )}
-                  {!isShuffleChecked && !isSlideShow && (
+                  {!isShuffleChecked && (
                     <ArrowForwardIosIcon
                       onClick={handleClickNext}
                       sx={{
@@ -269,30 +231,9 @@ const MemeDialogWidget = ({ postId, userId, isProfile = false, isOpen, setOpen }
                       }}
                     />
                   )}
-                  {/* {(nextPostIndex === posts.length - 1 && !isShuffleChecked) ||
-                    (isSlideShow && (
-                      <ArrowForwardIosIcon
-                        sx={{
-                          color: palette.neutral.light
-                        }}
-                      />
-                    ))} */}
                 </>
               </DialogActions>
             </FlexBetween>
-            {/* <Box display="grid" gridTemplateColumns="repeat(6, minmax(0, 1fr))">
-              <DialogActions>
-                <Button sx={{ gridColumn: 'span 1' }} onClick={handleSlideShow}>
-                  {!isSlideShow && <PlayCircleIcon />}
-                  {isSlideShow && <PauseCircleIcon />}
-                </Button>
-              </DialogActions>
-              <LinearProgress
-                sx={{ gridColumn: 'span 5' }}
-                variant="determinate"
-                value={progress}
-              />
-            </Box> */}
           </Box>
         </DialogContent>
       </BootstrapDialog>

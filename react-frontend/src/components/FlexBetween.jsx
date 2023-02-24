@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { flexbox, styled } from '@mui/system';
+import { styled } from '@mui/system';
 
 // allows us to reuse these css properties in different areas
 const FlexBetween = styled(Box)({

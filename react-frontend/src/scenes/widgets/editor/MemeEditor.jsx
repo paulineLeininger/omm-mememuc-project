@@ -31,7 +31,6 @@ import {
   Download,
   ArrowBackIos as ArrowBackIosIcon,
   ArrowForwardIos as ArrowForwardIosIcon,
-  BookmarkBorder as BookmarkBorderIcon,
   Bookmark as BookmarkIcon,
   Delete as DeleteIcon
 } from '@mui/icons-material';
@@ -41,7 +40,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setImgs, setPosts, setDrafts } from 'state';
 import { exportAsImage, convertToImage } from 'helpers/exportAsImage';
 import UserImage from 'components/UserImage';
-import _uniqueId from 'lodash/uniqueId';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { v4 as uuid } from 'uuid';
 import dataURLtoBlob from 'helpers/dataURLtoBlob';
@@ -95,7 +93,6 @@ const MemeEditor = () => {
   const [font, setFont] = useState(FONT_ANTON);
   const [fontSize, setFontSize] = useState(5);
   const [fontColor, setFontColor] = useState(FONT_WHITE);
-  // const [fontBackground, setFontBackground] = useState('transparent');
 
   const [uploadedImage, setUploadedImage] = useState();
   const [uploadedDraft, setUploadedDraft] = useState();
@@ -289,11 +286,8 @@ const MemeEditor = () => {
               }}
             />
           </Tabs>
-          {/* {selectedTab === REFERENCE && <References />} */}
-          {/* {selectedTab === DRAFT && <Drafts />} */}
           <>
             <Box
-              // width="70px"
               height="90px"
               sx={{
                 gridColumn: 'span 6',
@@ -304,7 +298,7 @@ const MemeEditor = () => {
                 <Button
                   onClick={() => setOpenUploadDialog(true)}
                   sx={{
-                    m: '1rem', // TODO
+                    m: '1rem',
                     backgroundColor: palette.primary.main,
                     color: palette.primary.contrastText,
                     flexDirection: 'column',
@@ -361,7 +355,6 @@ const MemeEditor = () => {
               {selectedRefIndex >= 1 && (
                 <ArrowBackIosIcon
                   onClick={() => {
-                    // console.log(`sel ref i: ${selectedRefIndex}`);
                     setSelectedRefIndex(selectedRefIndex - 1);
                   }}
                   sx={{ color: medium, gridColumn: 'span 1' }}

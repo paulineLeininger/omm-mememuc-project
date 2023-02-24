@@ -59,13 +59,6 @@ export const authSlice = createSlice({
       });
       state.drafts = updatedDrafts;
     }
-    /* setRef: (state, action) => {
-        const updatedRefs = state.refs.map((ref) => {
-            if (ref._id === action.payload.ref._id) return action.payload.refs;
-            return ref;
-        });
-        state.refs = updatedRefs;
-        }, */
   }
 });
 

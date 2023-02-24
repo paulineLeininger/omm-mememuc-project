@@ -19,7 +19,10 @@ const useAPI = () => {
   const patchPostLike = (userId, postId) =>
     patchRequest(`http://localhost:3001/posts/${postId}/like`, JSON.stringify({ userId }));
   const patchAddComment = (userId, postId, comment) =>
-    patchRequest(`http://localhost:3001/posts/${postId}/comment`, JSON.stringify({ userId, comment}));
+    patchRequest(
+      `http://localhost:3001/posts/${postId}/comment`,
+      JSON.stringify({ userId, comment })
+    );
 
   // POST REQUESTS
   const postPosts = (postData) => postRequest('http://localhost:3001/posts', postData); // single post

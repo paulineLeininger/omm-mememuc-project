@@ -5,7 +5,16 @@ import {
   ShareOutlined,
   Send as SendIcon
 } from '@mui/icons-material';
-import { Box, Button, Divider, IconButton, TextField, Typography, useTheme, InputBase } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+  useTheme,
+  InputBase
+} from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
 import Friend from 'components/Friend';
 import WidgetWrapper from 'components/WidgetWrapper';
@@ -39,7 +48,7 @@ const PostWidget = ({
   // isDetail = false
 }) => {
   const [isComments, setIsComments] = useState(false);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
   const loggedInUserId = useSelector((state) => state.user._id);
@@ -64,7 +73,7 @@ const PostWidget = ({
     patchAddComment(loggedInUserId, postId, comment)
       .then((res) => res.json())
       .then((post) => dispatch(setPost({ post })));
-};
+  };
 
   const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
     console.log('dummy');
@@ -79,7 +88,7 @@ const PostWidget = ({
   }, [comment]);
 
   return (
-    <WidgetWrapper m="1rem 0" sx={{ backgroundColor: palette.neutral.light}}>
+    <WidgetWrapper m="1rem 0" sx={{ backgroundColor: palette.neutral.light }}>
       <Friend
         friendId={postUserId}
         userName={userName}
@@ -119,34 +128,35 @@ const PostWidget = ({
             <Typography>{comments.length}</Typography>
           </FlexBetween>
         </FlexBetween>
-
       </FlexBetween>
       {isComments && (
         <>
-        <Box mt="0.5rem">
-          {comments.map((comment, i) => (
-            <Box key={`${name}-${i}`} sx={{gridColumn: 'span 6'}}>
-              <Divider />
-              <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>{comment}</Typography>
-            </Box>
-          ))}
-          <Divider />
+          <Box mt="0.5rem">
+            {comments.map((comm, i) => (
+              <Box key={`${name}-${i}`} sx={{ gridColumn: 'span 6' }}>
+                <Divider />
+                <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>{comm}</Typography>
+              </Box>
+            ))}
+            <Divider />
           </Box>
           <FlexBetween>
-              <InputBase
-                  placeholder="Comment"
-                  onChange={(e) => setComment(e.target.value)}
-                  sx={{
-                    backgroundColor: palette.neutral.light,
-                    borderRadius: '0.5rem',
-                    padding: '1rem',
-                    gridColumn: 'span 5'
-                  }}
-              />
-            <IconButton sx={{ gridColumn: 'span 1' }} onClick={patchComment}> <SendIcon /> </IconButton>
+            <InputBase
+              placeholder="Comment"
+              onChange={(e) => setComment(e.target.value)}
+              sx={{
+                backgroundColor: palette.neutral.light,
+                borderRadius: '0.5rem',
+                padding: '1rem',
+                gridColumn: 'span 5'
+              }}
+            />
+            <IconButton sx={{ gridColumn: 'span 1' }} onClick={patchComment}>
+              {' '}
+              <SendIcon />{' '}
+            </IconButton>
           </FlexBetween>
-        
-          </>
+        </>
       )}
     </WidgetWrapper>
   );

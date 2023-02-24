@@ -74,7 +74,6 @@ const UserWidget = ({ userId, picturePath }) => {
           <Typography color={medium}>{location}</Typography>
         </Box>
       </Box>
-
     </WidgetWrapper>
   );
 };

@@ -1,13 +1,13 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Button, Typography, useTheme } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 import WidgetWrapper from 'components/WidgetWrapper';
 import useAPI from 'hooks/useAPI';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import FlexBetween from 'components/FlexBetween';
 import PostWidget from './PostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
-import FlexBetween from 'components/FlexBetween';
 
 const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
   const dispatch = useDispatch();
@@ -65,11 +65,12 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <WidgetWrapper style={{
-    display: 'flex-row',
-    alignItems: 'center',
-    justifyContent: 'center',
-}}>
+    <WidgetWrapper
+      style={{
+        display: 'flex-row',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
       <Typography
         variant="h4"
         color={palette.neutral.dark}
@@ -126,10 +127,15 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
                   setDialogOpen(true);
                   setSelectedPost(postid);
                 }}
-                />
-          )
-        )}
+              />
+            )
+          )}
         <div ref={observerRef} />
+        {maxPosts && (
+          <Link to="/feed">
+            <Button> Show More </Button>
+          </Link>
+        )}
       </Box>
       <MemeDialogWidget
         isOpen={isDialogOpen}

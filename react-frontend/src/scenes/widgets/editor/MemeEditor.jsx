@@ -47,8 +47,6 @@ import { v4 as uuid } from 'uuid';
 import dataURLtoBlob from 'helpers/dataURLtoBlob';
 
 import Meme from 'components/Meme';
-import Drafts from './Drafts';
-import References from './References';
 import MemeSelection from './MemeSelection';
 import UploadDialog from './UploadDialog';
 
@@ -65,23 +63,20 @@ const MemeEditor = () => {
   const FONT_BANGERS = "'Bangers', cursive";
   const FONT_RUBIK = "'Rubik', sans-serif";
 
-  const token = useSelector((state) => state.token);
-
   const dispatch = useDispatch();
   const { getImgs, postPosts, getPosts, getDrafts, postDraft } = useAPI(); // TODO should get Refs
   const imgs = useSelector((state) => state.imgs); // TODO should get references not images
   const user = useSelector((state) => state.user);
   const drafts = useSelector((state) => state.drafts);
 
+  const [selectedRefIndex, setSelectedRefIndex] = useState(0);
+  const [selectedRefPath, setSelectedRefPath] = useState('');
+  const [refPaths, setRefPaths] = useState([]);
   const [draftThumbnailPaths, setDraftThumbnailPaths] = useState([]);
 
   useEffect(() => {
     setDraftThumbnailPaths(drafts.map((draft) => draft.picturePath));
   }, [drafts]);
-
-  const [selectedRefIndex, setSelectedRefIndex] = useState(0);
-  const [selectedRefPath, setSelectedRefPath] = useState('');
-  const [refPaths, setRefPaths] = useState([]);
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
@@ -107,9 +102,12 @@ const MemeEditor = () => {
 
   useEffect(() => {
     getImgs().then((res) => dispatch(setImgs({ imgs: res })));
-    // getDrafts().then((res) => dispatch(setDrafts({ drafts: res })));
+    getDrafts().then((res) => dispatch(setDrafts({ drafts: res })));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    console.log(drafts);
+  }, [drafts]);
   const childCaptionPosToParent = (topCaptionPos, middleCaptionPos, bottomCaptionPos) => {
     const newCaptions = [...captions];
     newCaptions[0].position = topCaptionPos;
@@ -280,6 +278,7 @@ const MemeEditor = () => {
               value={DRAFT}
               icon={<CollectionsBookmarkIcon />}
               label="drafts"
+              disabled={drafts.length === 0}
               sx={{
                 width: '50%',
                 gridColumn: 'span 6'
@@ -373,9 +372,9 @@ const MemeEditor = () => {
                 isDraggable
                 exportRef={exportRef}
                 selectedRefPath={selectedRefPath}
-                topCaption={captions[0].text}
-                middleCaption={captions[1].text}
-                bottomCaption={captions[2].text}
+                topCaption={captions[0]?.text}
+                middleCaption={captions[1]?.text}
+                bottomCaption={captions[2]?.text}
                 topX={40}
                 middleX={40}
                 bottomX={40}
@@ -528,7 +527,7 @@ const MemeEditor = () => {
             <InputBase
               placeholder="Text 1"
               fontFamily={font}
-              value={captions[0].text}
+              value={captions[0]?.text}
               onChange={(e) => updateCaption(e.target.value, 0)}
               sx={{
                 width: '100%',
@@ -541,7 +540,7 @@ const MemeEditor = () => {
             />
             <InputBase
               placeholder="Text 2"
-              value={captions[1].text}
+              value={captions[1]?.text}
               onChange={(e) => updateCaption(e.target.value, 1)}
               sx={{
                 width: '100%',
@@ -554,7 +553,7 @@ const MemeEditor = () => {
             />
             <InputBase
               placeholder="Text 3"
-              value={captions[2].text}
+              value={captions[2]?.text}
               onChange={(e) => updateCaption(e.target.value, 2)}
               sx={{
                 width: '100%',
@@ -587,7 +586,9 @@ const MemeEditor = () => {
               }}
             />
             <Button
-              disabled={captions[0].text === '' && captions[1].text === ''}
+              disabled={
+                captions[0].text === '' && captions[1].text === '' && captions[2].text === ''
+              }
               onClick={() => {
                 convertToImage(exportRef.current).then((res) => setUploadedImage(res));
               }}

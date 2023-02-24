@@ -1,7 +1,6 @@
 import { Box, useMediaQuery } from '@mui/material';
 import { useSelector } from 'react-redux';
 import UserWidget from 'scenes/widgets/profile/UserWidget';
-import MemeEditorWidget from 'scenes/widgets/editor/MemeEditorWidget';
 import MemeFeedWidget from 'scenes/widgets/feed/FeedWidget';
 import NavBar from 'scenes/navigation/NavBar';
 import FriendListWidget from 'scenes/widgets/friends/FriendListWidget';
@@ -30,7 +29,7 @@ const HomePage = () => {
         <Box
           flexBasis={isNonMobileScreens ? '30%' : undefined}
           mt={isNonMobileScreens ? undefined : '2rem'}>
-          <MemeFeedWidget userId={_id} />
+          <MemeFeedWidget maxPosts={4} />
         </Box>
       </Box>
     </PageWrapper>

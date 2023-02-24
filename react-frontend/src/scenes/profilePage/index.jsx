@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Navbar from 'scenes/navigation/NavBar';
 import FriendListWidget from 'scenes/widgets/friends/FriendListWidget';
-import MemeEditorWidget from 'scenes/widgets/editor/MemeEditorWidget';
 import MemeFeedWidget from 'scenes/widgets/feed/FeedWidget';
 import UserWidget from 'scenes/widgets/profile/UserWidget';
 import PageWrapper from 'PageWrapper';
@@ -45,7 +44,7 @@ const ProfilePage = () => {
           <Box m="2rem 0" />
         </Box>
         <Box flexBasis={isNonMobileScreens ? '70%' : undefined}>
-          <MemeFeedWidget isProfile />
+          <MemeFeedWidget isProfile feedUserId={user._id} />
         </Box>
       </Box>
     </PageWrapper>

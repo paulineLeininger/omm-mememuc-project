@@ -42,5 +42,6 @@ module.exports = {
     'no-unused-vars': 'warn',
     'no-nested-ternary': 'warn',
     'no-underscore-dangle': 'warn'
+    // 'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
   }
 };

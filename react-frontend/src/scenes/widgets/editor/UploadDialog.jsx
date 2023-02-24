@@ -19,17 +19,34 @@ import useAPI from 'hooks/useAPI';
 import { useDispatch } from 'react-redux';
 import { setImgs } from 'state';
 import _uniqueId from 'lodash/uniqueId';
+import dataURLtoBlob from 'helpers/dataURLtoBlob';
+import Webcam from 'react-webcam';
+
+const WebcamComponent = () => <Webcam />;
+
+const videoConstraints = {
+  width: 500,
+  height: 400,
+  facingMode: 'user'
+};
 
 const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
   const { palette } = useTheme();
   const { mediumMain, lightMain, darkMain, medium, light } = palette.neutral;
 
   const dispatch = useDispatch();
-  const { postImg, getImgs } = useAPI();
+  const { postImg, getImgs, getProxyImage } = useAPI();
 
   const [uploadedImgPath, setUploadedImgPath] = useState(''); // path to image after upload
   const [image, setImage] = useState(null); // image before upload
   const [link, setLink] = useState('');
+  const [picture, setPicture] = useState('');
+  const webcamRef = React.useRef(null);
+  const capture = React.useCallback(() => {
+    const pictureSrc = webcamRef.current.getScreenshot();
+    setPicture(pictureSrc);
+  });
+  const [webcamOpen, setWebcamOpen] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -73,7 +90,9 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
     if (imageUrl) {
       const formData = new FormData();
 
-      fetch(imageUrl)
+      fetch(`http://localhost:3001/imgs/imageProxy?url=${imageUrl}`, {
+        method: 'GET'
+      })
         .then((response) => response.blob())
         .then((blob) => {
           const mimeToExtMap = {
@@ -100,12 +119,34 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
         });
     }
   };
+
+  const handleCamPicPost = async () => {
+    if (picture) {
+      const formData = new FormData();
+      const pictureName = `${_uniqueId()}.jpg`;
+      formData.append('picture', dataURLtoBlob(picture), pictureName);
+      formData.append('pictureName', pictureName);
+      postImg(formData)
+        .then((response) => {
+          getImgs().then((res) => {
+            dispatch(setImgs({ imgs: res }));
+            setPicture('');
+            setWebcamOpen(false);
+            setSelectedRefIndex(res.length - 1);
+          });
+          return response.json();
+        })
+        .then((json) => setUploadedImgPath(`http://localhost:3001/assets/${json.picturePath}`))
+        .then(() => setOpen(false)); // TODO
+    }
+  };
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle>Upload an image</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          You can upload an image from your file system or through a link.
+          You can upload an image from your file system or through a link or take a picture with
+          your webcam.
         </DialogContentText>
         <>
           <Box
@@ -182,14 +223,72 @@ const UploadDialog = ({ open, setOpen, setSelectedRefIndex }) => {
               </Button>
             </Box>
           </Box>
-
-          {/* <Box
+          <Box
+            border={`1px solid ${medium}`}
+            borderRadius="5px"
+            mt="1rem"
+            p="1rem"
+            // display="flex"
+            width="100%"
             sx={{
-              gridColumn: 'span 6',
-              minHeight: '400px'
+              gridColumn: 'span 6'
             }}>
-            {uploadedImgPath && <img src={uploadedImgPath} alt="uploaded reference" width="100%" />}
-          </Box> */}
+            <div>Take a picture from your webcam:</div>
+            {!webcamOpen && (
+              <Box mt="1rem">
+                <Button variant="contained" onClick={() => setWebcamOpen(true)}>
+                  Open Webcam
+                </Button>
+              </Box>
+            )}
+            {webcamOpen && (
+              <>
+                <div>
+                  {picture === '' ? (
+                    <Webcam
+                      audio={false}
+                      height={400}
+                      ref={webcamRef}
+                      width={500}
+                      screenshotFormat="image/jpeg"
+                      videoConstraints={videoConstraints}
+                    />
+                  ) : (
+                    <img src={picture} alt="webcam" />
+                  )}
+                </div>
+                <div>
+                  {picture !== '' ? (
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPicture('');
+                      }}
+                      variant="contained">
+                      Retake
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        capture();
+                      }}
+                      variant="contained">
+                      Capture
+                    </Button>
+                  )}
+                  {picture !== '' && (
+                    <Button
+                      variant="contained"
+                      sx={{ ml: '10px' }}
+                      onClick={() => handleCamPicPost()}>
+                      Upload
+                    </Button>
+                  )}
+                </div>
+              </>
+            )}
+          </Box>
         </>
       </DialogContent>
       <DialogActions>

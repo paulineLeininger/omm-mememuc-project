@@ -43,6 +43,7 @@ const PostWidget = ({
   const loggedInUserId = useSelector((state) => state.user._id);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
+
   // const is_Detail = Object.keys(isDetail);
 
   const { palette } = useTheme();
@@ -51,14 +52,19 @@ const PostWidget = ({
   const { patchPostLike } = useAPI();
 
   const patchLike = async () => {
-    console.log(`post id: ${postId}`);
-    patchPostLike(loggedInUserId, postId).then((res) =>
-      dispatch(setPost({ post: JSON.stringify(res) }))
-    );
+    // console.log(`post id: ${postId}`);
+    patchPostLike(loggedInUserId, postId)
+      .then((res) => res.json())
+      .then((post) => dispatch(setPost({ post })));
   };
+
   const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
     console.log('dummy');
   };
+
+  useEffect(() => {
+    console.log('like update');
+  }, [likes]);
 
   return (
     <WidgetWrapper m="1rem 0" sx={{ backgroundColor: palette.neutral.light }}>
@@ -83,22 +89,6 @@ const PostWidget = ({
             style={{ objectFit: 'contain', width: '100%', maxWidth: '300px', borderRadius: '5px' }}
             alt="meme"
           />
-          {/* <Meme
-            childToParent={childCaptionPosToParent}
-            isDraggable={false}
-            selectedRefPath={picturePath}
-            topCaption={topCaption}
-            bottomCaption={bottomCaption}
-            topX={topX}
-            bottomX={bottomX}
-            topY={topY}
-            bottomY={bottomY}
-            font={font}
-            fontSize={fontSize}
-            fontColor={fontColor}
-            canvasHeight={0}
-            canvasWidth={0}
-          /> */}
         </Button>
       )}
       <FlexBetween mt="0.25rem">

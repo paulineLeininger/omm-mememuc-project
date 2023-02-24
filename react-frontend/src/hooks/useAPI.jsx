@@ -11,6 +11,8 @@ const useAPI = () => {
   const getRefs = () => getRequest('http://localhost:3001/refs');
   const getImgs = () => getRequest('http://localhost:3001/imgs');
   const getUser = (userId) => getRequest(`http://localhost:3001/users/${userId}`);
+  const getProxyImage = (imageUrl) =>
+    getRequest(`http://localhost:3001/imgs/proxy-image?imageUrl=${imageUrl}`);
 
   // PATCH REQUESTS
   const patchPostLike = (userId, postId) =>
@@ -19,7 +21,17 @@ const useAPI = () => {
   // POST REQUESTS
   const postPosts = (postData) => postRequest('http://localhost:3001/posts', postData); // single post
   const postImg = (imgData) => postRequest('http://localhost:3001/imgs', imgData);
-  return { getUserPosts, getPosts, patchPostLike, postPosts, postImg, getRefs, getImgs, getUser };
+  return {
+    getUserPosts,
+    getPosts,
+    patchPostLike,
+    postPosts,
+    postImg,
+    getRefs,
+    getImgs,
+    getUser,
+    getProxyImage
+  };
 };
 
 export default useAPI;

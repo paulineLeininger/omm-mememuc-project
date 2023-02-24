@@ -5,6 +5,7 @@ import { setImgs, setPosts } from 'state';
 import { exportAsImage, convertToImage } from 'helpers/exportAsImage';
 import UserImage from 'components/UserImage';
 import _uniqueId from 'lodash/uniqueId';
+import dataURLtoBlob from 'helpers/dataURLtoBlob';
 import {
   UploadFile,
   TextIncrease as TextIncreaseIcon,
@@ -12,7 +13,10 @@ import {
   TextDecrease as TextDecreaseIcon,
   Download,
   ArrowBackIos as ArrowBackIosIcon,
-  ArrowForwardIos as ArrowForwardIosIcon
+  ArrowForwardIos as ArrowForwardIosIcon,
+  BookmarkBorder as BookmarkBorderIcon,
+  Bookmark as BookmarkIcon,
+  Delete as DeleteIcon
 } from '@mui/icons-material/';
 
 import {
@@ -56,6 +60,7 @@ const References = () => {
   const [selectedRefIndex, setSelectedRefIndex] = useState(0);
   const [selectedRefPath, setSelectedRefPath] = useState('');
   const [refPaths, setRefPaths] = useState([]);
+  const [isDraft, setIsDraft] = useState(false);
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
@@ -65,10 +70,14 @@ const References = () => {
   const { mediumMain, lightMain, darkMain, medium, light } = palette.neutral;
 
   const [desc, setDesc] = useState('');
-  const [topCaption, setTopCaption] = useState('');
-  const [bottomCaption, setBottomCaption] = useState('');
-  const [topCaptionPosEd, setTopCaptionPosEd] = useState({ x: 0, y: 0 });
-  const [bottomCaptionPosEd, setBottomCaptionPosEd] = useState({ x: 0, y: 0 });
+  const [captions, setCaptions] = useState([
+    { text: '', position: { x: 0, y: 0 } },
+    { text: '', position: { x: 0, y: 0 } }
+  ]);
+  // const [topCaption, setTopCaption] = useState('');
+  // const [bottomCaption, setBottomCaption] = useState('');
+  // const [topCaptionPosEd, setTopCaptionPosEd] = useState({ x: 0, y: 0 });
+  // const [bottomCaptionPosEd, setBottomCaptionPosEd] = useState({ x: 0, y: 0 });
   const [font, setFont] = useState(FONT_ANTON);
   const [fontSize, setFontSize] = useState(5);
   const [fontColor, setFontColor] = useState(FONT_WHITE);
@@ -81,8 +90,9 @@ const References = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
-    setTopCaptionPosEd(topCaptionPos);
-    setBottomCaptionPosEd(bottomCaptionPos);
+    const newCaptions = [...captions];
+    newCaptions[0].position = topCaptionPos;
+    newCaptions[1].position = bottomCaptionPos;
   };
 
   // imgs changed // TODO should be refs
@@ -98,23 +108,12 @@ const References = () => {
     // console.log("selected ref index: " + selectedRefIndex);
   }, [refPaths, selectedRefIndex]);
 
-  // convert data URL to Blob object
-  function dataURLtoBlob(dataurl) {
-    const [type, base64] = dataurl.split(';base64,');
-    const binary = atob(base64);
-    const array = new Uint8Array(binary.length);
-
-    for (let i = 0; i < binary.length; i += 1) {
-      array[i] = binary.charCodeAt(i);
-    }
-    return new Blob([array], { type });
-  }
-
   const handlePost = async () => {
     const formData = new FormData();
     formData.append('userId', user._id);
-    formData.append('topCaption', topCaption);
-    formData.append('bottomCaption', bottomCaption);
+    formData.append('captions', captions);
+    // formData.append('topCaption', topCaption);
+    // formData.append('bottomCaption', bottomCaption);
     // formData.append('font', font);
     // formData.append('fontSize', fontSize);
     // formData.append('fontColor', fontColor);
@@ -145,6 +144,19 @@ const References = () => {
         setUploadedImage(null);
       });
     });
+  };
+
+  const handleClear = () => {
+    setCaptions([
+      { text: '', position: { x: 0, y: 0 } },
+      { text: '', position: { x: 0, y: 0 } }
+    ]);
+  };
+
+  const updateCaption = (text, id) => {
+    const newCaptions = [...captions];
+    newCaptions[id].text = text;
+    setCaptions(newCaptions);
   };
 
   useEffect(() => {
@@ -225,8 +237,8 @@ const References = () => {
           isDraggable
           exportRef={exportRef}
           selectedRefPath={selectedRefPath}
-          topCaption={topCaption}
-          bottomCaption={bottomCaption}
+          topCaption={captions[0].text}
+          bottomCaption={captions[1].text}
           topX={40}
           bottomX={40}
           topY={10}
@@ -253,17 +265,19 @@ const References = () => {
       </Box>
       <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 5' }} />
       <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 1' }}>
-        {/* <IconButton onClick={() => setIsDraft(!isDraft)}>
+        <IconButton onClick={() => setIsDraft(!isDraft)}>
           {isDraft && <BookmarkIcon />}
           {!isDraft && <BookmarkBorderIcon />}
-        </IconButton> */}
-        {/* TODO */}
+        </IconButton>
         <IconButton onClick={() => exportAsImage(exportRef.current, selectedRefPath)}>
           <Download />
         </IconButton>
+        <IconButton onClick={() => handleClear()}>
+          <DeleteIcon />
+        </IconButton>
         {/* <IconButton onClick={() => convertToImage(exportRef.current, selectedRefPath)}>
           <Download />
-        </IconButton> */}
+          </IconButton> */}
       </Box>
       <Divider sx={{ margin: '0.25rem 0', gridColumn: 'span 6' }} />
       <Box
@@ -371,9 +385,11 @@ const References = () => {
         </Stack>
       </Box>
       <InputBase
-        placeholder="Top Caption"
+        placeholder="Text 1"
         fontFamily={font}
-        onChange={(e) => setTopCaption(e.target.value)}
+        value={captions[0].text}
+        // defaultValue={captions[0].text}
+        onChange={(e) => updateCaption(e.target.value, 0)}
         sx={{
           width: '100%',
           height: '70%',
@@ -384,8 +400,9 @@ const References = () => {
         }}
       />
       <InputBase
-        placeholder="Bottom Caption"
-        onChange={(e) => setBottomCaption(e.target.value)}
+        placeholder="Text 2"
+        value={captions[1].text}
+        onChange={(e) => updateCaption(e.target.value, 1)}
         sx={{
           width: '100%',
           height: '70%',
@@ -398,7 +415,7 @@ const References = () => {
       <Divider sx={{ margin: '0.25rem 0', gridColumn: 'span 6' }} />
       <UserImage gap="2rem" mr="1rem" image={user.picturePath} sx={{ gridColumn: 'span 1' }} />
       <InputBase
-        placeholder="Leave a comment..."
+        placeholder="Description"
         onChange={(e) => setDesc(e.target.value)}
         value={desc}
         ml="3rem"
@@ -411,8 +428,8 @@ const References = () => {
           gridColumn: 'span 4'
         }}
       />
-      <IconButton
-        disabled={bottomCaption === '' && topCaption === ''}
+      <Button
+        disabled={captions[0].text === '' && captions[1].text === ''}
         onClick={() => {
           convertToImage(exportRef.current).then((res) => setUploadedImage(res));
         }}
@@ -424,8 +441,8 @@ const References = () => {
           borderRadius: '0.5em',
           gridColumn: 'span 1'
         }}>
-        <PublishIcon />
-      </IconButton>
+        <PublishIcon sx={{ mr: '5px' }} /> Post
+      </Button>
 
       {/* <img src={testImg} alt="test" /> */}
     </>

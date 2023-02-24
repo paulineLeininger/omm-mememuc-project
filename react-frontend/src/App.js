@@ -32,6 +32,8 @@ const App = () => {
               path="/profile/:userId"
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
+            <Route path="/home/:postId" element={isAuth ? <HomePage /> : <Navigate to="/" />} />
+            <Route path="/feed/:postId" element={isAuth ? <FeedPage /> : <Navigate to="/" />} />
             <Route path="/feed" element={<FeedPage />} />
           </Routes>
         </ThemeProvider>

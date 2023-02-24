@@ -10,9 +10,7 @@ import {
   UploadFile
 } from '@mui/icons-material';
 import References from './References';
-import History from './History';
 import Drafts from './Drafts';
-import Templates from './Templates';
 
 const MemeEditor = () => {
   const REFERENCE = 'reference';
@@ -51,7 +49,7 @@ const MemeEditor = () => {
               icon={<ImageSearchIcon />}
               label="references"
               sx={{
-                width: '25%',
+                width: '50%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -59,25 +57,25 @@ const MemeEditor = () => {
                 // setMaxRefIndex(refs.length - 1);
               }}
             />
-            <Tab
+            {/* <Tab
               value={HISTORY}
               icon={<BrowseGalleryIcon />}
               label="history"
               sx={{
-                width: '25%',
+                width: '33%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
                 setRefMode(HISTORY);
                 // setMaxRefIndex(refs.length - 1);
               }}
-            />
+            /> */}
             <Tab
               value={DRAFT}
               icon={<CollectionsBookmarkIcon />}
               label="drafts"
               sx={{
-                width: '25%',
+                width: '50%',
                 gridColumn: 'span 6'
               }}
               onClick={() => {
@@ -85,7 +83,7 @@ const MemeEditor = () => {
                 // setMaxRefIndex(refs.length - 1);
               }}
             />
-            <Tab
+            {/* <Tab
               value={TEMPLATE}
               icon={<CollectionsIcon />}
               label="templates"
@@ -97,12 +95,12 @@ const MemeEditor = () => {
                 setRefMode(TEMPLATE);
                 // setMaxRefIndex(refs.length - 1);
               }}
-            />
+            /> */}
           </Tabs>
           {selectedTab === REFERENCE && <References />}
-          {selectedTab === HISTORY && <History />}
+          {/* {selectedTab === HISTORY && <History />} */}
           {selectedTab === DRAFT && <Drafts />}
-          {selectedTab === TEMPLATE && <Templates />}
+          {/* {selectedTab === TEMPLATE && <Templates />} */}
         </Box>
       </FlexBetween>
     </WidgetWrapper>

@@ -1,60 +1,67 @@
 import { Box, Typography, useTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 import WidgetWrapper from 'components/WidgetWrapper';
 import useAPI from 'hooks/useAPI';
+import { useParams } from 'react-router-dom';
 import PostWidget from './PostWidget';
 import MemeDialogWidget from './MemeDialogWidget';
 
-const MemeFeedWidget = ({ isProfile = false }) => {
+const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const posts = useSelector((state) => state.posts);
   const token = useSelector((state) => state.token);
   const { getPosts, getUserPosts } = useAPI();
   const { palette } = useTheme();
+  const { postId } = useParams();
 
   const [selectedPost, setSelectedPost] = useState('');
   const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const [visibleCount, setVisibleCount] = useState(2); // show 10 items at a time
+  const observerRef = useRef(null);
 
   useEffect(() => {
     console.log(token);
   }, [token]);
 
-  // // API call to server/routes/posts.js getFeedPosts
-  // const getPosts = async () => {
-  //   const response = await fetch('http://localhost:3001/posts', {
-  //     method: 'GET',
-  //     headers: { Authorization: `Bearer ${token}` }
-  //   });
-  //   const data = await response.json();
-  //   dispatch(setPosts({ posts: data }));
-  // };
+  useEffect(() => {
+    if (postId) {
+      setSelectedPost(postId);
+      setDialogOpen(true);
+    }
+  }, [postId]);
 
-  // // API call to server/routes/posts.js getUserPosts
-  // const getUserPosts = async () => {
-  //   const response = await fetch(`http://localhost:3001/posts/${userId}/posts`, {
-  //     method: 'GET',
-  //     headers: { Authorization: `Bearer ${token}` }
-  //   });
-  //   const data = await response.json();
-  //   dispatch(setPosts({ posts: data }));
-  // };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleCount((prevCount) => prevCount + 2); // show 10 more items
+        }
+      },
+      {
+        rootMargin: '0px',
+        threshold: 1.0
+      }
+    );
+    observer.observe(observerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (isProfile) {
-      getUserPosts(user._id).then((res) => dispatch(setPosts({ posts: res })));
+      getUserPosts(feedUserId).then((res) => dispatch(setPosts({ posts: res })));
       console.log('get user post............');
     } else {
       getPosts().then((res) => dispatch(setPosts({ posts: res })));
       console.log('get post............');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // useEffect(() => {
-  //   console.log(`Posts: ${JSON.stringify(posts)}`);
-  // }, [posts]);
 
   return (
     <WidgetWrapper>
@@ -65,10 +72,10 @@ const MemeFeedWidget = ({ isProfile = false }) => {
         sx={{
           gridColumn: 'span 6'
         }}>
-        {isProfile ? 'Your recent posts' : 'Explore popular memes'}
+        {isProfile ? 'Your recent posts' : 'Explore recent memes'}
       </Typography>
       <Box maxWidth="400px" display="flex-row">
-        {posts?.map(
+        {posts.slice(0, maxPosts || visibleCount).map(
           ({
             _id,
             userId,
@@ -76,12 +83,12 @@ const MemeFeedWidget = ({ isProfile = false }) => {
             lastName,
             userName,
             description,
-            topCaption,
-            bottomCaption,
-            topCaptionX,
-            bottomCaptionX,
-            topCaptionY,
-            bottomCaptionY,
+            // topCaption,
+            // bottomCaption,
+            // topCaptionX,
+            // bottomCaptionX,
+            // topCaptionY,
+            // bottomCaptionY,
             font,
             fontSize,
             fontColor,
@@ -98,12 +105,12 @@ const MemeFeedWidget = ({ isProfile = false }) => {
               userName={userName}
               name={`${firstName} ${lastName}`}
               description={description}
-              topCaption={topCaption}
-              bottomCaption={bottomCaption}
-              topX={topCaptionX}
-              topY={topCaptionY}
-              bottomX={bottomCaptionX}
-              bottomY={bottomCaptionY}
+              // topCaption={topCaption}
+              // bottomCaption={bottomCaption}
+              // topX={topCaptionX}
+              // topY={topCaptionY}
+              // bottomX={bottomCaptionX}
+              // bottomY={bottomCaptionY}
               font={font}
               fontSize={fontSize}
               fontColor={fontColor}
@@ -119,6 +126,7 @@ const MemeFeedWidget = ({ isProfile = false }) => {
             />
           )
         )}
+        <div ref={observerRef} />
       </Box>
       <MemeDialogWidget
         isOpen={isDialogOpen}

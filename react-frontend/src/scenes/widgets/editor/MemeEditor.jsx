@@ -93,6 +93,7 @@ const MemeEditor = () => {
   const [desc, setDesc] = useState('');
   const [captions, setCaptions] = useState([
     { text: '', position: { x: 0, y: 0 } },
+    { text: '', position: { x: 0, y: 0 } },
     { text: '', position: { x: 0, y: 0 } }
   ]);
 
@@ -109,10 +110,11 @@ const MemeEditor = () => {
     // getDrafts().then((res) => dispatch(setDrafts({ drafts: res })));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const childCaptionPosToParent = (topCaptionPos, bottomCaptionPos) => {
+  const childCaptionPosToParent = (topCaptionPos, middleCaptionPos, bottomCaptionPos) => {
     const newCaptions = [...captions];
     newCaptions[0].position = topCaptionPos;
-    newCaptions[1].position = bottomCaptionPos;
+    newCaptions[1].position = middleCaptionPos;
+    newCaptions[2].position = bottomCaptionPos;
   };
 
   // imgs changed // TODO should be refs
@@ -215,6 +217,7 @@ const MemeEditor = () => {
 
   const handleClear = () => {
     setCaptions([
+      { text: '', position: { x: 0, y: 0 } },
       { text: '', position: { x: 0, y: 0 } },
       { text: '', position: { x: 0, y: 0 } }
     ]);
@@ -371,10 +374,13 @@ const MemeEditor = () => {
                 exportRef={exportRef}
                 selectedRefPath={selectedRefPath}
                 topCaption={captions[0].text}
-                bottomCaption={captions[1].text}
+                middleCaption={captions[1].text}
+                bottomCaption={captions[2].text}
                 topX={40}
+                middleX={40}
                 bottomX={40}
                 topY={10}
+                middleY={40}
                 bottomY={70}
                 font={font}
                 fontSize={fontSize}
@@ -530,7 +536,7 @@ const MemeEditor = () => {
                 backgroundColor: palette.neutral.light,
                 borderRadius: '0.5rem',
                 padding: '1rem',
-                gridColumn: 'span 3'
+                gridColumn: 'span 2'
               }}
             />
             <InputBase
@@ -543,7 +549,20 @@ const MemeEditor = () => {
                 backgroundColor: palette.neutral.light,
                 borderRadius: '0.5rem',
                 padding: '1rem',
-                gridColumn: 'span 3'
+                gridColumn: 'span 2'
+              }}
+            />
+            <InputBase
+              placeholder="Text 3"
+              value={captions[2].text}
+              onChange={(e) => updateCaption(e.target.value, 2)}
+              sx={{
+                width: '100%',
+                height: '70%',
+                backgroundColor: palette.neutral.light,
+                borderRadius: '0.5rem',
+                padding: '1rem',
+                gridColumn: 'span 2'
               }}
             />
             <Divider sx={{ margin: '0.25rem 0', gridColumn: 'span 6' }} />

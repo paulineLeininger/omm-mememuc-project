@@ -1,10 +1,12 @@
 import useAPI from 'hooks/useAPI';
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setImgs, setPosts } from 'state';
+import { setImgs, setPosts, setDrafts } from 'state';
 import { exportAsImage, convertToImage } from 'helpers/exportAsImage';
 import UserImage from 'components/UserImage';
 import _uniqueId from 'lodash/uniqueId';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { v4 as uuid } from 'uuid';
 import dataURLtoBlob from 'helpers/dataURLtoBlob';
 import {
   UploadFile,
@@ -53,14 +55,13 @@ const References = () => {
   const token = useSelector((state) => state.token);
 
   const dispatch = useDispatch();
-  const { getImgs, postPosts, getPosts } = useAPI(); // TODO should get Refs
+  const { getImgs, postPosts, getPosts, getDrafts, postDraft } = useAPI(); // TODO should get Refs
   const imgs = useSelector((state) => state.imgs); // TODO should get references not images
   const user = useSelector((state) => state.user);
 
   const [selectedRefIndex, setSelectedRefIndex] = useState(0);
   const [selectedRefPath, setSelectedRefPath] = useState('');
   const [refPaths, setRefPaths] = useState([]);
-  const [isDraft, setIsDraft] = useState(false);
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
@@ -75,10 +76,7 @@ const References = () => {
     { text: '', position: { x: 0, y: 0 } },
     { text: '', position: { x: 0, y: 0 } }
   ]);
-  // const [topCaption, setTopCaption] = useState('');
-  // const [bottomCaption, setBottomCaption] = useState('');
-  // const [topCaptionPosEd, setTopCaptionPosEd] = useState({ x: 0, y: 0 });
-  // const [bottomCaptionPosEd, setBottomCaptionPosEd] = useState({ x: 0, y: 0 });
+
   const [font, setFont] = useState(FONT_ANTON);
   const [fontSize, setFontSize] = useState(5);
   const [fontColor, setFontColor] = useState(FONT_WHITE);
@@ -106,28 +104,21 @@ const References = () => {
   // selectedRefIndex changed
   useEffect(() => {
     setSelectedRefPath(refPaths[selectedRefIndex]);
-    // console.log("selected ref index: " + selectedRefIndex);
   }, [refPaths, selectedRefIndex]);
 
   const handlePost = async () => {
     const formData = new FormData();
     formData.append('userId', user._id);
     formData.append('captions', captions);
-    // formData.append('topCaption', topCaption);
-    // formData.append('bottomCaption', bottomCaption);
-    // formData.append('font', font);
-    // formData.append('fontSize', fontSize);
-    // formData.append('fontColor', fontColor);
-    // formData.append('topCaptionX', topCaptionPosEd.x);
-    // formData.append('topCaptionY', topCaptionPosEd.y);
-    // formData.append('bottomCaptionX', bottomCaptionPosEd.x);
-    // formData.append('bottomCaptionY', bottomCaptionPosEd.y);
+    formData.append('font', font);
+    formData.append('fontSize', fontSize);
+    formData.append('fontColor', fontColor);
 
     if (desc !== '') {
       formData.append('description', desc);
     }
 
-    const generatedImageName = `${_uniqueId(user._id)}.png`;
+    const generatedImageName = `${uuid()}.png`;
     if (selectedRefPath !== '') {
       formData.append('picturePath', `memes/${generatedImageName}`);
     }
@@ -143,6 +134,37 @@ const References = () => {
         setDesc('');
         console.log(`send picture: ${formData.get('picturePath')}`);
         setUploadedImage(null);
+      });
+    });
+  };
+
+  const handleDraft = async () => {
+    const formData = new FormData();
+    formData.append('userId', user._id);
+    formData.append('captions', captions);
+    formData.append('font', font);
+    formData.append('fontSize', fontSize);
+    formData.append('fontColor', fontColor);
+    formData.append('referencePath', selectedRefPath);
+
+    if (desc !== '') {
+      formData.append('description', desc);
+    }
+
+    const generatedImageName = `${uuid()}.png`;
+    if (selectedRefPath !== '') {
+      formData.append('picturePath', `memes/${generatedImageName}`);
+    }
+
+    if (uploadedImage) {
+      // console.log(dataURLtoBlob(uploadedImage));
+      formData.append('picture', dataURLtoBlob(uploadedImage), generatedImageName);
+    }
+
+    postDraft(formData).then(() => {
+      getDrafts(user._id).then((res) => {
+        dispatch(setDrafts({ drafts: res }));
+        setDesc('');
       });
     });
   };
@@ -228,7 +250,7 @@ const References = () => {
         {selectedRefIndex >= 1 && (
           <ArrowBackIosIcon
             onClick={() => {
-              console.log(`sel ref i: ${selectedRefIndex}`);
+              // console.log(`sel ref i: ${selectedRefIndex}`);
               setSelectedRefIndex(selectedRefIndex - 1);
             }}
             sx={{ color: medium, gridColumn: 'span 1' }}
@@ -270,9 +292,11 @@ const References = () => {
       </Box>
       <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 5' }} />
       <Box sx={{ margin: '0.25rem 0', gridColumn: 'span 1' }}>
-        <IconButton onClick={() => setIsDraft(!isDraft)}>
-          {isDraft && <BookmarkIcon />}
-          {!isDraft && <BookmarkBorderIcon />}
+        <IconButton
+          onClick={() => {
+            handleDraft();
+          }}>
+          <BookmarkIcon />
         </IconButton>
         <IconButton onClick={() => exportAsImage(exportRef.current, selectedRefPath)}>
           <Download />
@@ -280,9 +304,6 @@ const References = () => {
         <IconButton onClick={() => handleClear()}>
           <DeleteIcon />
         </IconButton>
-        {/* <IconButton onClick={() => convertToImage(exportRef.current, selectedRefPath)}>
-          <Download />
-          </IconButton> */}
       </Box>
       <Divider sx={{ margin: '0.25rem 0', gridColumn: 'span 6' }} />
       <Box
@@ -393,7 +414,6 @@ const References = () => {
         placeholder="Text 1"
         fontFamily={font}
         value={captions[0].text}
-        // defaultValue={captions[0].text}
         onChange={(e) => updateCaption(e.target.value, 0)}
         sx={{
           width: '100%',
@@ -461,8 +481,6 @@ const References = () => {
         }}>
         <PublishIcon sx={{ mr: '5px' }} /> Post
       </Button>
-
-      {/* <img src={testImg} alt="test" /> */}
     </>
   );
 };

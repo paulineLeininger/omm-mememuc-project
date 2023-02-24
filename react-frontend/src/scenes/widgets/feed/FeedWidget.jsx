@@ -79,25 +79,34 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
         }}>
         {isProfile ? 'Your recent posts' : 'Explore recent memes'}
       </Typography>
-      <Box maxWidth="600px" display="flex-row">
-        {posts.slice(0, maxPosts || visibleCount).map(
-          ({
-            _id,
-            userId,
-            firstName,
-            lastName,
-            userName,
-            description,
-            font,
-            fontSize,
-            fontColor,
-            location,
-            picturePath,
-            userPicturePath,
-            likes,
-            comments
-          }) => (
-            <FlexBetween>
+      <Box maxWidth="400px" display="flex-row">
+        {posts
+          .slice(0)
+          .reverse()
+          .slice(0, maxPosts || visibleCount)
+          .map(
+            ({
+              _id,
+              userId,
+              firstName,
+              lastName,
+              userName,
+              description,
+              // topCaption,
+              // bottomCaption,
+              // topCaptionX,
+              // bottomCaptionX,
+              // topCaptionY,
+              // bottomCaptionY,
+              font,
+              fontSize,
+              fontColor,
+              location,
+              picturePath,
+              userPicturePath,
+              likes,
+              comments
+            }) => (
               <PostWidget
                 key={_id}
                 postId={_id}
@@ -118,7 +127,6 @@ const MemeFeedWidget = ({ feedUserId, isProfile = false, maxPosts }) => {
                   setSelectedPost(postid);
                 }}
                 />
-            </FlexBetween>
           )
         )}
         <div ref={observerRef} />

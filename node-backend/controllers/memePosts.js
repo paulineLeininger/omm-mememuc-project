@@ -2,24 +2,22 @@ import User from "../models/User.js";
 import MemePost from "../models/MemePost.js";
 
 export const createPost = async (req, res) => {
-    
+
     try {
         //what frontend sends us
         const {
             userId,
-            topCaption,
-            middleCaption,
-            bottomCaption,
+            // topCaption,
+            // bottomCaption,
+            captions,
             description,
             font,
             fontSize,
             fontColor,
-            topCaptionX,
-            topCaptionY,
-            middleCaptionX,
-            middleCaptionY,
-            bottomCaptionX,
-            bottomCaptionY,
+            // topCaptionX,
+            // topCaptionY,
+            // bottomCaptionX,
+            // bottomCaptionY,
             picturePath,
             isPrivate,
             isUnlisted
@@ -32,21 +30,19 @@ export const createPost = async (req, res) => {
             lastName: user.lastName,
             userName: user.userName,
             location: user.location,
-            topCaption,
-            middleCaption,
-            bottomCaption,
+            captions: captions,
+            // topCaption,
+            // bottomCaption,
             description,
             picturePath,
             userPicturePath: user.picturePath,
             font,
             fontColor,
             fontSize,
-            topCaptionX,
-            topCaptionY,
-            middleCaptionX,
-            middleCaptionY,
-            bottomCaptionX,
-            bottomCaptionY,
+            // topCaptionX,
+            // topCaptionY,
+            // bottomCaptionX,
+            // bottomCaptionY,
             isPrivate,
             isUnlisted,
             likes: {},
@@ -54,7 +50,7 @@ export const createPost = async (req, res) => {
 
         });
         await newPost.save(); //save to mongodb
-        
+
         //this grabs ALL posts
         const post = await MemePost.find();
 
@@ -67,7 +63,7 @@ export const createPost = async (req, res) => {
 /* READ */
 
 export const getFeedPosts = async (req, res) => {
-    try {        
+    try {
         //this grabs ALL posts
         const post = await MemePost.find();
         res.status(200).json(post);
@@ -77,7 +73,7 @@ export const getFeedPosts = async (req, res) => {
 };
 
 export const getUserPosts = async (req, res) => {
-    try { 
+    try {
         const { userId } = req.params;
         const post = await MemePost.find({ userId });
         //this grabs ALL posts
@@ -111,7 +107,7 @@ export const addComment = async (req, res) => {
 }
 
 export const likePost = async (req, res) => {
-    try { 
+    try {
         const { id } = req.params;
         const { userId } = req.body;
         const post = await MemePost.findById(id);
